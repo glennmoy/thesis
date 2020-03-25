@@ -1,0 +1,975 @@
+
+\section[Deriviation of the Voigt-Reuss-Hill Equations]{Deriviation of the Voigt-Reuss-Hill \break Equations}
+\label{sec:vrh_derivation}
+
+%GENERAL HOOKES LAW
+In this Appendix, we shall re-derive 
+the formulae 
+for the elastic properties 
+of a planar material
+ as a function 
+of orientation of the in-plane stress 
+as outlined in Ref.~\cite{jones1975mechanics}.
+%
+The general form of Hooke's law for a non-isotropic material 
+is expressed as the linear mapping 
+$\varepsilon_{ij}=C_{ijkl}\sigma_{kl}$ 
+between the stress tensor $\boldsymbol{\sigma}$ 
+and strain tensor $\boldsymbol{\varepsilon}$ 
+by a fourth-order stiffness tensor $\boldsymbol{C}$.
+%
+In cartesian coordinates the stress and strain 
+tensors are $3\times3$ matrices, given by 
+%
+\begin{equation}
+\boldsymbol{\sigma}=\left[\begin{array}{ccc}
+\sigma_{11} & \sigma_{12} & \sigma_{13} \\
+\sigma_{21} & \sigma_{22} & \sigma_{21} \\
+\sigma_{31} & \sigma_{32} & \sigma_{33} 
+\end{array}
+\right]
+\quad
+\mbox{and}
+\quad
+\boldsymbol{\varepsilon}=\left[\begin{array}{ccc}
+\varepsilon_{11} & \varepsilon_{12} & \varepsilon_{13} \\
+\varepsilon_{21} & \varepsilon_{22} & \varepsilon_{21} \\
+\varepsilon_{31} & \varepsilon_{32} & \varepsilon_{33} 
+\end{array}
+\right].
+\end{equation}
+
+%
+This relation may be transformed 
+into a rotated reference frame 
+via a rotational matrix $\boldsymbol{R}$ 
+applied to each of the tensors.
+%
+If we consider rotations about the z-axis, 
+and ignore contributions 
+to the stresses in that direction, 
+the rotation matrix is 
+%
+\begin{equation}
+\boldsymbol{R_z}(\theta)=\left[\begin{array}{ccc}
+\cos{\theta} & -\sin{\theta} & 0 \\
+\sin{\theta} & \cos{\theta} & 0 \\
+0 & 0&1
+\end{array}
+\right],
+\end{equation}
+%
+where the transformed stress-tensor 
+as a function of $\theta$ is now
+%
+\begin{equation}
+\boldsymbol{\sigma^\prime}(\theta)=\boldsymbol{R_z}(\theta)\boldsymbol{\sigma}\boldsymbol{R_z}^T(\theta),
+\end{equation}
+%
+and likewise for the strain-tensor.
+%
+% Hooks law for orthotropic materials
+For orthotropic materials 
+subject to in-plane stress, 
+Hooke's law may be re-expressed in Voigt notation, 
+where the stiffness tensor is a 
+symmetric $3\times3$ matrix given by
+%
+\begin{equation}
+C_{2D}=\left[\begin{array}{ccc}
+c_{11} & c_{12}  & 0 \\
+c_{12} & c_{22}  & 0 \\
+0 & 0  & c_{66}
+\end{array}\right]
+\quad
+\text{with}
+\quad
+S_{2D}=C_{2D}^{-1},
+\label{eq:2dmatrix}
+\end{equation} 
+where $S$ is the compliance matrix. 
+%
+Here, the reduced stress and strain vectors are 
+%
+\begin{equation}
+\sigma^T=\left[\sigma_{11},\sigma_{22},\sigma_{12}\right]
+\quad\mbox{and}\quad 
+\varepsilon^T=\left[\varepsilon_{11},\varepsilon_{22},\varepsilon_{12}\right],
+\end{equation}
+arising from planar symmetries.
+%
+The reduced stress-vector 
+of a rotated stress-tensor 
+relates the new coordinate system 
+to the original via a matrix operation  
+$\sigma^\prime=\boldsymbol{M}\sigma$, 
+with
+\begin{equation}
+%
+\boldsymbol{M}
+=
+\left[\begin{array}{ccc}
+\cos^2\theta& \sin^2\theta & \cos\theta\sin\theta\\
+\sin^2\theta& \cos^2\theta&-\cos\theta\sin\theta\\
+-2\cos\theta\sin\theta& 2\cos\theta\sin\theta & \cos^2\theta-\sin^2\theta
+\end{array}\right],
+\end{equation}
+%
+and similarly for the strain tensor $\boldsymbol{\varepsilon}$.
+%
+From this, Hooke's law in a rotated frame 
+can be expressed in the original basis as 
+%
+\begin{align}
+{\varepsilon^\prime}&=\boldsymbol{C^\prime}{\sigma^\prime}
+\Rightarrow
+\boldsymbol{M}{\varepsilon}=\boldsymbol{C^\prime}\boldsymbol{M}{\sigma}\\
+\Rightarrow
+{\varepsilon}&=\boldsymbol{M}^T\boldsymbol{C^\prime}\boldsymbol{M}{\sigma}\ 
+\Rightarrow
+{\varepsilon}=\boldsymbol{C}{\sigma},
+\end{align}
+%
+with  
+$\boldsymbol{C}=\boldsymbol{M}^T\boldsymbol{C}^\prime \boldsymbol{M}$ 
+and similarly 
+$\boldsymbol{S}=\boldsymbol{M}^T\boldsymbol{S}^\prime \boldsymbol{M}$.
+%
+Shown below in Eq.~\ref{eq:rot2dmatrix} 
+are the elements of the rotated $C_{2D}$, 
+where the Reuss equations $S_{ij}\left(\theta\right)$ 
+are obtained by 
+substituting the elements $c_{ij}\to s_{ij}$:
+%
+\begin{equation}
+\begin{aligned}
+C_{11}\left(\theta\right)&=c_{11}\cos^4\theta+c_{22}\sin^4\theta
+                +(2c_{12}+c_{66})\cos^2\theta\sin^2\theta\\
+C_{22}\left(\theta\right)&=c_{11}\sin^4\theta+c_{22}\cos^4\theta
+                +(2c_{12}+c_{66})\cos^2\theta\sin^2\theta\\
+C_{66}\left(\theta\right)&=(4c_{11}+4c_{22}-8c_{12}-2c_{66})\cos^2\theta\sin^2\theta+c_{66}(\cos^4\theta+\sin^4\theta)\\
+C_{12}\left(\theta\right)&=c_{12}(\cos^4\theta+\sin^4\theta)+(c_{11}+c_{22}-c_{66})\cos^2\theta\sin^2\theta.
+\end{aligned}
+\label{eq:rot2dmatrix}
+\end{equation}
+%
+From these, 
+one can resolve the 
+in-plane elastic properties 
+as a function of orientation and, 
+by integrating over $\theta$, 
+the average in-plane 
+properties can be extracted
+from the fully isotropic tensors.
+
+Finally, 
+the above derivation can be 
+easily extended to three dimensions.
+%
+A general rotation matrix 
+$\boldsymbol{R}=\boldsymbol{R_1}(\alpha)\boldsymbol{R_2}(\beta)\boldsymbol{R_3}(\gamma)$ 
+about the coordinate axes 
+can be constructed 
+by compounding three rotation matrices, 
+parameterised by three angles 
+of rotation 
+$\alpha$, $\beta$, $\gamma$.
+%
+The elastic matrices for any rotated reference 
+frame may be constructed 
+by applying this general transformation  
+to the stress and strain tensors.
+%
+One arrives exactly at the Voigt~\cite{ZAMM:ZAMM19290090104,cook1999advanced} 
+and Reuss~\cite{ANDP:ANDP18892741206} 
+equations from the which 
+the Hill-averages~\cite{0370-1298-65-5-307} 
+are considered reliable estimates 
+for physical values 
+by integrating these matrices over 
+each of the angles 
+$\alpha$, $\beta$, $\gamma$.
+%
+Presented here are the equations for the 
+Voigt estimate for the Young's $Y_V$ 
+and shear modulus $G_V$:
+%
+\begin{equation}
+Y_V=\frac{(A-B+3C)(A+2B)}{2A+3B+C} 
+\quad \mbox{and} \quad
+G_V=\frac{A-B+3C}{5}, 
+\label{eq:voigt1}
+\end{equation}
+%
+where the parameters $A$, $B$ and $C$ 
+are expressed in terms of the stiffness tensor elements
+%
+\begin{equation}
+A=\frac{c_{11}+c_{22}+c_{33}}{3},
+\quad
+B=\frac{c_{23}+c_{13}+c_{12}}{3},
+\quad\mbox{and}\quad
+C=\frac{c_{44}+c_{55}+c_{66}}{3}.
+\label{eq:voigt2}
+\end{equation}
+%
+Similarly, the equations for the 
+Reuss estimate for the Young's $Y_R$ 
+and shear modulus $G_R$ are given by
+%
+\begin{equation}
+Y_R=\frac{5}{3A^\prime+2B^\prime+C^\prime}
+\quad \mbox{and} \quad
+G_R = \frac{5}{4A^\prime-4B^\prime+3C^\prime},
+\label{eq:reuss1}
+\end{equation}
+%
+where the parameters $A^\prime$, $B^\prime$ and $C^\prime$ 
+are expressed in terms of the compliance tensor elements
+%
+\begin{equation}
+A^\prime=\frac{s_{11}+s_{22}+s_{33}}{3},
+\quad
+B^\prime=\frac{s_{23}+s_{13}+s_{12}}{3},
+\quad \mbox{and} \quad
+C^\prime=\frac{s_{44}+s_{55}+s_{66}}{3}.
+\label{eq:reuss2}
+\end{equation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+\section{Calculated elastic tensor elements}
+\label{sec:calculated_elastic_tensor_elements}
+
+Presented in Table~\ref{table:cmatrix_data} 
+are the calculated stiffness tensor elements 
+for each of the phases of P, As and Sb with 
+available experimental data from
+Refs.~\cite{doi:10.1143/JPSJ.60.1612,doi:10.1143/JPSJ.55.1196}
+given in parentheses.
+
+\begin{table}[htb!]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrrr}
+\hline\hline
+&$c_{11}$&$c_{22}$&$c_{33}$&$c_{44}$&$c_{55}$&$c_{66}$&$c_{23}$&$c_{13}$&$c_{12}$\\  
+\hline
+P\textsubscript{mono}   &79.48&25.33& -&-&-&20.86&-&-&16.50\\
+P\textsubscript{bi}     &95.16&30.44&-&-&-&28.71&-&-&20.95\\
+P\textsubscript{bulk}   &187.92&55.06&67.64&4.55&22.04&64.85&1.52&10.37&42.15\\
+\hline
+Ref.~\cite{doi:10.1143/JPSJ.60.1612}&178&55.1&53.6&5.5&11.1-21.3&14.5-15.6\\
+Ref.~\cite{doi:10.1143/JPSJ.55.1196}&284&80&74&10.8&7.2&59.4\\
+\hline
+As\textsubscript{mono}  &40.35&8.04&-&-&-&11.31&-&-&11.68\\
+As\textsubscript{bi}        &71.25&24.91&-&-&-&23.58&-&-&23.70\\
+As\textsubscript{bulk} &134.24&41.34&93.24&11.18&20.13&49.26&15.27&23.37&43.64\\
+\hline
+Sb\textsubscript{mono}  &31.23&12.93&-&-&-&13.60&-&-&14.53\\
+Sb\textsubscript{bi}        &36.78&14.10&-&-&-&19.47&-&-&15.36\\
+Sb\textsubscript{bulk}&70.79&29.56&111.52&15.82&22.06&37.63&18.08&26.99&26.47\\
+\hline\hline
+\end{tabular}
+}
+\caption{
+Elements of stiffness tensor in GPa of each structure.
+Experimental values for bulk P from Refs.~\cite{doi:10.1143/JPSJ.60.1612,doi:10.1143/JPSJ.55.1196}
+are also presented. 
+The stiffness in general increases with the number of layers and decreases as 
+we move from P to As to Sb, whereas the anisotropy increases for both cases.
+}
+\label{table:cmatrix_data}
+\end{table}
+
+\clearpage
+\section{Group-V in-plane elastic extrema}
+\label{sec:2d_profiles_extrema}
+
+\begin{table}[htb!]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrr|rrrrr|rrrrr}
+\hline\hline
+&$Y_{\min}$&$\theta$&$Y_{\max}$&$\theta$&$\left<Y\right>$
+&$G_{\min}$&$\theta$&$G_{\max}$&$\theta$&$\left<G\right>$
+&$\nu_{\min}$&$\theta$&$\nu_{\max}$&$\theta$&$\left<\nu\right>$\\
+\hline
+P\textsubscript{mono}   &17.1 & $69^{\degree}$ &72.4 & $0^{\degree}$ &36.4
+&20.9& $90^{\degree}$&42.2 &$45^{\degree}$&31.0&0.3& $31^{\degree}$&0.5
+&$63^{\degree}$&0.5\\
+P\textsubscript{bi}        &20.5 &$75^{\degree}$&85.6 &$0^{\degree}$&44.4
+&28.1& $90^{\degree}$&49.2& $45^{\degree}$&37.8
+&0.31& $34^{\degree}$&0.5& $68^{\degree}$&0.4\\
+P\textsubscript{bulk}       &34.2& $87^{\degree}$&166.4& $0^{\degree}$&85.7
+&64.9 &$87^{\degree}$&92.4 &$45^{\degree}$&74.5
+&0.2& $36^{\degree}$ &0.5& $75^{\degree}$&0.3\\
+\hline
+As\textsubscript{mono}  &-2.1 &$90^{\degree}$&30.5& $18^{\degree}$&12.7
+&10.4 &$77^{\degree}$&13.8 &$45^{\degree}$&11.2
+&0.2 &$39^{\degree}$&0.9 &$90^{\degree}$&0.4\\
+As\textsubscript{bi}    &9.7& $90^{\degree}$&56.0 &$0^{\degree}$&31.0
+&23.0 &$78^{\degree}$&28.6& $45^{\degree}$&24.3
+&0.4 &$40^{\degree}$&0.6& $90^{\degree}$&0.5\\
+As\textsubscript{bulk}  &10.9 &$90^{\degree}$&105.1 &$20^{\degree}$ &55.0
+&44.4&$73^{\degree}$&51.1& $45^{\degree}$&66.7
+&0.3 &$40^{\degree}$&0.7& $90^{\degree}$ &0.4\\
+\hline
+Sb\textsubscript{mono}&1.4 &$90^{\degree}$&24.4 &$22^{\degree}$&12.6
+&8.9 &$45^{\degree}$&13.6 &$90^{\degree}$&9.4
+&0.3 &$43^{\degree}$&0.8& $90^{\degree}$&0.6\\
+Sb\textsubscript{bi}        &2.6 &$90^{\degree}$&31.6&$33^{\degree}$&16.3
+&11.8 &$45^{\degree}$&19.5 &$90^{\degree}$&12.8
+&0.2&$42^{\degree}$&0.8& $90^{\degree}$&0.5\\
+Sb\textsubscript{bulk}  &12.4 &$90^{\degree}$&58.9& $30^{\degree}$&35.4
+&28.1& $59^{\degree}$&28.2& $45^{\degree}$&63.2
+&0.2& $41^{\degree}$&0.6& $90^{\degree}$&0.4\\
+\hline\hline
+\end{tabular}
+}
+\caption{
+Summary of the minima and maxima 
+of the Hill-averaged in-plane 
+Young's modulus $Y\left(\theta\right)$ (GPa),  
+shear modulus $G\left(\theta\right)$ (GPa), 
+and Poisson's ratio $\nu\left(\theta\right)$ 
+as well as the angle $\theta$ 
+with respect to the $\vec{x}$-direction (zigzag) 
+at which they occur in degrees,
+and their in-plane averages.
+}
+\label{table:2d_extrema}
+\end{table}
+
+%BP EXP DATA
+\clearpage
+\section{Black phosphorus experimental data}
+\label{sec:bp_experimental_data}
+
+
+\begin{table}[htb!]
+\centering
+\begin{tabular}{ll}
+\hline\hline
+Volume fraction (\%) & Young's Modulus (MPa) \\
+$0 	\pm0$ 		&$551\pm118$\\
+$0.037\pm0.002$ 	&$418\pm152$\\
+$0.055\pm0.003$ 	&$629\pm123$\\
+$0.073\pm0.004$ 	&$466\pm78$\\
+$0.110\pm0.005$	&$635\pm53$\\
+\hline
+$0.037\pm0.002$	&$632\pm217$\\
+$0.055\pm0.003$	&$712\pm85.2$\\
+$0.073\pm0.004$ 	&$757\pm120$\\
+$0.11\pm0.01$ 		&$824\pm194$\\
+$0.183\pm0.01$ 	&$726\pm139$\\
+$0.294\pm0.01$ 	&$930\pm135$\\
+\hline\hline
+\end{tabular}
+\caption{
+Summary of the experimental data associated with 
+the analysis in section~\ref{sec:comparison_to_exp}. 
+%
+The Young's modulus (MPa) of the BP:PVC 
+composite was measured while varying the 
+volume fraction ($\%$) of the BP nano-flakes.
+%
+The data on top were acquired from the small nano-flakes 
+with mean-length $L_s=130\pm111$~nm, 
+and the data on the bottom were from the large nano-flakes 
+with mean-length $L_l=2260\pm1000$~nm. 
+}
+\label{table:bp_exp_data}
+\end{table}
+
+
+%SUMMARY OF ELECTRONIC PROPERTIES
+\clearpage
+\section{Summary of electronic properties}
+\label{sec:elec_properties}
+
+\begin{table}[htb!]
+\centering
+\begin{tabular}{lrrrrr}
+\hline\hline
+&$E_g$ (eV) &$Me_{\Gamma-X}$&$Me_{\Gamma-Y}$&$Mh_{\Gamma-X}$&$Mh_{\Gamma-Y}$\\
+\hline
+P\textsubscript{mono}	&0.9			&1.25(1)&0.16(1)&2.8(2)&0.14(1)\\
+As\textsubscript{mono}	&$0.15^\star$	&1.16(1)&0.26(1)&1.09(1)&0.18(2)\\
+Sb\textsubscript{mono}	&$0.2^\star$	&1.10(1)&0.28(1)&1.04(1)&0.19(2)\\
+\hline
+P\textsubscript{bi}		&0.4			&1.41(1)&0.19(1)&1.21(3)&0.15(2)\\
+As\textsubscript{bi}		&0.45		&1.15(1)&0.24(1)&0.94(4)&0.17(2)\\
+Sb\textsubscript{bi}		&$0^\dagger$	&1.16(1)&0.39(1)&0.99(4)&0.33(4)\\
+\hline
+P\textsubscript{bulk}		&$0^\ddagger$	&-&0.37(2)&-&0.21(2)\\
+As\textsubscript{bulk}	&$0^\ddagger$	&-&0.36(1)&-&0.30(3)\\
+Sb\textsubscript{bulk}	&$0^\ddagger$	&-&-&-&-\\
+\hline\hline
+\end{tabular}
+\caption{ 
+Kohn-Sham band gaps (eV), 
+indicating the indirect semiconducting ($\star$), 
+semi-metallic ($\dagger$) 
+and metallic ($\ddagger$) states, 
+as well as the charge-carrier 
+effective masses ($m_0$) 
+for each phase of P, As, Sb.
+}
+\label{table:bandgaps}
+\end{table}
+
+\clearpage
+\section{Summary of electronic transitions}
+\label{sec:elec_transitions}
+
+\begin{table}[htb!]
+\centering
+\resizebox{0.75\textwidth}{!}{%
+\begin{tabular}{lllr}
+\hline\hline
+&Transition&Direction&Strain (\%)\\
+\hline
+P\textsubscript{bi}     &D Gap $\to$ SM\textsuperscript{$\triangle$}
+&$xx$, $yy$&-5\\
+                    &D Gap $\to$ ID Gap     &$xx$, $yy$&+2\\
+P\textsubscript{bulk}       &SM
+                    $\to$ D Gap $\to$ ID Gap &$xx$, $yy$&+1$\to$+3\\
+                    &{SM$\to$SM\textsuperscript{$\triangledown$}}
+&{$xx$, $yy$}&{+2}\\
+\hline
+As\textsubscript{mono}  &ID $\to$ D Gap     &$xx$&-3\\
+                    &ID Gap $ \to$ SM       &$xx$&+2\\
+                    &ID Gap $ \to$ SM       &$xx$&+2\\
+                    &SM $\to$ SM\textsuperscript{$\triangle$}       &$xx$&+5\\
+As\textsubscript{bi}        &D Gap $\to$ ID Gap $\to$ D Gap &$xx$&+2$\to$+3\\
+                    &D Gap $\to$ ID Gap     & $yy$&-3,+2\\
+As\textsubscript{bulk}  &SM 
+                    $\to$ D Gap $\to $ ID Gap&$xx$&0$\to$+3\\
+                    &SM  
+                    $\to$ D Gap& $yy$&0$\to$+3\\
+                    &{SM$\to$SM\textsuperscript{$\triangledown$}}
+                    &{$xx$, $yy$}&{+1}\\
+\hline
+Sb\textsubscript{mono}  &ID Gap $\to$ SM        &$xx$&-2\\
+                    &ID Gap $\to$ D Gap $\to$
+SM\textsuperscript{$\triangle$}&$xx$&+2$\to$+4\\
+                    &ID Gap $\to$ SM        & $yy$&-2\\
+Sb\textsubscript{bi}        &SM $\to$ SM\textsuperscript{$\triangle$}   &$xx$&+4\\
+                    &Structural Transition  & $yy$&-3\\
+                    &SM $\to$ ID Gap        & $yy$&+3\\
+\hline\hline
+\end{tabular}
+}
+\caption{
+Summary of the  
+band gap transitions  
+including direct (D); 
+indirect (ID); metallic (M);
+and semi-metallic (SM), 
+in particular those that 
+indicate potential Dirac {states} ($\triangle$), 
+{Weyl states ($\triangledown$)}, 
+and the structural phase-transition.
+}
+\label{table:transitions}
+\end{table}
+
+
+
+
+
+\clearpage
+\section{Band structures figures}
+\label{sec:band_structure_figs}
+
+In this section we present 
+the band structures of the relaxed 
+P, As and Sb discussed in Chapter~\ref{ch:elec_prop_2d_mater}, 
+which were calculated without spin-orbit coupling (SOC).
+%
+Band structures of the strained phases may be 
+found in the supplemental material of Ref.~\cite{2053-1583-4-4-045018}.
+%
+%The primary figure on each page 
+%is the band structure 
+%of the fully relaxed phase, 
+%following which we present the 
+%band structures for 
+%increasing strain along 
+%$\varepsilon_{xx}$, 
+%$\varepsilon_{yy}$ 
+%and $\varepsilon_{xy}$.
+%%
+%Beginning with P 
+%we first present the monolayer ({Fig.~\ref{fig:monopbs}}), 
+%then the bilayer  ({Fig.~\ref{fig:bipbs}}), 
+%and finally the bulk  ({Fig.~\ref{fig:bulkpbs}}) 
+%band structures, 
+%following which we present 
+%those for As  ({Figs.~\ref{fig:monoasbs}-\ref{fig:bulkasbs}}) 
+%and Sb  ({Figs.~\ref{fig:monosbbs}-\ref{fig:bulksbbs}}) 
+%in the same fashion.
+%%
+%We highlight the potential 
+%Dirac or Weyl states in each case, 
+%which are recalculated including SOC 
+%and presented in Chapter~\ref{ch:elec_prop_2d_mater}.
+ 
+ 
+\begin{figure}[htb!]
+\centering
+\begin{subfloat}[Monolayer P]{
+\includegraphics[width=0.31\textwidth]{images/p/mono/xx/bs.0.00.pdf}}
+\end{subfloat}
+\begin{subfloat}[Bilayer P]{
+\includegraphics[width=0.31\textwidth]{images/p/bi/xx/bs.0.00.pdf}}
+\end{subfloat}
+\begin{subfloat}[Bulk P]{
+\includegraphics[width=0.31\textwidth]{images/p/bulk/xx/bs.0.00.pdf}}
+\end{subfloat}
+\\
+\begin{subfloat}[Monolayer As]{
+\includegraphics[width=0.31\textwidth]{images/as/mono/xx/bs.0.00.pdf}}
+\end{subfloat}
+\begin{subfloat}[Bilayer As]{
+\includegraphics[width=0.31\textwidth]{images/as/bi/xx/bs.0.00.pdf}}
+\end{subfloat}
+\begin{subfloat}[Bulk As]{
+\includegraphics[width=0.31\textwidth]{images/as/bulk/xx/bs.0.00.pdf}}
+\end{subfloat}
+\\
+\begin{subfloat}[Monolayer Sb]{
+\includegraphics[width=0.31\textwidth]{images/sb/mono/xx/bs.0.00.pdf}}
+\end{subfloat}
+\begin{subfloat}[Bilayer Sb]{
+\includegraphics[width=0.31\textwidth]{images/sb/bi/xx/bs.0.00.pdf}}
+\end{subfloat}
+\begin{subfloat}[Bulk Sb]{
+\includegraphics[width=0.31\textwidth]{images/sb/bulk/xx/bs.0.00.pdf}}
+\end{subfloat}
+\label{fig:relaxed_bandstructures}
+\caption[Band structures of relaxed group-V phases]
+{Band structures of relaxed group-V materials 
+in the monolayer, bilayer and bulk phases.}
+\end{figure}
+ 
+%
+%\clearpage
+%\begin{figure}[htb!]
+%\caption[Band structures of strained monolayer phosphorus]
+%{Band structures of strained {\bf monolayer phosphorus}.}
+%\centering
+%\includegraphics[width=0.20\textwidth]{images/p/mono/xx/bs.0.00.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xx/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xx/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xx/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xx/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xx/bs.-0.01.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xx/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xx/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xx/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xx/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xx/bs.0.05.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/p/mono/yy/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/yy/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/yy/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/yy/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/yy/bs.-0.01.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/p/mono/yy/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/yy/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/yy/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/yy/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/yy/bs.0.05.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xy/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xy/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xy/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xy/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xy/bs.-0.01.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xy/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xy/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xy/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xy/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/mono/xy/bs.0.05.pdf}
+%\label{fig:monopbs}
+%\end{figure}
+%
+%\clearpage
+%\begin{figure}[htb!]
+%\caption[Band structures of strained bilayer phosphorus]
+%{Band structures of strained {\bf bilayer phosphorus} 
+%with the predicted $\Gamma$-point Dirac states at 
+%$\varepsilon_{xx}=-5\%$ and $\varepsilon_{yy}=-5\%$ 
+%compressive strains circled in green.}
+%\centering
+%%
+%\includegraphics[width=0.20\textwidth]{images/p/bi/xx/bs.0.00.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xx/bs.-0.05.ed.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xx/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xx/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xx/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xx/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xx/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xx/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xx/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xx/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xx/bs.0.05.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/p/bi/yy/bs.-0.05.ed.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/yy/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/yy/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/yy/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/yy/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/yy/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/yy/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/yy/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/yy/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/yy/bs.0.05.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xy/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xy/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xy/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xy/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xy/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xy/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xy/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xy/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xy/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bi/xy/bs.0.05.pdf}
+%\label{fig:bipbs}
+%\end{figure}
+%
+%\clearpage
+%\begin{figure}[htb!]
+%\caption[Band structures of strained bulk phosphorus]
+%{Band structures of strained {\bf bulk phosphorus} 
+%with the potential Weyl  {states} at $+2\%$ uniaxial tensile strain 
+%circled in green.
+%%
+%{See Fig.~\ref{fig:p_bulk_highres} for more detail}.}
+%\centering
+%\includegraphics[width=0.20\textwidth]{images/p/bulk/xx/bs.0.00.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xx/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xx/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xx/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xx/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xx/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xx/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xx/bs.0.02.ed.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xx/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xx/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xx/bs.0.05.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/yy/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/yy/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/yy/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/yy/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/yy/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/yy/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/yy/bs.0.02.ed.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/yy/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/yy/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/yy/bs.0.05.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xy/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xy/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xy/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xy/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xy/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xy/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xy/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xy/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xy/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/p/bulk/xy/bs.0.05.pdf}
+%\label{fig:bulkpbs}
+%\end{figure}
+%
+%\clearpage
+%\begin{figure}[htb!]
+%\caption[Band structures of strained monolayer arsenic]
+%{Band structures of strained {\bf monolayer arsenic} 
+%with the predicted $\Gamma$-point Dirac  {state} at 
+%$\varepsilon_{xx}=+5\%$ tensile strain circled in green.
+%%
+%See Fig.~\ref{fig:as_bi_highres} for more detail.}
+%\centering
+%\includegraphics[width=0.20\textwidth]{images/as/mono/xx/bs.0.00.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xx/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xx/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xx/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xx/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xx/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xx/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xx/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xx/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xx/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xx/bs.0.05.ed.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/as/mono/yy/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/yy/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/yy/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/yy/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/yy/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/yy/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/yy/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/yy/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/yy/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/yy/bs.0.05.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xy/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xy/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xy/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xy/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xy/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xy/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xy/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xy/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xy/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/mono/xy/bs.0.05.pdf}
+%\label{fig:monoasbs}
+%\end{figure}
+%
+%\clearpage
+%\begin{figure}[htb!]
+%\caption[Band structures of strained bilayer arsenic]
+%{Band structures of strained {\bf bilayer arsenic}
+%with the predicted $\Gamma$-point Dirac  {state} at 
+%$\varepsilon_{xx}=-4\%$ compressive strain circled in green.
+%%
+%See Fig.~\ref{fig:as_bi_highres} for more detail.}
+%\centering
+%%
+%\includegraphics[width=0.20\textwidth]{images/as/bi/xx/bs.0.00.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xx/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xx/bs.-0.04.ed.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xx/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xx/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xx/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xx/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xx/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xx/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xx/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xx/bs.0.05.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/as/bi/yy/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/yy/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/yy/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/yy/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/yy/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/yy/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/yy/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/yy/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/yy/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/yy/bs.0.05.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xy/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xy/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xy/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xy/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xy/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xy/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xy/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xy/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xy/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bi/xy/bs.0.05.pdf}
+%\label{fig:biasbs}
+%\end{figure}
+%
+%\clearpage
+%\begin{figure}[htb!]
+%\caption[Band structures of strained bulk arsenic]
+%{Band structures of strained {\bf bulk arsenic} 
+%with the potential Weyl  {states} at $\varepsilon_{xx}=+1\%$ 
+%and $\varepsilon_{yy}=+1\%-2\%$ tensile strains circled in green.
+%%
+%See Fig.~\ref{fig:as_bulk_highres} for more detail.}
+%\centering
+%\includegraphics[width=0.20\textwidth]{images/p/bulk/xx/bs.0.00.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xx/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xx/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xx/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xx/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xx/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xx/bs.0.01.ed.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xx/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xx/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xx/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xx/bs.0.05.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/yy/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/yy/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/yy/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/yy/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/yy/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/yy/bs.0.01.ed.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/yy/bs.0.02.ed.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/yy/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/yy/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/yy/bs.0.05.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xy/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xy/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xy/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xy/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xy/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xy/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xy/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xy/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xy/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/as/bulk/xy/bs.0.05.pdf}
+%\label{fig:bulkasbs}
+%\end{figure}
+%
+%\clearpage
+%\begin{figure}[htb!]
+%\caption[Band structures of strained monolayer antimony]
+%{Band structures of strained {\bf monolayer antimony}
+%with the predicted non-symmetry-point Dirac states at 
+%$\varepsilon_{xx}\geq+3\%$ tensile strains circled in green.}
+%\centering
+%%
+%\includegraphics[width=0.20\textwidth]{images/sb/mono/xx/bs.0.00.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xx/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xx/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xx/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xx/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xx/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xx/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xx/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xx/bs.0.03.ed.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xx/bs.0.04.ed.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xx/bs.0.05.ed.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/yy/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/yy/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/yy/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/yy/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/yy/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/yy/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/yy/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/yy/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/yy/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/yy/bs.0.05.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xy/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xy/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xy/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xy/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xy/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xy/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xy/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xy/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xy/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/mono/xy/bs.0.05.pdf}
+%\label{fig:monosbbs}
+%\end{figure}
+%
+%\clearpage
+%\begin{figure}[htb!]
+%\caption[Band structures of strained bilayer antimony]
+%{Strained {\bf bilayer antimony} 
+%with the predicted non-symmetry-point Dirac  {states} at 
+%$\varepsilon_{xx}\geq+3\%$ tensile strains circled in green.
+%%
+%See Fig.~\ref{fig:sb_bi_highres} for more detail.}
+%\centering
+%\includegraphics[width=0.20\textwidth]{images/sb/bi/xx/bs.0.00.pdf}
+%\\
+%\setlength\tabcolsep{1.5pt}
+%\begin{tabular}{ccccc}
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xx/bs.-0.05.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xx/bs.-0.04.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xx/bs.-0.03.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xx/bs.-0.02.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xx/bs.-0.01.pdf}\\
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xx/bs.0.01.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xx/bs.0.02.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xx/bs.0.03.ed.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xx/bs.0.04.ed.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xx/bs.0.05.ed.pdf}
+%\\
+%\raisebox{1.2cm}{Phase}  &\raisebox{1.2cm}{Transition}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/yy/bs.-0.03.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/yy/bs.-0.02.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/yy/bs.-0.01.pdf}\\
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/yy/bs.0.01.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/yy/bs.0.02.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/yy/bs.0.03.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/yy/bs.0.04.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/yy/bs.0.05.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xy/bs.-0.05.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xy/bs.-0.04.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xy/bs.-0.03.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xy/bs.-0.02.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xy/bs.-0.01.pdf}\\
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xy/bs.0.01.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xy/bs.0.02.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xy/bs.0.03.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xy/bs.0.04.pdf}&
+%\includegraphics[width=0.19\textwidth]{images/sb/bi/xy/bs.0.05.pdf}
+%\end{tabular}
+%\label{fig:bisbbs}
+%\end{figure}
+%
+%\clearpage
+%\begin{figure}[htb!]
+%\caption[Band structures of strained bulk antimony]
+%{Band structures of strained {\bf bulk antimony}. 
+%Here we see an appreciable effect of shear-strain on the 
+%valence and conduction bands despite not opening a gap.}
+%\centering
+%\includegraphics[width=0.20\textwidth]{images/p/bulk/xx/bs.0.00.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xx/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xx/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xx/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xx/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xx/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xx/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xx/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xx/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xx/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xx/bs.0.05.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/yy/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/yy/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/yy/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/yy/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/yy/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/yy/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/yy/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/yy/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/yy/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/yy/bs.0.05.pdf}
+%\\
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xy/bs.-0.05.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xy/bs.-0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xy/bs.-0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xy/bs.-0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xy/bs.-0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xy/bs.0.01.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xy/bs.0.02.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xy/bs.0.03.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xy/bs.0.04.pdf}
+%\includegraphics[width=0.19\textwidth]{images/sb/bulk/xy/bs.0.05.pdf}
+%\label{fig:bulksbbs}
+%\end{figure}
+%
+
+
+
+
+

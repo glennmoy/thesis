@@ -1,0 +1,1816 @@
+%THE SELF INTERACTION ERROR
+
+\lett{I}{n the preceding Chapters}, 
+we extensively explored 
+a set of calculations on 
+puckered, two-dimensional materials, 
+and classified broad trends in 
+electro-mechanical properties 
+while making comparison 
+to experimental and computational data.
+%
+However, specific quantities, 
+particularly those derived 
+from electronic band structures, 
+were found to be 
+significantly miscalculated and, 
+in some instances, 
+in direct contradiction to experiments.
+%
+These erroneous findings are not just limited 
+to the group-V materials but 
+are a {pervasive} feature of all DFT 
+electronic structure calculations 
+when performed with {commonplace}  
+exchange-correlation (XC) functionals.
+
+In spite of the numerous, 
+yet justifiable, approximations 
+introduced in the formulation of Kohn-Sham DFT 
+in Chapter~\ref{ch:qm_simulation}, 
+none affect the qualitative reliability of calculations 
+more so than the approximation to the XC functional.
+%
+Although DFT is, 
+in principle, an exact theory, 
+the semi-empirical determination 
+of the XC functional used in practical calculations 
+fails to fully account for 
+the nuanced many-body effects 
+found in various chemical environments.
+%
+The infamous 
+many-body self-interaction error (SIE)~\cite{PhysRevB.23.5048,doi:10.1063/1.476859,doi:10.1063/1.463297,seminario1996recent,PhysRevB.56.16021}, 
+or delocalisation error~\cite{cohen2008insights,doi:10.1021/cr200107z,PhysRevLett.100.146401}, 
+and static correlation error (SCE)~\cite{seminario1996recent,PhysRevLett.87.133004,doi:10.1063/1.1589733,cohen2008insights,doi:10.1063/1.2987202,doi:10.1021/cr200107z,PhysRevB.77.115123,doi:10.1021/ct8005419,PhysRevA.88.030501,PhysRevA.85.042507}
+are extensively documented.
+%
+They are responsible for the systematic inaccuracies in 
+electronic and optical band gaps~\cite{QUA:QUA560280846}; 
+charge transfer excitation energies~\cite{doi:10.1021/jp9533077}; 
+chemical reaction barriers~\cite{JOHNSON1994100,JURSIC1996603,BAKER199553};
+binding energies~\cite{doi:10.1063/1.463297,doi:10.1021/jp972378y};
+and electric field responses~\cite{:/content/aip/journal/jcp/119/21/10.1063/1.1630011}.
+%
+In fact, the SIE is arguably the largest obstacle  
+{preventing DFT from attaining 
+the superior level of accuracy 
+possible in quantum chemistry calculations}. 
+%
+Understanding the origin of the SIE 
+is therefore crucial to the 
+construction of better XC functionals 
+and the development of practical remedies.
+
+%
+In this Chapter, 
+we shall describe the nature 
+and origin of the SIE and SCE 
+as they relate to the violation of conditions 
+on the exact XC functional 
+pertaining to fractional occupancies 
+and fractional spins, respectively~\cite{cohen2008insights}. 
+%
+We shall employ the examples of the 
+dihydrogen cation H$_2^+$ 
+and hydrogen molecule H$_2$ 
+as test models
+in order to {understand}  
+the effect of these errors 
+in strongly-correlated systems. 
+
+Moreover, 
+we will outline corrective procedures developed 
+to ameliorate these errors, 
+{beginning with the formative 
+work of Perdew and Zunger~\cite{PhysRevB.23.5048}, 
+in constructing    
+self-interaction corrections.
+%
+We will also emphasise  
+the efforts of Dabo and co-workers~\cite{PhysRevB.82.115121,PhysRevB.90.075135,PhysRevLett.114.166405,nguyen2017koopmans} 
+to restoring compliance with 
+the generalised Koopmans' condition~\cite{KOOPMANS1934104,PhysRev.123.420,PhysRevB.82.115121,PhysRevB.90.075135}.}
+%
+{
+We will then discuss 
+the establishment of the widely successful 
+DFT+$U$ (DFT + Hubbard $U$) method~\cite{PhysRevB.43.7570,PhysRevB.44.943,
+PhysRevB.48.16929,PhysRevB.50.16861,PhysRevB.52.R5467,PhysRevB.57.1505,
+PhysRevB.58.1201,PhysRevB.71.035105,QUA:QUA24521}
+for treating one-electron SIE, 
+which finds its roots in the 
+treatment of strongly-correlated Mott-Hubbard systems, 
+drawing from the work of 
+Anisimov~\cite{PhysRevB.43.7570,PhysRevB.44.943,PhysRevB.48.16929,PhysRevB.50.16861}, Dederichs~\cite{PhysRevB.41.514,PhysRevB.50.16861,PhysRevB.49.6736}, and Gunnarsson~\cite{PhysRevB.39.1708,PhysRevB.43.7570,PhysRevB.37.9919,0295-5075-7-2-013,PhysRevLett.65.1148,PhysRevLett.68.1900}, 
+and later revised by Liechtenstein and Dudarev~\cite{0953-8984-9-4-002,PhysRevB.52.R5467,PhysRevB.56.4900,0953-8984-9-35-010}, 
+and Himmetoglu and Cococcioni~\cite{PhysRevB.71.035105,PhysRevB.84.115108}.
+%
+We find that DFT+$U$ may be well placed 
+to correct one-electron SIE, 
+when supplied with a sufficient $U$ parameter 
+and under the appropriate population analysis.
+%
+However, it fails entirely 
+to restore Koopmans' compliance.
+%
+Finally, we propose that 
+the generalised DFT+$U$+$J$ functional 
+may potentially be used to correct the SCE.}
+
+%FRACTIONAL CHARGES
+\section{Fractional charges}
+\label{sec:fractional_charges}
+
+%%%
+Perdew~\cite{PhysRevLett.49.1691}, 
+Zhang~\cite{doi:10.1063/1.476859}, 
+and Ayers~\cite{Ayers2008}, 
+cumulatively demonstrated that the SIE 
+is best understood 
+from the perspective {of} non-integer particle numbers 
+ $E(N+q)$.
+%
+This formalism stems from 
+the well-known failure of the XC energy 
+$E_\textrm{xc}[n]$ 
+to sufficiently cancel 
+the Hartree energy $E_H[n]$ 
+in fractionally occupied orbitals~\cite{PhysRevLett.100.146401}.
+%
+A somewhat heuristic argument 
+can also be made by noting that the Hartree energy 
+in Eq.~\eqref{eq:classical_hartree_energy} 
+is incorrectly non-zero for one electron, 
+as noted by Fermi and Amaldi~\cite{fermi1934mem}.
+% 
+The exact energy of a 
+fractional-charge system  
+was proven in Ref.~\cite{PhysRevLett.49.1691} 
+to be a piece-wise linear interpolation
+between the adjacent integer values (Fig.~\ref{fig:h2+_sie})
+%
+\begin{equation}
+E(N+q)=(1-q)E(N)+qE(N+1) 
+\quad\mbox{for}\quad
+0\leq q\leq 1. 
+\label{eq:linearity_condition}
+\end{equation}
+%
+Deviations from this {\it linearity condition} 
+are, therefore, indicative of a residual SIE 
+that is affiliated with a spurious curvature   
+in the total-energy vs particle number profile, 
+as illustrated in Fig.~\ref{fig:h2+_sie}.
+
+ \begin{figure}[th!]
+ \centering
+ \includegraphics[height=0.494\textwidth]{images/h2+_sie.pdf}
+ \caption[SIE of a H atom as the deviation from piece-wise linearity]
+ {The calculated SIE of a H atom 
+ is shown by the deviation 
+ of the PBE total-energy (dashed) 
+ from the correct piece-wise linearity (solid)
+ between integer particle number.}
+ \label{fig:h2+_sie}
+ \end{figure}
+%%%
+
+
+The concept of non-integer electrons  
+makes very little sense from a chemical perspective, 
+as no fractionally-charged systems exist in nature, 
+yet they provide a useful contrivance  
+for the diagnosis of XC functionals.
+%and are indirectly accessible in systems 
+%comprising {an odd number of} electrons.
+%
+The study of SIE, therefore, 
+is often {constructed} from the dissociation
+of homo-nuclear diatomic ions.
+%namely H$_2^+$, He$_2^+$, and F$_2^+$.
+%
+{While H$_2^+$ is not a strongly-correlated system, 
+it is the simplest 
+one-electron system lacking in any  
+extraneous multi-reference 
+and static correlation error effects, 
+and thus permits a systematic analysis 
+of the SIE relevant only to 
+the underlying XC functional.
+%
+Moreover, 
+the exact binding curve can be calculated  
+with the same code and pseudopotential 
+by omitting contributions 
+from the Hartree and XC potentials, 
+and therefore allows a direct 
+comparison between energies.
+
+The binding curve of H$_2^+$, 
+calculated in {\sc ONETEP}
+with a hard ($0.65$~a$_0$ cutoff) 
+norm-conserving pseudopotential~\cite{PhysRevB.41.1227}, 
+{a PBE XC functional}, 
+$10$~a$_0$ NGWF cutoff radius, 
+and open boundary conditions~\cite{:/content/aip/journal/jcp/110/6/10.1063/1.477923}, 
+is presented in Fig.~\ref{fig:h2+_total_energy}.
+%
+{We note that any attempt to extend our 
+bond-length interval beyond $8.5$~a$_0$, 
+in this and subsequent calculations, 
+resulted in numerical instabilities 
+due to the near-degeneracy of 
+the Kohn-Sham $\sigma$ and $\sigma^*$ 
+eigenstates, and shown here are  the results only
+of well-converging calculations.}
+
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/h2+_total_energy.pdf}
+\caption[Binding energy curve of H$_2^+$]
+{Binding energy of H$_2^+$ 
+calculated with exact (solid) and PBE (dashed) XC functionals.
+%
+{The reference energy for each curve 
+is that of the  isolated H atom calculated with 
+the corresponding XC functional.}
+%
+The significant failure of PBE functional 
+is evident in the dissociation limit.}
+\label{fig:h2+_total_energy}
+\end{figure}
+%
+%In the dissociation limit, 
+%the physical solution 
+%is a linear combination of states 
+%composed of alternately filled H atoms 
+%%
+%\begin{equation}
+%\Psi\sim 1s_A + 1s_B
+%\end{equation}
+
+\edit{The occupancy of each H atom, 
+calculated respectively from the exact and PBE 
+1$s$ orbital subspace projectors, 
+closely match the KS orbitals 
+and are reasonably well described 
+as seen in Fig.~\ref{fig:h2+_occ}.
+%
+The subspace occupancy acquires values greater 
+than one half due to the overlap of the orbitals, 
+which results in double-counting of the occupancy.
+%
+Furthermore, 
+when the KS density is not 
+completely enclosed by the subspace orbitals,  
+particularly for the exact calculations, 
+the resulting charge spillage causes 
+the subspace occupancy to be less than one half.}
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/h2+_occupancy.pdf}
+\caption[Occupancy of H atom in dissociating H$_2^+$]
+{Average total occupancy of the H atoms in dissociating H$_2^+$ 
+calculated with exact (solid) and PBE (dashed) 
+and PBE+$U$ (open circles) XC functionals.
+%
+The population analysis was performed on the 
+1$s$ orbital subspace projectors, 
+which closely match the KS orbitals.}
+\label{fig:h2+_occ}
+\end{figure}
+%
+
+The spurious repulsion between the symmetrically charged ions 
+is then {caused} by the {semi}-local 
+PBE XC functional (since $E_\textrm{xc}[n]\leq 0$),
+which significantly lowers the total-energy.
+%
+The superfluous repulsion 
+imposes artificial electron delocalisation, 
+manifested by the curvature 
+of the total-energy vs occupancy profile, 
+shown in Fig.~\ref{fig:h2+_sie}, 
+and {is} the reason 
+for an incorrect total-energy.
+%
+%In fact, it is clear that 
+%the SIE is most potent where 
+%the occupancy is $1/2$, 
+%in the dissociation limit, 
+%and least concerning where the occupancy 
+%is near $1$ at short bond-lengths.
+%
+Moreover, 
+the importance of fractional charges 
+in chemical processes such as 
+charge transfer, molecular binding 
+and spectroscopic properties,  
+{alludes to} the effect of SIE 
+in these scenarios as well,   
+for which many remedies 
+have been proposed.
+
+
+%ONE ELECTRON SIC
+\section{One-electron self-interaction correction}
+\label{sec:one_electron_sic}
+
+Over the years, 
+a number of methods have been devised 
+for correcting many-body SIE~\cite{doi:10.1021/ja8087482,
+doi:10.1063/1.3269030,
+doi:10.1063/1.3269029,
+PhysRevLett.100.146401,
+RevModPhys.80.3,
+doi:10.1021/ct8005419,
+PhysRevB.67.125109,
+PhysRevB.71.035105,
+PhysRevB.71.205210,
+doi:10.1063/1.2387954,
+0953-8984-19-10-106206,
+PhysRevB.78.125116,
+PhysRevB.77.155106,
+doi:10.1063/1.452616,
+PhysRevB.82.115121}, 
+many of which take direct inspiration 
+from that proposed by Perdew and Zunger 
+(PZ)~\cite{PhysRevB.23.5048}.
+%
+PZ first laid out a {formalism for} a 
+self-interaction correction (SIC) 
+based on the individual removal of 
+one-electron SIE 
+from fully-occupied spin-polarised 
+KS-orbitals 
+$\{\psi_{i\sigma}\}$, 
+with occupancies 
+$n_{i\sigma}=\left|\psi_{i\sigma}\right|^2$, 
+via a correction term to the total-energy 
+given by
+%
+\begin{align}
+E_\textrm{PZ}&=E_\textrm{DFT}+\sum_{i\sigma}\Delta_{i\sigma}^\textrm{SIC} \nonumber\\[0.5em]
+\mbox{with}\quad
+\Delta_{i\sigma}^\textrm{SIC}
+&=E_H[n_{i\sigma}]+E_\textrm{xc}^\textrm{approx}[n_{i\sigma},0].
+\end{align}
+%
+{Here, $E_\textrm{xc}^\textrm{approx}[n_{i\sigma},0]$ 
+is the approximate exchange energy functional 
+where one spin-channel 
+has an occupation $n_{i\sigma}$ 
+and the other is empty.}
+%
+This corrective approach, 
+based on the removal of 
+single-orbital SIE from a system, 
+became a popular precept for 
+the treatment of many-body SIE~\cite{doi:10.1063/1.2204599,doi:10.1063/1.2176608}.
+%for which a formal mathematic description 
+%remains elusive.
+%
+The PZ SIC 
+produced remarkable 
+improvements for single atoms, 
+but tended to over-correct the SIE 
+in polyatomic systems, 
+leading to inaccurate binding energies 
+and under-estimated bond-lengths~\cite{PhysRevA.55.1765,PhysRevB.82.115121,doi:10.1021/cr200107z}.
+%
+This result prompted   
+the development of several modifications~\cite{doi:10.1063/1.2387954,doi:10.1063/1.2176608,doi:10.1063/1.2204599,doi:10.1063/1.2566637} 
+that scaled down the correction term 
+by a factor $\alpha$
+%
+\begin{equation}
+E_{\alpha PZ}=E_\textrm{PZ}+\alpha\left(E_\textrm{PZ}-E_\textrm{DFT}\right), 
+\end{equation}
+%
+which yielded modest improvements.
+%
+Regardless, 
+{an initial} drawback 
+of orbital-dependent SIC, 
+such as those used by PZ, 
+is that the Hamiltonians are no longer invariant 
+under unitary transformations, 
+and so precluded 
+the treatment of periodic systems,
+such as crystals and extensive molecules~\cite{RevModPhys.80.3}.
+%
+{
+Later work by 
+Svane and Gunnarsson~\cite{PhysRevB.37.9919,0295-5075-7-2-013,PhysRevLett.65.1148,PhysRevLett.68.1900}, 
+and Szotek and Temmerman~\cite{PhysRevB.47.4029,SZOTEK199119,PhysRevB.47.11533,PhysRevB.52.R14316,PhysRevLett.79.3970,PhysRevB.71.205109}, 
+extended the method to include the treatment of solids.}
+
+
+%KOOPMANS COMPLIANCE
+\section{Koopmans' compliance}
+\label{sec:koopmans_condition}
+
+%The SIE is not restricted to 
+%the miscalculation of total-energies 
+%but can also adversely effect 
+%other quantities such as 
+%ionisation energies and band gaps.
+%
+The basis of all chemical reactions 
+relies on the addition and removal of electrons 
+in a system.
+%
+The chemical potential\footnote{$\mu$ 
+also acts as the Lagrange multiplier 
+conserving particle number 
+in Eq.~\eqref{eq:hk_total_energy_functional}}
+$\mu$ quantifies the difficulty 
+of this process 
+and is defined as the derivative of 
+the total-energy $E(N)$
+with respect to particle number $N$ 
+for a fixed external potential $v$
+%
+\begin{equation}
+\mu_N=\left(\frac{\partial E(N)}{\partial N}\right)_v.
+\end{equation}
+%
+For exact functionals, 
+%where the linearity condition in Eq.~\eqref{eq:linearity_condition} holds, 
+the chemical potential assumes 
+constant values between 
+adjacent integer particle numbers 
+(shown in Fig.~\ref{fig:h2+_sie}), 
+given by the first ionisation energy $I_N$ 
+and electron affinity $A_N$, respectively, 
+for a neutral atom
+%
+\begin{equation}
+\mu_N=\left\{\begin{array}{c} 
+-I_N=E(N)-E(N-1)\\
+-A_N=E(N+1)-E(N)
+\end{array}\right. .
+\end{equation}
+%
+Mulliken's electronegativity 
+is defined as the average chemical potential 
+at a given occupancy 
+%
+\begin{equation}
+\chi_N=\frac{I_N+A_N}{2} = \frac{E(N-1)-E(N+1)}{2}
+\end{equation}
+%
+and dictates the tendency 
+of the atom 
+to gain or lose electrons 
+in chemical reactions.
+%
+Meanwhile, 
+the fundamental gap 
+for extended solids 
+is the difference of these quantities 
+%
+\begin{align}
+\epsilon_N^\textrm{gap}&=I_N-A_N\nonumber\\
+				&=[E(N-1)-E(N)]-[E(N)-E(N-1)]\nonumber\\
+				&=E(N-1)+E(N+1)-2E(N)
+\end{align}
+%
+and plays a key role in 
+charge transfer, 
+electronic structure 
+and the energetics 
+of defects and surfaces.
+%
+In molecules, 
+the corresponding quantity is 
+the Pearson hardness~\cite{parr1983absolute}.
+%
+
+%Cohen {\it et al.}~\cite{PhysRevB.77.115123} 
+%showed that the extension of this procedure to the KS DFT formalism, 
+%under an in-variational ground-state potential $v_\textrm{gs}$,
+%modified the particle number $\delta n_i$ 
+%in the frontier ground-state orbits $\{\psi_i^\textrm{gs}\}$
+%%
+%\begin{equation}
+%\mu=\left(\frac{\partial E[\rho(\br)]}{\partial N}\right)
+%=\left(\frac{\partial E[\{\psi_i^\textrm{gs},n_i\}]}{\partial n_i}\right)_{\{\psi_i^\textrm{gs}\}}=\varepsilon_f, 
+%\end{equation}
+%%
+%namely, 
+%the highest occupied molecular orbital (HOMO) 
+%and the lowest unoccupied molecular orbital (LUMO).
+%%
+%Invoking Janak's theorem~\cite{PhysRevB.18.7165} 
+%then allows for the 
+%HOMO and LUMO KS eigenvalues 
+%to be directly interpreted 
+%as the chemical potentials $\mu_N$.
+
+
+A critical, 
+and perhaps defining, 
+characteristic of a system free from SIE is 
+its compliance with {the generalised} Koopmans'  
+theorem~\cite{KOOPMANS1934104,PhysRev.123.420,PhysRevB.82.115121,PhysRevB.90.075135}, 
+which states that, 
+{for a given system,} 
+the energy of the 
+highest occupied molecular orbital (HOMO) 
+is precisely the negative of the ionisation energy 
+$\epsilon_\text{HOMO}=-I$.
+%
+In a one-electron system, 
+such as  H$_2^+$, 
+this implies that the total-energy and the 
+occupied Kohn-Sham eigenvalue $\varepsilon$
+should differ only by the ion-ion energy.
+%BY VIRTUE OF EQUATION BLAH IN CHAPTER 2
+%
+Thus, the binding curve of H$_2^+$ 
+should be equivalently accessible 
+by calculating either the total-energy directly, 
+or by using the occupied eigenvalue 
+with the expression  
+$E = \varepsilon + E_\textrm{ion-ion}$.
+%
+Fig.~\ref{fig:h2+_eigenvalues} 
+illustrates the strikingly poor 
+compliance of KS DFT with 
+Koopmans' condition and is, 
+yet another, 
+well-documented 
+consequence of SIE~\cite{PhysRevB.82.115121,
+doi:10.1063/1.3269030,
+doi:10.1021/ct8005419,
+PhysRevB.90.075135,
+PhysRevB.81.205209}.
+%
+%The KS eigenvalues have no physical basis really
+%
+%Nonetheless, 
+%the KS HOMO is, in fact, 
+%physically well established~\cite{PhysRevLett.49.1691} 
+%but much of the physical reproducibility 
+%relies heavily on the quality of the XC functional utilised, 
+%in particular its ability to uphold 
+%the linearity condition in Eq~\eqref{eq:linearity_condition}, 
+%the failure of which implies a SIE.
+%
+%On the other hand, 
+%the KS 
+%lowest unoccupied molecular orbital (LUMO)  
+%energy  
+%bears no physical meaning at all~\cite{PhysRevB.77.115123} - 
+%even when computed with an `exact' functional -  
+%since the conventional DFT procedure 
+%is concerned only with occupied orbitals.
+%%
+%This is resoundingly 
+%apparent in Fig.~\ref{fig:h2+_eigenvalues} 
+%where the LUMO eigenvalues of both 
+%the PBE and exact functionals 
+%fail to establish a physically meaningful, 
+%or even well-behaved, profile.
+%%
+%This result serves as a sobering  
+%reminder of the practical limitations of KS DFT 
+%to the study of ground-state properties alone.
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/h2+_eigenvalues.pdf}
+\caption[Eigenvalue-derived binding energy of H$_2^+$]
+{Binding energy of H$_2^+$ 
+derived from the KS occupied HOMO eigenvalue 
+calculated with exact (solid) and PBE (dashed) XC functionals, 
+relative to total-energy of an isolated H atom 
+{with the respective functional}.
+ %
+The inability of the PBE functional to replicate 
+the exact HOMO is another effect of the SIE.}
+ \label{fig:h2+_eigenvalues}
+ \end{figure}
+%%%
+
+Motivated by the explicit restoration 
+of Koopmans' condition 
+as a remedy for SIE,  
+Dabo~{\it et al}~\cite{PhysRevB.82.115121,PhysRevB.90.075135,PhysRevLett.114.166405,nguyen2017koopmans} 
+constructed a PZ-type SIC, 
+termed $\alpha$NK.
+%
+Instead of removing single-orbital SIE, 
+the $\alpha$NK correction to the total-energy 
+is a measure of the 
+unphysical occupation dependence 
+of the orbital eigenvalue energies 
+in the frozen-orbital approximation
+%
+\begin{align}
+&E_{\alpha\textrm{NK}}=E_\textrm{DFT}+\alpha_\textrm{NK}\Pi_{i\sigma}^u(f) \nonumber \\[0.5em]
+\mbox{with}\quad&
+\Pi_{i\sigma}^u(f)= \int^{f_{i\sigma}}_0\ df' \left[\epsilon_{i\sigma}^u(f)-\epsilon_{i\sigma}^u(f')\right], 
+\end{align}
+%
+{for which they define their 
+generalised Koopmans' condition as 
+%
+\begin{equation}
+\Pi_{i\sigma}^u(f)= 0
+\quad\mbox{where}\quad
+0\leq f\leq 1.
+\end{equation}}
+%
+Here, the orbital screening is accounted for 
+by the coefficient $\alpha^\textrm{NK}$.
+%
+The $\alpha$NK method 
+offers significant improvement 
+in atomic and molecular 
+ionisation energies, 
+photoemission energies, 
+binding energies 
+and molecular bond-lengths, 
+avoiding the over-binding tendency of PZ~\cite{PhysRevB.82.115121}, 
+{and has recently been extended 
+to solids~\cite{nguyen2017koopmans}.}
+%
+
+
+%STRONGLY CORRELATED SYSTEMS
+\section{Strongly correlated systems}
+\label{sec:strong_correlation}
+
+In addition to the practical application of 
+a single-particle SIC in atoms and finite molecules, 
+the emergence of SIE in extended systems, 
+comprising first-row transition-metals or lanthanide ions, 
+warrants a similarly measured treatment.
+%
+Indeed, 
+many of these compounds 
+boast considerable technological and biological significance 
+in photovoltaics~\cite{Kasirga2012,PhysRevB.90.165142}, 
+high-temperature superconductors~\cite{Dagotto257},
+energy storage~\cite{ADMA:ADMA200903328,Zhou2016}, 
+and biochemistry~\cite{doi:10.1021/jz3004188,C2CP41836C}, 
+where much of the chemically-relevant 
+interactions concern the 
+highly-localised $3d$ or $4f$ valence electrons.
+%
+These states tend to exhibit strong correlation 
+as a result of their spatial confinement, 
+and are hence very much outside the scope  
+of approximate XC functionals.
+
+While there is no strict definition 
+for strongly correlated systems, 
+they are typically characterised  
+by a correlation energy comparable 
+with the kinetic or Hartree energies  
+$E_c[n]\sim U_H[n]$ or $E_c[n]\sim T_s[n]$. 
+%
+{
+Meanwhile, 
+Rahm and Hoffman have 
+recently proposed a useful metric for 
+quantifying different types of chemical bonds~\cite{doi:10.1021/jacs.5b12434},
+which may prove to be a plausible measurement  
+of correlation energy in solids.}
+%Rahm and Hoffman~\cite{doi:10.1021/jacs.5b12434}, 
+%meanwhile, 
+%have recently proposed a useful metric for 
+%quantifying different types of chemical bonds, 
+%via a parameter $Q$.
+%%
+%They find that the absolute value of $Q$ 
+%is directly proportional to 
+%the correlation energy present in the bonds 
+%when compared against a series of similar molecules.
+%%
+%Going forward, 
+%this $Q$-term may prove to be a plausible measurement  
+%of correlation energy in solids.}
+
+As a result of invoking 
+approximate XC functionals, 
+the incurred electron delocalisation 
+often produces results 
+that are both quantitatively and qualitatively 
+inconsistent with experiments, 
+including
+{underestimated} local moments, 
+{misclassified} Mott-Hubbard insulators 
+and inaccurate electric field responses.
+%
+The treatment of the many-body SIE 
+in these cases
+is concerned with the restoration 
+of piece-wise linearity 
+in the total-energy functional 
+with respect to the localised-orbital occupancy, 
+much in the spirit of PZ SIC.
+%
+{
+The modification of PZ-SIC 
+to the treatment of solids 
+was later enabled~\cite{PhysRevB.37.9919,0295-5075-7-2-013,PhysRevLett.65.1148,PhysRevLett.68.1900,PhysRevB.47.4029,SZOTEK199119,PhysRevB.47.11533,PhysRevB.52.R14316,PhysRevLett.79.3970,PhysRevB.71.205109,0953-8984-21-4-045604}, 
+where Stengel and Spaldin~\cite{PhysRevB.77.155106} 
+advocated the implementation of Wannier functions, 
+and rotationally invariant correction functionals 
+in general.}
+%
+In the following section, 
+we will discuss {one such correction 
+that is widely renowned, 
+known as the} DFT+$U$ method, 
+which seeks to correct SIE 
+when it is attributed to 
+such highly-localised regions.
+
+%DFT+U METHOD
+\section{The DFT+{$U$} method}
+\label{sec:dft+u_method}
+
+A widely established and 
+computationally efficient~\cite{PhysRevB.85.085107} 
+scheme for correcting SIE, 
+when it may be appropriately 
+attributed to highly-localised orbitals, 
+is the DFT+$U$ 
+method~\cite{PhysRevB.43.7570,PhysRevB.44.943,
+PhysRevB.48.16929,PhysRevB.50.16861,PhysRevB.52.R5467,PhysRevB.57.1505,
+PhysRevB.58.1201,PhysRevB.71.035105,QUA:QUA24521}, 
+{which we have adopted in this dissertation   
+as the preferred approach for correcting SIE}.
+%
+Initially formulated   
+by Anisimov and co-workers~\cite{PhysRevB.43.7570,PhysRevB.44.943,PhysRevB.48.16929,PhysRevB.50.16861} 
+from the tight-binding Anderson model~\cite{PhysRev.124.41}, 
+its initial purpose was to restore  
+the Mott-Hubbard effects 
+absent in the LDA description of
+transition-metal oxides.
+
+In order to confine the electron charge-density 
+to the localised-orbitals, 
+in which it is assumed 
+the correlated electrons interact more strongly 
+compared to the electrons in the surrounding bath, 
+the DFT total-energy 
+is supplemented by an explicit 
+on-site $d-d$ Coulomb energy term, 
+given by
+%
+\begin{equation}
+E_\textrm{Hub}=\frac{U}{2}\sum_{i\neq j,j}^{\textrm{sites}}n_in_j
+{\quad\mbox{where}\quad
+\hat{n}_i=\hat{c}_i^\dagger\hat{c}_i}.
+\end{equation}
+%
+{
+The $d$-shell occupancies $\{n_i\}$ 
+are the number operators 
+defined by the creation and annihilation operators 
+on the subspace~\cite{PhysRev.124.41}, 
+$\hat{c}_i^\dagger$ and $\hat{c}_i$, 
+respectively.}
+%
+The on-site interactions described by $E_\textrm{Hub}$, however, 
+are already present in an average sense 
+in the total-energy $E_\textrm{DFT}$, 
+stemming from the cumulative interaction 
+between the total number 
+of $d$ electrons present $N=\sum n_i$.
+%
+The proto-DFT+$U$ functional
+was therefore constructed from the addition 
+of subsidiary $d-d$ interaction energies 
+to the KS total-energy functional,  
+mitigated by the removal of the 
+average on-site Coulomb energy 
+in terms of the double counting correction $E_\textrm{dc}$
+%
+\begin{align}
+E[n(\br)]&=E_\textrm{DFT}[n(\br)]+E_\textrm{Hub}-E_\textrm{dc}\nonumber\\[0.5em]
+&=E_\textrm{DFT}[n(\br)]+\frac{U}{2}\sum_{i,j\neq i,}^{\textrm{sites}}n_in_j-\frac{U}{2}N(N-1).
+\label{eq:hubbard1}
+\end{align}
+%
+Here $n(\br)$ represents 
+the conventional KS electron density. 
+%
+The resulting functional in Eq.~\eqref{eq:hubbard1} 
+invariably awarded better 
+experimental agreement to the calculation of  
+transition-metal oxides~\cite{PhysRevB.44.943,PhysRevB.48.16929},   
+and transition-metal impurities~\cite{PhysRevB.49.6736,PhysRevB.50.16861}.
+%
+Nonetheless, 
+the functional was still orbital dependent  
+and sensitive to the choice of basis 
+representing the localised electrons.
+
+A rotationally-invariant form
+was later established 
+by Liechtenstein {\it et al}~\cite{PhysRevB.52.R5467,PhysRevB.56.4900,0953-8984-9-35-010} 
+in terms of the elements of 
+a subspace occupancy matrix 
+of the localised orbitals 
+$\{n_{mm'}^{I\sigma}\}$,
+given by  
+%
+\begin{equation}
+%E_\textrm{DFT+$U$}[n(\br),\{n_{mm'}^{I\sigma}\}]
+%=E_\textrm{DFT}[n(\br)]
+E_U[\{n_{mm'}^{I\sigma}\}]=E_\textrm{Hub}[\{n_{mm'}^{I\sigma}\}]
+-E_\textrm{dc}[\{n^{I\sigma}\}].
+\label{eq:hubbard2}
+\end{equation}
+%
+The occupancy matrix, 
+for Hubbard site $I$, 
+is constructed from 
+the projection of the KS density matrix 
+onto the manifold of 
+localised orbitals 
+$\{\varphi^I_m\}$, 
+%also known as the 
+%{\it Hubbard projectors},
+%
+\begin{equation}
+n_{mm'}^{I\sigma}=\bra{\varphi^I_m}\hat{\rho}^{\sigma}\ket{\varphi^I_{m'}}
+\quad\mbox{with}\quad
+\hat{P}^I_{mm'}=\ket{\varphi^I_{m}}\bra{\varphi^I_{m'}}, 
+\end{equation}
+%
+which also defines the idempotent 
+Hubbard projection operator $\hat{P}^I$, 
+where 
+$\hat{P}^I=\hat{P}^{I2}$.
+%
+The localised subspaces are usually 
+pre-defined for corrective treatment,
+having been deemed responsible 
+for the dominant SIEs on the basis of physical intuition
+and experience, 
+although a further level of 
+self-consistency over subspaces 
+is also possible~\cite{PhysRevB.82.081102}.
+
+The Hubbard energy correction   
+is then evaluated from the 
+sum over the screened Coulomb interactions $V$ 
+between all on-site orbitals, 
+and is evaluated as follows
+%
+\begin{align}
+E_\textrm{Hub}[\{n^{I\,\sigma}_{mm'}\}]
+&=\frac{1}{2}\sum_{\{m\},\, I\sigma}\left\{V_{mm''m'm'''}^In^{I\sigma}_{mm'}n^{I\bar\sigma}_{m''m'''}\right.\nonumber \\[0.5em]
+&+\left(V_{mm''m'm'''}^I- V_{mm''m'''m'}^I\right)\left.n^{I\sigma}_{mm'}n^{I\sigma}_{m''m'''}\right\}.
+\label{eq:e_hub}
+\end{align}
+%
+The terms in Eq~\eqref{eq:e_hub} 
+respectively correspond to 
+spin off-diagonal Coulomb repulsion, 
+spin on-diagonal Coulomb repulsion, 
+and spin on-diagonal exchange.
+%
+The Coulomb matrix elements 
+of a given site $I$ 
+are expressed in terms of 
+renormalised Slater integrals 
+%
+%\bra{m,m''}\hat{V}_{ee}\ket{m',m'''}
+%
+\begin{equation}
+V_{mm''m'm'''}^I=\sum_{k=0}^{2l}a_k(m,m',m'',m''')F^k 
+\label{eq:slater_integrals}
+\end{equation}
+%
+for angular momentum quantum number $l$ 
+and magnetic quantum number $m$ 
+where $\alpha_k$ are given by
+%
+\begin{equation}
+a_k(m,m',m'',m''')=\frac{4\pi}{2k+1}\sum^{k}_{q=-k}\bra{lm}{Y}_{kq}\ket{lm'}\bra{lm''}{Y}^*_{kq'}\ket{lm'''}.
+\label{eq:coefficients}
+\end{equation}
+%
+\edit{The Slater integrals over the spherical harmonics 
+are then defined as follows~\cite{slater1960quantum}
+%
+\begin{equation}
+\bra{lm}{Y}_{kq}\ket{lm'} = \int Y^*_{lm}(\br)Y_{kq}(\br)Y_{lm'}(\br)\ d\br.
+\end{equation}}
+
+%
+Following the procedure in 
+Refs.~\cite{PhysRevB.71.035105}~\&~\cite{PhysRevB.84.115108},
+to simplify matters,  
+we concern ourselves only 
+with the lowest-order non-zero polar terms 
+between $m$ and $m'$, i.e.
+$V_{mm'mm'}$ and $V_{mm'm'm}$.
+%Is V^I_{mmm'm'} = 0 because or orthogonality between Ys?
+%
+Thus, the sum over interaction terms in  
+Eq.~\eqref{eq:e_hub} 
+may be approximated by the expansion 
+%
+\begin{align}
+E_\textrm{Hub}%[\{n^{I\,\sigma}_{mm'}\}]
+&\approx\frac{1}{2}\sum_{I\sigma}\sum_{mm'}\left\{V^I_{mm'mm'}n_{mm}^{I\sigma}n_{m'm'}^{I\bar\sigma}+V^I_{mm'm'm}n_{mm'}^{I\sigma}n_{m'm}^{I\bar\sigma}\right.\nonumber \\[0.5em]
+&\left.+(V^I_{mm'mm'}-V^I_{mm'm'm})(n_{mm}^{I\sigma}n_{m'm'}^{I\sigma}-n_{mm'}^{I\sigma}n_{m'm}^{I\sigma})\right\}.
+\label{eq:e_hub_reduced}
+\end{align}
+%
+For $d$-electrons, 
+the sum over $k$ 
+in Eq.~\eqref{eq:slater_integrals} 
+runs over 
+$F^0$, $F^2$ and $F^4$ 
+(and $F^6$ for $f$-electrons), 
+hence, the average on-site 
+Coulomb and exchange interactions 
+are 
+%
+\begin{align}
+&U^I=\frac{1}{(2l+1)^2}\sum_{m,m'}V_{mm'mm'}^I=F^0\nonumber\\[0.5em]
+\mbox{and}\quad&
+J^I=\frac{1}{2l(2l+1)}\sum_{m\neq m',m'}V_{mm'm'm}^I=\frac{F^2+F^4}{14}.
+\label{eq:interaction_parameters}
+\end{align}
+%\begin{align}
+%\bra{m,m'}V_{ee}\ket{m,m'}&=a_0(m,m,m',m')F^0+a_2(m,m,m',m')F^2+a_4(m,m,m',m')F^4\\
+%					&=4\pi|\bra{lm}Y_{kq}\ket{lm'}|^2F^0\\
+%					&=F^0
+%\end{align}
+%
+%then summing this over the $2l+1$ orbitals
+%\begin{equation}
+%\sum_{m,m'}\bra{m,m'}V_{ee}\ket{m,m'}=\sum_{m=-l}^l\sum_{m'=-l}^l\bra{m,m'}V_{ee}\ket{m,m'}=(2l+1)^2F^0
+%\end{equation}
+%
+Using these definitions, 
+we construct the aforementioned 
+double-counting correction 
+in terms of the total subspace occupancy 
+$N^{I\sigma}=\sum_{m} n^{I\sigma}_{mm}$
+for site $I$ and spin $\sigma$,
+%$E_\textrm{dc}$ as
+%
+\begin{align}
+E_\textrm{dc}&=\frac{1}{2}\sum_{I}U^IN^{I}(N^{I}-1)-\frac{1}{2}\sum_{I\sigma}J^IN^{I\sigma}(N^{I\sigma}-1)\nonumber\\[0.5em]
+&=\frac{1}{2}\sum_{I\sigma}\left\{(U^I-J^I)\left[N^{I\sigma}(N^{I\sigma}-1)\right]+U^IN^{I\sigma}N^{I\bar\sigma}\right\}.
+\label{eq:double_counting}
+\end{align}
+%
+Finally, substituting Eqs.~\eqref{eq:e_hub_reduced}~\&~\eqref{eq:double_counting} 
+into Eq.~\eqref{eq:hubbard2}, 
+we arrive at the full expression 
+for the Hubbard correction 
+%
+\begin{align}
+E_U
+&=\frac{1}{2}\sum_{I\sigma}\sum_{mm'}\left\{V^I_{mm'mm'}n_{mm}^{I\sigma}n_{m'm'}^{I\bar\sigma}+V^I_{mm'm'm}n_{mm'}^{I\sigma}n_{m'm}^{I\bar\sigma}\right.\nonumber \\[0.5em]
+&\left.+(V^I_{mm'mm'}-V^I_{mm'm'm})(n_{mm}^{I\sigma}n_{m'm'}^{I\sigma}-n_{mm'}^{I\sigma}n_{m'm}^{I\sigma})\right\}\nonumber \\[0.5em]
+&-\frac{1}{2}\sum_{I\sigma}\left\{(U^I-J^I)\left[N^{I\sigma}(N^{I\sigma}-1)\right]+U^IN^{I\sigma}N^{I\bar\sigma}\right\}.
+\end{align}
+%
+We may simplify this equation further 
+by re-expressing the 
+total occupancy $N^{I\sigma}$ 
+in terms of the constituent matrix elements 
+%
+\begin{align}
+E_U
+&=\frac{1}{2}\sum_{I\sigma}\sum_{mm'}\left\{V^I_{mm'mm'}n_{mm}^{I\sigma}n_{m'm'}^{I\bar\sigma}+V^I_{mm'm'm}n_{mm'}^{I\sigma}n_{m'm}^{I\bar\sigma}\right.\nonumber \\[0.5em]
+&\left.+(V^I_{mm'mm'}-V^I_{mm'm'm})(n_{mm}^{I\sigma}n_{m'm'}^{I\sigma}-n_{mm'}^{I\sigma}n_{m'm}^{I\sigma})\right.\nonumber \\[0.5em]
+&-\left.(U^I-J^I)(n^{I\sigma}_{mm}n^{I\sigma}_{m'm'}-n^{I\sigma}_{mm'}\delta_{mm'})-U^I n^{I\sigma}_{mm}n^{I\bar\sigma}_{m'm'}\right\}, 
+\end{align}
+%
+and grouping terms 
+according to their dependence on such 
+%
+\begin{align}
+E_U
+&=\frac{1}{2}\sum_{I\sigma}\sum_{mm'}\left\{(V^I_{mm'mm'}-U^I)n_{mm}^{I\sigma}n_{m'm'}^{I\bar\sigma}\right.\nonumber \\[0.5em]
+&+\left(V^I_{mm'mm'}-U^I+V^I_{mm'm'm}-J^I\right)n_{mm}^{I\sigma}n_{m'm'}^{I\sigma}\nonumber \\[0.5em]
+&+(U^I-J^I)n^{I\sigma}_{mm}\delta_{mm'}\nonumber\\[0.5em]
+&-(V^I_{mm'mm'}-V^I_{mm'm'm})n_{mm'}^{I\sigma}n_{m'm}^{I\sigma}\nonumber \\
+&+\left.V^I_{mm'm'm}n_{mm'}^{I\sigma}n_{m'm}^{I\bar\sigma}\right\}.
+\end{align}
+%
+Finally, we may simplify the expression again 
+by replacing the orbital-dependent terms 
+$V^I_{mm'mm'}$ and $V^I_{mm'm'm}$ 
+by their respective scalar averages 
+$U^I$ and $J^I$, 
+which yields
+%
+\begin{align}
+E_U
+&=\frac{1}{2}\sum_{I\sigma}\sum_{mm'}\left\{(U^I-J^I)(n^{I\sigma}_{mm'}\delta_{mm'}-n_{mm'}^{I\sigma}n_{m'm}^{I\sigma})+J^In_{mm'}^{I\sigma}n_{m'm}^{I\bar\sigma}\right\}\nonumber\\[0.5em]
+%&=\sum_{I\sigma}\sum_{m}\frac{U^I-J^I}{2}\left(n^{I\sigma}_{mm}-\sum_{m'}n_{mm'}^{I\sigma}n_{m'm}^{I\sigma}\right)+\frac{J^I}{2}\sum_{mm'}n_{mm'}^{I\sigma}n_{m'm}^{I\bar\sigma}
+&=\frac{1}{2}\sum_{I\sigma}\left\{(U^I-J^I)\mbox{Tr}\left[\hat{n}^{I\sigma}-\hat{n}^{I\sigma}\hat{n}^{I\sigma}\right]
++J^I\textrm{Tr}\left[\hat{n}^{I\sigma}\hat{n}^{I\bar\sigma}\right]\right\},
+\label{eq:dft+u+j_functional}
+\end{align}
+%
+and completes the full 
+DFT+$U$+$J$ functional 
+for Hubbard site $I$ 
+in terms of the spin-dependent 
+occupancy matrices $\hat{n}^{I\sigma}$.
+
+
+To simplify the utilisation and 
+transparency of the Hubbard functional, 
+many practitioners tend to ignore 
+unlike-spin interactions 
+by setting the exchange term $J^I$ to zero~\cite{PhysRevB.79.035103} 
+(thereby omitting magnetic interaction), 
+or equivalently,   
+incorporating $J^I$ into the $U$-term 
+to compose an effective parameter~\cite{PhysRevB.57.1505,PhysRevB.71.035105,PhysRevB.79.035103} 
+$U^I_\textrm{eff}=U^I-J^I$~\footnote{Alternatively, it is not uncommon
+for $J^I$ to be set to $\sim$1~eV.}, 
+which simplifies 
+Eq.~\eqref{eq:dft+u+j_functional} 
+even more 
+%
+\begin{equation}
+E_U[\{\hat{n}^{I\sigma}\}]=\sum_{I\sigma}\frac{U^I}{2}\textrm{Tr}\left[\hat{n}^{I\sigma}-\hat{n}^{I\sigma}\hat{n}^{I\sigma}\right], 
+\label{eq:dft+u_functional}
+\end{equation}
+%
+resulting in the functional 
+most commonly  
+implemented in the DFT+$U$ formalism.
+%
+The intended effect of 
+Eq.~\eqref{eq:dft+u_functional} 
+becomes more clear if it 
+is represented in a basis 
+that diagonalises the occupancy matrix 
+%
+\begin{equation}
+\hat{n}^{I\sigma}v^{I\sigma}_i=q^{I\sigma}v^{I\sigma}_i
+\quad\mbox{with}\quad
+0 \leq q_i^{I\sigma} \leq 1,
+\end{equation}
+such that the correction becomes
+%
+\begin{equation}
+E_U[\{\hat{n}^{I\sigma}\}]=\sum_{I\sigma}\sum_i\frac{U^I}{2}q^{I\sigma}(1-q^{I\sigma}) 
+\label{eq:dft+u_diagonal},
+\end{equation}
+%
+which is ensured because $\hat{n}$ is also idempotent\footnote{This is for the
+same reason the Kohn-Sham density matrix $\hat{\rho}$ is, see section~\ref{sec:density_matrix}}.
+%
+Here, Eq.~\eqref{eq:dft+u_functional} 
+is clearly imposing a penalty on 
+non-integer occupancies 
+in the localised orbitals $q^{I\sigma}$, 
+the strength of which is 
+tuned by the magnitude of the 
+$U$ parameter, 
+in order to restore the 
+linear behaviour of the 
+exact XC functional.
+%
+The correction thus favours 
+orbitals that are either 
+fully occupied 
+$q^{I\sigma}=1$, 
+or fully depleted 
+$q^{I\sigma}=0$, 
+and contributes a non-zero correction 
+{to the potential when $q^{I\sigma}\neq1/2$}, 
+which counteracts the SIE.
+
+This effect can be further examined 
+by constructing the DFT+$U$ potential 
+%
+\begin{align}
+\hat{V}_U
+=\frac{\delta E_U}{\delta\hat{\rho}}
+&=\sum_{I\sigma}\frac{U^I}{2}\left(\hat{P}^I-2\hat{P}^I\hat{\rho}^\sigma\hat{P}^I\right)\nonumber \\[0.5em]
+&=\sum_{I\sigma}\sum_{mm'}\frac{U^I}{2}\ket{\varphi^I_m}\left(\hat{1}-2\hat{n}^{I\sigma}_{mm'}\right)\bra{\varphi^I_{m'}}, 
+\end{align}
+%
+which is repulsive for occupancies 
+less than one half, 
+and attractive for occupancies 
+greater than one half, 
+thus incentivising idempotency 
+in the subspace occupancy matrix.
+% 
+This re-localisation process opens a gap 
+on the order of $U$
+between occupied and unoccupied 
+KS states, 
+thereby restoring the desired 
+Mott-Hubbard behaviour.
+%
+In practice, however,  
+the individual subspace occupancy matrices 
+do not attain binary eigenvalues, 
+and are only partially enforced, 
+since it competes with the idempotency condition 
+in the ground-state KS density-matrix $\hat{\rho}$, 
+which is strictly enforced.
+%
+
+%ONE ELECTRON DFT+U
+\subsection{A one-electron assessment of DFT+$U$}
+\label{sec:one_electron_dft+u}
+
+{
+It has been repeatedly stated~\cite{PhysRevB.44.943,PhysRevB.48.16929,PhysRevB.71.035105,PhysRevB.71.041102,PhysRevB.73.195107,PhysRevB.75.035115,:/content/aip/journal/jcp/145/5/10.1063/1.4959882,PhysRevLett.97.103001}, 
+or at least inferred, 
+that DFT+$U$ provides a sufficient 
+correction to one-electron SIE.
+%
+This claim, however, 
+has not been explicitly verified to our knowledge, 
+despite forming the basis for DFT+$U$ 
+as an SIE correction scheme.
+%
+In Chapter~\ref{ch:calculating_hubbard_u}, 
+we provide the first demonstration of this claim, 
+but for now let us explore the 
+effect of the DFT+$U$ functional on dissociating  H$_2^+$, 
+which we saw provided an emphatic example of one-electron SIE, 
+and investigate the effect of DFT+$U$ on this system.}
+
+Following the same procedure 
+described in section~\ref{sec:fractional_charges}, 
+we calculated the binding curve using the DFT+$U$ 
+functionality in {\sc ONETEP}~\cite{PhysRevB.85.085107}.
+%
+The $+U$ correction 
+was applied simultaneously to each atom,
+using a separate $1s$ pseudoatomic orbital (PAO) subspace
+centred on each, 
+generated from the occupied KS state 
+of the pseudopotential for neutral hydrogen 
+{with the PBE XC functional}.
+%
+The effect of the correction on 
+the binding energy 
+is evident in Fig.~\ref{fig:h2+_dft+u_total_energy}, 
+where the Hubbard $U$ parameter required to correct the
+PBE total-energy to the exact value, 
+ranges over approximately $8$~eV from the fully bonded to 
+dissociated limits.
+ %
+This result highlights the 
+importance of the chemical environment, 
+and not just the atomic species,
+in determining the $U$ parameters, 
+as was previously shown 
+in Refs.~\cite{doi:10.1063/1.3660353,
+doi:10.1063/1.4865831,PhysRevB.90.115105}.
+
+ \begin{figure}[th!]
+ \centering
+ \includegraphics[height=0.494\textwidth]{images/h2+_dft+u_total_energy.pdf}
+ \caption[Binding energy curve of H$_2^+$ with DFT+$U$]
+ {Binding energy of H$_2^+$ 
+ calculated with exact XC functional (solid) and DFT+$U$ with 
+$U= 0,\ 4,\ 8$~eV (dashed), 
+ relative to energy of isolated H atom.
+ %
+DFT+$U$ successfully resolves the SIE in the total-energy, 
+albeit for a bond-length dependent Hubbard $U$.}
+ \label{fig:h2+_dft+u_total_energy}
+ \end{figure}
+
+
+If we instead explore 
+the efficacy of DFT+$U$ 
+at restoring Koopmans' compliance, 
+we can inspect the eigenvalue-derived 
+total-energy as before, 
+but where we now concern ourselves 
+with the treatment of only the HOMO.
+%
+In Fig.~\ref{fig:h2+_dft+u_eigenvalue}, 
+we observe the egregious failure 
+of the DFT+$U$ scheme 
+when charged with the latter condition.
+%
+The non-compliance with  
+Koopmans' condition 
+broadly increases both with 
+bond-length and, 
+to one's surprise, 
+with the Hubbard $U$.
+%
+In fact, 
+the effect of DFT+$U$ on 
+the eigenvalue is lost entirely
+in the dissociated limit, 
+where both factors drive the 
+subspace occupancy to $1/2$, 
+at which point the $+U$ 
+potential vanishes. 
+
+ \begin{figure}[th!]
+ \centering
+ \includegraphics[height=0.494\textwidth]{images/h2+_dft+u_eigenvalue}
+ \caption[Eigenvalue-derived binding energy of H$_2^+$ with DFT+$U$]
+ {Binding energy of H$_2^+$ 
+derived from the KS HOMO eigenvalue
+ calculated with exact XC functional (solid) and DFT+$U$ with 
+$U= 0, 4, 8$~eV (dashed), 
+ relative to energy of isolated H atom.
+ %
+DFT+$U$ does not address the inaccuracy in the Kohn-Sham
+eigenvalue, or non-compliance with Koopmans' condition.}
+ \label{fig:h2+_dft+u_eigenvalue}
+ \end{figure}
+ 
+Across the binding curve, 
+we see that the Hubbard $U$ 
+required to enforce compliance
+with Koopmans' condition, 
+and that needed to attain the 
+exact total-energy typically differ substantially.
+ %
+The facile correction of the 
+total-energy of this system with DFT+$U$, 
+albeit with a varying but reasonable $U$ value, 
+is in sharp contrast with the 
+qualitative {failure} to correct 
+the occupied eigenvalue. 
+%
+Indeed, 
+the {vanishing eigenvalue correction} at dissociation 
+suggests an insufficiency in 
+the linear term of the DFT+$U$ formalism, 
+{the root of which lies in the 
+symmetric treatment of the linear and quadratic 
+terms in the double-counting correction  
+in Eq.~\eqref{eq:double_counting}}.
+%
+Going forward, 
+H$_2^+$ will serve as a 
+useful tool for benchmarking 
+the performance of 
+the DFT+$U$ methodologies, 
+since we have by now accumulated   
+a commanding understanding  
+of the behaviour of 
+SIE and Koopmans' condition 
+in this model system.
+%and the expected compensation 
+%of DFT+$U$ in those respects.
+
+
+%STATIC CORRELATION ERROR
+\section{Static Correlation Error}
+\label{sec:static_correlation_error}
+
+Another {important} source of error  
+that also permeates approximate DFT calculations 
+is the {\it static correlation error} (SCE).
+%
+The SCE is known to arise in DFT 
+when performing calculations on systems with 
+degenerate states~\cite{seminario1996recent,PhysRevLett.87.133004,doi:10.1063/1.1589733,cohen2008insights,doi:10.1021/cr200107z}, 
+such as those found in 
+strongly correlated systems, 
+transition-metal oxides,
+and chemical dissociation, 
+where it plays an equally pivotal role as the SIE 
+in their accurate description.
+%
+The SCE becomes particularly dominant in DFT 
+when the single Slater determinant wave function  
+is no longer a valid approximation.
+%
+For example, 
+the closed-shell dissociation of 
+H$_2$~\cite{doi:10.1063/1.1589733,doi:10.1063/1.1858371,
+PhysRevLett.87.133004,
+doi:10.1063/1.2747248,
+cohen2008insights} 
+is often used to illustrate SCE~\cite{cohen2008insights,doi:10.1021/cr200107z,doi:10.1063/1.2987202}, 
+which we shall now explore.
+
+We performed  non-spin-polarised 
+calculations of the dissociating H$_2$ molecule 
+in {\sc ONETEP} 
+using the DFT+$U$ functional 
+for $U=0,\ 2,\ 4$~eV, 
+with the same calculation parameters 
+as before in sections~\ref{sec:fractional_charges}~\&~\ref{sec:one_electron_dft+u}.
+%
+We then compared these results against 
+highly accurate binding energies 
+calculated in Ref.~\cite{sims2006high}, 
+which in turn used the full configuration interaction (FCI) 
+method described in Ref.~\cite{PhysRevA.4.908}.
+%
+Presented in Fig.~\ref{fig:H2_dft+u_energy} 
+are the resulting binding curves 
+where it is demonstrated that the 
+conventional PBE functional 
+performs reasonably well 
+for short bond-lengths, 
+but overestimates the total-energy 
+in the dissociation limit.
+%
+Furthermore, 
+positive $U$ values 
+serve only to make matters worse 
+by increasing the total-energy\footnote{
+Although, it appears that 
+selectively invoking negative $U$ values,  
+which would instead {\it encourage} delocalisation, 
+could correct the SCE 
+by haphazardly increasing the level of SIE.}.
+%
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/H2_dft+u_energy}
+\caption[Binding energy curve of H$_2$ with DFT+$U$]
+{Binding energy of {closed-shell} H$_2$ 
+calculated with FCI~\cite{sims2006high} (solid) and 
+DFT+$U$ with $U=0,\ 2,\ 4$~eV (dashed), 
+relative to energy of isolated H atoms, 
+{with the respective functionals}.
+%
+Positive $U$ values exacerbate the SCE 
+for all bond-lengths, in which case, 
+negative $U$ values may be required.}
+\label{fig:H2_dft+u_energy}
+\end{figure}
+%
+
+
+
+% %%%%%%%%%%%%%
+\edit{
+To understand what is happening in this instance, 
+let us consider the H$_2$ wave function 
+as constructed in Hartree-Fock theory 
+using molecular orbitals.
+%
+Around equilibrium, 
+the  H$_2$  bonding and anti-bonding orbitals 
+are constructed from a basis of 1$s$ atomic orbitals 
+centred on the atoms labelled $A$ and $B$  
+(up to a constant of normalisation) 
+respectively given as follows 
+%
+\begin{align}
+&{\sigma_{1s}(i,\alpha)}\sim \left({1s_A(i)}+{1s_B(i)}\right)\chi(\alpha)\\
+\quad\mbox{and}\quad
+&{\sigma_{1s}^*(i,\alpha)}\sim \left({1s_A(i)}-{1s_B(i)}\right)\chi(\alpha), 
+\end{align}
+%
+where $\chi(\alpha)$ denotes the spin component 
+of the wave function for electron $i$.
+%
+Thus, 
+the ground-state $^1\Sigma^+_g$ wave function 
+$\Psi_0$
+may be built from a single Slater determinant 
+of $\sigma_{1s}$ bonding orbitals 
+with an anti-symmetric spin component 
+%
+\begin{align}
+\Psi_{0}\sim 
+%\left| \begin{array}{cc}
+%{\sigma_{1s}(1,\uparrow)} & {\sigma_{1s}(1,\downarrow)}\\
+%{\sigma_{1s}(2,\uparrow)} & {\sigma_{1s}(2,\downarrow)}
+%\end{array}\right| 
+{\sigma_{1s}(1)}{\sigma_{1s}(2)}\left[\chi(\uparrow)\chi(\downarrow)-\chi(\downarrow)\chi(\uparrow)\right].
+\end{align}
+%
+If we now expand the spatial component of this expression  
+we find that the wave function comprises 
+terms attributed to both ionic and covalent states 
+%
+\begin{equation}
+\Psi_{0}\sim 
+\underbrace{1s_A(1)1s_A(2)+1s_B(1)1s_B(2)}_{\textrm{ionic}}
++\underbrace{1s_A(1)1s_B(2)+1s_A(2)1s_B(1)}_{\textrm{covalent}}, 
+\end{equation}
+%
+in which the electrons simultaneously 
+occupy one or both atoms, respectively.}
+
+\edit{Around equilibrium, 
+this single Slater determinant wave function 
+produces a more or less reasonable approximation 
+to the exact wave function and, 
+depending on the level of theory, 
+i.e., Hartree-Fock or DFT~\cite{doi:10.1021/cr200107z}, 
+it determines the binding energy 
+to a very reasonable accuracy 
+as shown in Fig.~\ref{fig:H2_dft+u_energy}.}
+
+\edit{
+As the bond-length increases, however, 
+this approximation clearly breaks down as the 
+the ionic terms contribute as 
+much to the construction of the wave function 
+as the covalent terms.
+%
+In other words, 
+the independent-particle approximation 
+maintains that the two electrons have equal 
+probability of occupying the same atom, 
+even as the bond-length increases to infinity. 
+%
+Physically, we know this to be false 
+as the electrons should be correlated 
+in such a way that they avoid each other  
+and localise on one atom each into dissociation.
+%
+The single Slater determinant approximation in Hartree-Fock 
+therefore neglects a large component of 
+the correlation that exists between the two electrons.}
+
+\edit{
+In the FCI, 
+this correlation is explicitly considered 
+as the wave function is built from a linear combination 
+of all allowed single determinants 
+$\Psi_{\textrm{CI}}=\sum_{I=0} a_I\Psi_I$, 
+where the coefficients $\{a_I\}$ 
+are optimised by a variational procedure.
+%
+In the case of the $^1\Sigma_g^+$ state of H$_2$,   
+it suffices to consider only the bonding singlet state $\Psi_0$ 
+and doubly-excited anti-bonding singlet state 
+$\Psi_1$~\cite{frank1999introduction}, 
+given by
+%
+\begin{align}
+\Psi_{1}\sim 
+%\left| \begin{array}{cc}
+%{\sigma_{1s}^*(1,\uparrow)} & {\sigma_{1s}^*(1,\downarrow)}\\
+%{\sigma_{1s}^*(2,\uparrow)} & {\sigma_{1s}^*(2,\downarrow)}
+%\end{array}\right| 
+{\sigma_{1s}(1)}^*{\sigma_{1s}(2)}^*\left[\chi(\uparrow)\chi(\downarrow)-\chi(\downarrow)\chi(\uparrow)\right].
+\end{align}
+%
+Thus, the FCI wave function 
+(expressed in terms of the 1$s$ orbitals only) 
+is simply expressed in terms of the adaptive 
+mixing of the ionic and covalent contributions
+%
+\begin{align}
+\Psi_{\textrm{CI}}
+&= a_0\Psi_0+a_1\Psi_1\nonumber \\
+&= (a_0+a_1)\underbrace{(1s_A(1)1s_A(2)+1s_B(1)1s_B(2))}_{\textrm{ionic}}\nonumber \\
+&\qquad+(a_0-a_1)\underbrace{(1s_A(1)1s_B(2)+1s_B(1)1s_A(2))}_{\textrm{covalent}}, 
+\label{eq:ci_wavefunction}
+\end{align}
+%
+which is optimised according to $a_0$ and $a_1$.
+%
+Around equilibrium, 
+one finds that $a_1\approx 0$, 
+while towards dissociation $a_1\approx -a_0$ 
+such that the exact binding energy 
+is calculated at all bond-lengths~\cite{doi:10.1021/cr200107z,sims2006high}.
+%
+The $\Psi_1$ state therefore introduces 
+the so-called {\it left-right correlation} 
+between the two electrons 
+that is inherently absent in the 
+single determinant construction.}
+%
+
+
+%%%%%%%%%%%%%%%%%%%
+
+\edit{While electron correlation is entirely absent in HF theory, 
+it is included to some extent in DFT via the PBE XC functional, 
+which is used to generate Fig.~\ref{fig:H2_dft+u_energy}, 
+in spite of the latter also utilising a single Slater determinant wave function.
+%
+Evidently, the PBE binding energy 
+ still exhibits SCE 
+and to understand its origins in DFT 
+in terms of the {\it density} 
+it is instructive to approach from the perspective of 
+fractional spins~\cite{doi:10.1063/1.2987202,doi:10.1021/cr200107z,PhysRevB.77.115123,doi:10.1021/ct8005419,PhysRevA.88.030501,PhysRevA.85.042507}, 
+similar to the diagnosis of SIE in terms of fractional occupancy.}
+
+{Let us consider therefore H$_2$ 
+hypothetically stretched to infinity, 
+at which point each atom accommodates one electron in total 
+that is equally split between spin-up and spin-down states.
+%
+This configuration, 
+in which only the covalent terms 
+in Eq.~\eqref{eq:ci_wavefunction} feature, 
+must in principle be equal in energy 
+to two fully spin-polarised H atoms at infinite bond-length, 
+as proven in Ref.~\cite{doi:10.1063/1.2987202}.}
+%
+
+{Approximate XC functionals, 
+such as the PBE functional in Fig.~\ref{fig:H2_dft+u_energy}, 
+fail to comply with this so-called {\it constancy condition}, 
+which states that, 
+for fixed occupancy, 
+the total-energy of a system  
+with $g$ degenerate states 
+is independent of the distribution 
+of spin-density among those states.
+%
+The violation of this condition 
+is thus responsible for the SCE 
+and is expressed mathematically 
+in Ref.~\cite{doi:10.1063/1.2987202} 
+as follows 
+%
+\begin{align}
+&E\left[\sum_{i=1}^g c_i\rho_i\right]=E[\rho_j]=E_0(N),\nonumber \\[0.5em]
+\quad\mbox{with}\quad&
+j=\{1,\cdots, g\}
+\quad\mbox{and}\quad
+\sum_{i=1}^g c_i=1, 
+\end{align}
+%
+which is illustrated in Fig.~\ref{fig:H2_sce} 
+to be maximised at half-spin occupancy.}
+%
+
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/H2_sce}
+\caption[SCE of a H$_2$ molecule as the deviation from piece-wise constancy]
+{The calculated SCE of a the H$_2$ molecule  
+ is shown by the deviation 
+ of the PBE total-energy (dashed) 
+ from the correct piece-wise constant behaviour (solid)
+ between integer spin-density .}
+\label{fig:H2_sce}
+\end{figure}
+
+%
+%Nonetheless, 
+%it is sometimes possible to acquire 
+%the exact total-energy in KS DFT  
+%by invoking constraints that to break 
+%the spin-symmetry of the orbitals 
+%{(before the Coulson-Fischer point~\cite{doi:10.1080/14786444908521726})}
+%using constrained-DFT~\cite{PhysRevB.94.035159}.
+%%
+%However, 
+%this type of constrained-DFT calculation~\cite{doi10.1021/cr200148b}  
+%(to be discussed further in the next Chapter)
+%can be prohibitively expensive to perform, 
+%and, not to mention, 
+%would invariably return incorrect 
+%time-averaged spin-densities, 
+%which may be the quantity of interest.
+%
+
+\edit{As we have previously shown, 
+the correction of SCE is possible 
+with multi-determinant FCI wave functions.
+%
+While the recent work of Alavi {\it et al} 
+have helped extend its application to 
+quite large systems~\cite{PhysRevB.85.081103,Booth2012} 
+it is nonetheless desirable 
+to have at hand a first-principles 
+DFT correction scheme.}
+%
+\edit{The unsuitability of the DFT+$U$ functional, 
+while correctly targeting fractional occupancies, 
+ultimately lies with the $U$ parameter itself, 
+which is a measure of the curvature with respect 
+to total occupancy and {\it not} magnetisation.
+%
+As such, it will not be conducive to correcting SIE 
+and other options must be explored.}
+
+%
+Indeed, 
+the $J$ parameter that couples occupancy matrices 
+of opposite spin in Eq.~\eqref{eq:dft+u+j_functional} 
+has been linked to linked to the curvature 
+of the total-energy with respect to magnetisation 
+in Ref.~\cite{PhysRevB.84.115108}, 
+and acts to penalise non-magnetic 
+ordering~\cite{PhysRevB.79.035103,PhysRevB.84.115108}.
+%
+Given this connection between $J$, the SCE, 
+and the parabolic deviations from 
+the constancy condition, 
+as in Fig.~\ref{fig:H2_sce},
+we postulate that $J$ may be the parameter we desire   
+to correctly restore the H$_2$ total-energy, 
+while retaining the physical spin-density.
+
+Let us therefore restrict our treatment to 
+un-like spin interactions only, 
+for which the DFT+$J$ functional 
+takes the form 
+%
+\begin{equation}
+E_{DFT+J}
+=E_\textrm{DFT}
++\sum_{I\sigma}\frac{J^I}{2}\textrm{Tr}\left[\hat{n}^{I\sigma}\hat{n}^{I\bar\sigma}\right].
+\label{eq:dft+j_functional} 
+\end{equation}
+%
+The spin-polarised calculations 
+of the H$_2$ binding curve, 
+for $J=0,\ 2,\ 4$~eV, 
+are presented in Fig.~\ref{fig:H2_dft+j_energy}, 
+in which it is evident 
+that positive $J$ values again 
+worsen the total-energy at all bond-lengths, 
+albeit in a slightly different way 
+to the DFT+$U$ functional in Fig.~\ref{fig:H2_dft+u_energy}.
+%
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/H2_dft+j_energy}
+\caption[Binding energy curve of H$_2$ with DFT+$J$]
+{Binding energy of {closed-shell} H$_2$ 
+calculated with CI (solid) and 
+DFT+$J$ with $J=0,\ 2,\ 4$~eV (dashed), 
+relative to energy of isolated H atoms.
+%
+Positive $J$ values also worsen the SCE 
+for all bond-lengths, but negative $J$ 
+values may alleviate the error.}
+\label{fig:H2_dft+j_energy}
+\end{figure}
+
+{This outcome can be understood 
+when $J$ is interpreted as the negative of 
+the energy curvature with respect to magnetisation~\cite{PhysRevB.84.115108},
+in which case applying a positive $J$ will only increase 
+the level of curvature present and 
+consequently increase the error.}
+%
+Although a range of negative $J$ values
+over the binding curve could hypothetically  
+alleviate the SCE {by removing this spurious curvature}, 
+we desire the means to calculate the 
+necessary $J$ values from first-principles 
+analogous to how the $U$ values may be 
+computed to treat SIE.
+
+Based on our discussion heretofore, however, 
+we would argue that the SIE and SCE of a given system 
+are likely to be intricately linked, 
+as both relate to the violation of physical conditions 
+pertaining to fractional orbital occupations.
+%
+Consequently, 
+we are unable to determine, as of yet, 
+exactly how the treatment of one error may affect the 
+other~\cite{doi:10.1021/cr200107z,doi:10.1080/00268976.2010.507227}, 
+e.g., favourably, adversely, or not at all as the case may be, 
+prior to the analysis of the particular system.
+%
+This will become an important 
+matter to consider when we pursue a ground-state 
+that is simultaneous free of SIE and SCE.
+
+
+%CONCLUSION
+\section{Conclusion}
+%
+
+In this Chapter, 
+we have outlined 
+the origins of the most pervasive errors 
+in approximate DFT, 
+namely the self-interaction error (SIE) 
+and static-correlation error (SCE), 
+which may be respectively attributed 
+to violations in the linearity and constancy conditions  
+obeyed by exact XC functionals.
+%
+In particular, 
+we have discussed how the SIE 
+is manifest in a spurious 
+curvature in the total-energy vs occupancy profile 
+which is attributed to fractional occupancies.
+%
+%This invariably leads to 
+%a many-body self-interaction 
+%and consequent electron delocalisation.
+%
+In the same context, 
+we explored how 
+the incorrect energy-derivatives between integer occupancies 
+is related to the 
+non-compliance of Koopmans' condition 
+of the HOMO eigenvalue.
+%
+
+
+We then outlined the motivation 
+and subsequent development 
+of the rotationally-invariant DFT+$U$+$J$ functional 
+and its potential for effectively correcting 
+single and many-body SIE 
+in strongly-correlated systems, 
+a claim which is widely accepted but 
+has not been explicitly verified.
+%
+However, we found DFT+$U$ 
+to be remarkably {unsuitable} for 
+restoring Koopmans' compliance 
+due to an {insufficient} linear-term.
+%
+{
+It appears that DFT+$U$, 
+in its current form, 
+is limited to the treatment of either 
+the total-energy or the eigenspectrum,
+since it cannot achieve both for a one-electron system.}
+%
+The choice of the Hubbard subspace 
+in the DFT+$U$ approach 
+is also non-incidental but, 
+for our purposes in this dissertation, 
+we have restricted ourselves 
+to using the well-known pseudoatomic orbitals (PSA).
+
+Finally, 
+we illustrated how SCE arises 
+from using a single Slater determinant wave function 
+and that explicit treatment of 
+electron correlation found in the FCI 
+are required for it to be adequately resolved.
+%
+In DFT, 
+the SCE arises in systems with degenerate valence states, 
+which tends to increase the total-energy, 
+and is quantified in terms of 
+the spurious curvature in the total-energy 
+with respect to subspace magnetisation.
+
+%An additional error, 
+%which we have neglected to discuss, 
+%is that proposed by by Burke {\it et al.}~\cite{PhysRevLett.111.073003}, 
+%which is exhibited in systems 
+%where the approximate XC functional 
+%performs sufficiently well  
+%but the error arises due to incorrect densities.
+%%
+%However this error shall not be discussed further.
+
+
+To conclude, 
+we have presented the 
+motivation and theoretical framework 
+for the DFT+$U$ method, 
+which is known to be an efficient and highly 
+effective many-body SIE correction scheme 
+that now finds routine application 
+in a diverse range of systems~\cite{QUA:QUA24521,
+doi:10.1021/jz3004188,
+PhysRevLett.113.086402,
+doi:10.1021/jp3107809,
+PhysRevB.93.085135}.
+%
+The versatility of the method 
+grants it widespread applicability 
+in a variety of software packages~\cite{PhysRevB.73.195107,PhysRevB.75.035115,PhysRevLett.97.103001}, 
+including {\sc ONETEP}~\cite{o2011optimised,PhysRevB.83.245124,PhysRevB.85.085107,PhysRevB.85.193101,PhysRevB.82.081102,PhysRevB.94.220104}.
+% 
+Furthermore, it attains the status 
+of an automated, first-principles
+method when it is provided with calculated 
+Hubbard $U$ parameters~\cite{0953-8984-9-4-002,
+PhysRevB.58.1201,PhysRevB.71.035105,
+PhysRevB.74.235113,QUA:QUA24521}
+(particularly at their self-consistency~\cite{PhysRevB.93.085135,
+PhysRevLett.97.103001,doi:10.1021/jp070549l}),
+the calculation of which, 
+from first-principles, 
+will be addressed in the 
+following Chapters.
+
+
+
+

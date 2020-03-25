@@ -1,0 +1,588 @@
+
+\lett{I}{t is the desire of} 
+every postgraduate student  
+to contribute meaningfully and fruitfully, 
+in a manner however small, 
+to the body of work cultivated   
+by their mentor, colleagues, 
+and predecessors.
+%
+In this dissertation, 
+we have strived, as much as possible, 
+to present a comprehensive and 
+coherent account of our modest research, 
+for both posterity and the hope 
+that it may contribute to new paths forward.
+%
+We now end with 
+a brief summary on the central findings of each Chapter 
+and a discussion on some potential avenues 
+for further research based on our research.
+
+
+%SYNOPSIS
+\section{Synopsis}
+
+We began our discussion in Chapter~\ref{ch:qm_simulation} 
+by outlining the chronology of 
+significant developments that gave rise to Kohn-Sham DFT, 
+which is now  routinely applied in contemporary research 
+in chemistry and materials science.
+%
+We highlighted the important consequences 
+of utilising approximate exchange-correlation functionals, 
+which includes, but is not limited to, 
+the qualitative mischaracterisation 
+of strongly-correlated systems 
+due to the onset of self-interaction (SIE) 
+and static correlation (SCE) errors.
+%
+Moreover, 
+we placed a special emphasis on 
+the exploitation of the near-sightedness of 
+quantum mechanical interactions~\cite{PhysRevLett.76.3168}, 
+which contributed to the development of 
+linear-scaling methods.
+%
+
+In Chapters~\ref{ch:mech_prop_2d_mater}~\&~\ref{ch:elec_prop_2d_mater} 
+we presented the results of a 
+comprehensive set of DFT calculations 
+on the puckered phase of 
+phosphorus, arsenic, antimony, 
+and their few-layer counterparts.
+%
+\edit{We discovered that 
+the mechanical properties of these materials 
+are well described by approximate DFT 
+and corroborate experimental measurements.
+%
+This enables further predictions 
+regarding the mechanical properties of these novel 2D materials, 
+such as their use in nano-composite materials~\cite{PMID:26469634,LI201617}, 
+to be made in confidence.}
+
+%
+The electronic properties, 
+on the other hand, 
+were found to be largely underestimated 
+with respect to the experimental values, 
+a result that is characteristic of the SIE.
+%
+Nonetheless, 
+we expect general trends in electronic behaviour 
+to be reliable and we made preliminary predictions 
+of possible Weyl and Dirac states in many of these structures.
+%
+\edit{
+Our preliminary results in this section 
+showcase the possible exciting directions 
+that developments in these materials 
+may take the near future such as in 
+high-mobility conductors~\cite{doi:10.1021/nn501226z,Kim723,doi:10.1063/1.4943548,Yao2013,Lu2016,Zhao2015,Lu2016,doi:10.1021/nl500935z}, 
+battery materials~\cite{doi:10.1021/jp302265n,Sun2015}, 
+transistors~\cite{Xia2014,Li2014} , 
+and catalysts~\cite{doi:10.1021/jp508618t,doi:10.1021/acs.jpcLetters5b01094}.
+%
+Indeed, 
+from our results we have shown that reasonable strains, 
+which are experimentally accessible, 
+provide a convenient mechanism 
+to attain exotic electronic behaviour in 
+the group-V materials without the need for doping.}
+
+
+In Chapter~\ref{ch:self_interaction_error}, 
+we explored the nature of the 
+SIE and SCE in greater detail.
+%
+In particular, 
+we discussed how they relate to violations of the 
+physical conditions obeyed by the exact functional, 
+namely piece-wise linearity and piece-wise constancy, 
+which may be respectively understood from the perspectives of 
+fractional occupancies and fractional spins.
+%
+We also discussed some historically successful 
+procedures to ameliorate these conditions 
+and recognised the noteworthy contributions 
+of Perdew and Zunger~\cite{PhysRevB.23.5048}, 
+and Dabo~\cite{PhysRevB.82.115121}.
+%
+In particular, 
+we note the efforts of the latter to 
+restore Koopmans' compliance, 
+as well as the widely successful 
+DFT+Hubbard $U$ (DFT+$U$) method~\cite{QUA:QUA24521}, 
+the marriage of which is a central focus of this thesis.
+%which has gained widespread popularity 
+%as a means to correcting one-electron SIE 
+%when it is attributed to highly localised electrons, 
+%typically the 3$d$ or 4$f$ orbitals.
+
+The calculation of Hubbard $U$ parameters from first-principles 
+in a code utilising direct minimisation 
+motivated the work discussed in Chapter~\ref{ch:calculating_hubbard_u}.
+%
+We outlined the challenges we faced 
+with the popular linear-response method  
+of Cococcioni and co-workers~\cite{PhysRevB.71.035105,PhysRevB.84.115108}
+and our approach for modifying it to surpass them.
+
+The calculated parameters were 
+accompanied by small statistical errors 
+and generalised easily to multi-electronic systems.
+%
+The DFT+$U$ calculations 
+performed on various strongly-correlated systems, 
+including bulk NiO and Cr$_2$O$_3$, 
+yielded results that greatly improved upon 
+the uncorrected DFT treatment 
+without exception and were in line with qualitative 
+and quantitative experimental data 
+provided by colleagues.
+%
+This showed that our method was highly robust,  
+readily applicable to a broad range of systems,  
+and capable of competing with other state-of-the-art methods.}
+
+\edit{A key advantage of our adapted method 
+is that the response functions, 
+and by extension the Hubbard $U$ and $J$ parameters, 
+are computed as ground-state properties of the system, 
+thereby elevating DFT+$U$ 
+to the status of a self-contained, 
+ground-state density-functional theory.
+%
+This was not the case beforehand 
+and precluded the direct comparison of 
+DFT+$U$ total energies needed for 
+computing thermodynamic quantities, 
+which were inherently ill-defined as a result.
+%
+The fact that the Hubbard $U$ parameter can now be 
+regarded as an implicit functional of the ground-state density 
+represents an important first step toward enabling this functionality 
+and will be a welcome upgrade for many 
+researchers in this field~\cite{PhysRevB.84.045115,doi:10.1021/cm702327g,PhysRevB.73.195107,PhysRevB.85.155208}.}
+
+We also drew upon the observations we made in 
+Chapter~\ref{ch:self_interaction_error} 
+to propose a similar procedure 
+for calculating the exchange parameter $J$.
+%
+\edit{The exchange parameters were also 
+determined very accurately and 
+were largely in line with values calculated 
+in previous studies.
+%
+These results were greatly encouraging 
+and provided a firm framework 
+as we progressed to establishing 
+self-consistency schemes for both parameters.}
+
+Our desire for a framework enabling the 
+direct comparison of DFT+$U$ total-energies 
+to facilitate the calculation of thermodynamic quantities, 
+was outlined in Chapter~\ref{ch:self_consistent_hubbard}.
+%
+We discussed how the comparability of total-energies 
+depends on the condition that the applied $U$ (or $J$) 
+is a functional of the DFT+$U$ ground-state density 
+to which it is applied.
+%
+We therefore extended the variational linear-response method 
+to allow the self-consistent calculation of $U$ and $J$.
+%
+Here, they became implicit functionals 
+of both the ground-state density and input parameters 
+and thereby provided a convenient mechanism 
+to identify the self-consistency scheme 
+that fully corrects the SIE.
+%
+The resulting output parameters 
+were also highly accurately resolved and 
+extensive investigation of the different 
+schemes applied to NiO allowed us to 
+identify the self-consistency schemes that 
+provided the best agreement with experiment, 
+which were also in line with our model predictions.
+%
+
+This approach was then used to correct the SCE  of H$_2$ 
+in the dissociating limit with a self-consistently calculated $J$, 
+which is the first instance that this parameter has been used in this manner.
+%
+\edit{
+We showed that not only was 
+a self-consistent $J$ capable 
+of quantifying and removing the SCE 
+in H$_2$ beyond the Coulson-Fischer point, 
+but a self-consistent scheme 
+was actually required to do so.
+%
+This confirmed our earlier empirical observation 
+that both $J$ and the SCE relate 
+to the total-energy curvature with respect to magnetisation 
+and indicates that a combined correction 
+of SIE and SCE may be possible.
+%
+However, more research is required to render 
+the scheme applicable for short bond-lengths.}
+
+\edit{Our findings in this section provide 
+new and interesting insights 
+toward the efficient first-principles correction 
+of SIE and SCE.
+%
+Our scheme is not only accurate and transferable, 
+but it is also applicable in direct minimisation 
+and SCF codes alike and, therefore, 
+has far reaching potential 
+to be useful across many platforms and 
+for a large variety of systems.}
+
+We then motivated our development of 
+a generalised DFT+$U$ functional 
+that allowed for the simultaneous treatment  
+of both SIE and non-compliance with Koopman's theorem 
+in Chapter~\ref{ch:non_linear_constraints}.
+%
+We first demonstrated that the 
+automatic removal of SIE in a system 
+by means of enforcing non-linear constraints 
+within constrained-DFT (cDFT) to be unfeasible, 
+even for a one-electron system.
+%
+\edit{This presented a surprising impasse 
+through which we make progress by 
+instead limiting the directions of methods 
+based on this strategy.}
+
+%
+Nevertheless, 
+we showed that a two-parameter DFT+$U$ functional 
+could correct both the total-energy and eigenvalue.
+%
+We then derived an approximate scheme 
+to calculate the $U_1$ and $U_2$ parameters 
+required to restore Koopmans' compliance  
+and correct SIE in a one electron system 
+with a generalised DFT+$U$ functional.
+%
+We provided the formulae with 
+the best self-consistent $U$ values 
+derived in Chapter~\ref{ch:self_consistent_hubbard}, 
+and proceeded to correct the total-energy 
+and eigenvalue for dissociating H$_2^+$ 
+to precisely the same accuracy.
+
+\edit{
+This very promising result   
+prompts the development of an 
+application to multi-electronic systems 
+where it would be useful for instance 
+in heterogeneous catalysis 
+and charge transfer calculations.}
+%
+%Supplementing this correction with a $J$ term 
+%may then possibly enable the simultaneous correction 
+%of three of the most fundamental and important sources of error 
+%in electronic structure calculations 
+%that is efficient, accurate and affordable.}
+\edit{
+Indeed, 
+we expect that the novel developments 
+made in this dissertation will contribute greatly towards the 
+high-throughput calculation of 
+thermodynamical quantities~\cite{doi:10.1021/cm702327g,CapdevilaCortada201558,PhysRevB.85.155208,PhysRevB.84.045115,PhysRevB.85.115104,PhysRevB.90.115105}, 
+reaction barriers~\cite{curtarolo,Curtarolo2012218,PhysRevX.5.011006}, 
+charge-transfer energies~\cite{martin2004electronic,PhysRevB.88.165112,PhysRevLett.95.146402,:/content/aip/journal/jcp/126/20/10.1063/1.2743004,doi:10.1021/jp9533077}, 
+and formation enthalpies.
+%
+These quantities are central 
+to the development of solutions to many of the challenges 
+we currently face in the 21$^{\textrm{st}}$ century
+in sustainable energy, 
+transport, 
+materials science, 
+and engineering.
+%
+We have therefore shown that there still lies much scope in the development of DFT+$U$ 
+and its utility in electronic structure methods has yet untapped potential   
+to provide more valuable and exciting contributions toward these endeavours.}
+
+
+
+%FUTURE WORK
+\section{Future work}
+
+Let us now briefly discuss 
+some of the possible future directions of research 
+based on the works presented in this dissertation.
+
+
+%DFT+U1+U2 and Koopmans
+
+It is clear that Koopmans' compliance 
+remains a vexing challenge 
+for the design of self-contained methods, 
+even for very sophisticated 
+exchange-correlation functionals 
+and correction schemes.
+%
+On the basis of our results in Chapter~\ref{ch:non_linear_constraints}, 
+a generalised functional, 
+such as our DFT+$U_1$+$U_2$, 
+presents an intriguing and very promising
+avenue of exploration for future methods.
+%
+
+If the proposed scheme described earlier 
+is applied to supplement an 
+existing DFT+$U$ calculation 
+that has already accurately 
+recovered the total-energy, 
+then it is sufficient to set $U = 0$~eV 
+in our approximate formulae of 
+Eq.~\eqref{eq:U1U2}.
+%
+This is because the SIE interaction has 
+already been treated by an appropriate $+U_0$ correction.
+%
+An approximately Koopmans-compliant  
+DFT+$U$ calculation may then be 
+performed by a simple change of parameters 
+%
+\begin{equation}
+(U_1,N_\textrm{DFT}U_2) \to \left(U_K,U_K\right), 
+\end{equation}
+%
+which only requires knowledge of 
+the ionised state $E[N-1]$.
+
+The scheme may also be generalised to 
+multi-orbital subspaces straightforwardly, 
+by replacing $N_\textrm{DFT}$ 
+with a sum over the eigenvalues of 
+$\hat{n}^I_\textrm{DFT}$, 
+given as follows 
+%
+\begin{equation}
+N_\textrm{DFT} \to \sum_{m}\left[\hat{n}^I_{mm'}\right]
+\quad\mbox{and}\quad
+N_\textrm{DFT}^2 \to \sum_{m}\left[\hat{n}^I_{mm'}\hat{n}^I_{m'm}\right], 
+\end{equation}
+%
+which ignores intra-subspace interactions 
+in the spirit of DFT+$U$.
+
+Finally, the approximation of constant $N_\textrm{DFT}$ 
+may be replaced by a linear-response approximation, 
+in terms of the response function $\chi$, 
+%
+\begin{equation}
+N_\textrm{DFT}\to \chi \textrm{Tr}[\hat{v}_\textrm{ext}\hat{P}]
+\end{equation}
+%
+or lifted entirely by means of
+a  parametrisation of the occupancies in terms of 
+$\textrm{Tr}\left[ \hat{v}_{U_1 U_2} \right] $ 
+and a numerical solution of 
+the resulting equations.
+%
+In this work, we have opened the door to 
+the possibility of designing other generalised functionals, 
+which may be motivated by the need for other specialised purposes 
+that are beyond the scope of the traditional DFT+$U$ functional.
+%
+The possibilities for such will only become apparent with time, 
+and will hopefully illuminate new paths in future research.
+
+%Indeed, 
+%we demonstrated in Chapter~\ref{ch:non_linear_constraints} 
+%that the conventional rotationally invariant DFT+$U$ functional 
+%is not equipped to enforce compliance with Koopmans' condition, 
+%even when provided with an adequate 
+%self-consistently calculated $U$.
+%
+%%The well-motivated, but potentially provocative, formulation of 
+%A generalised DFT+$U$ functional, 
+%%comprising Hubbard parameters $U_1$ and $U_2$, 
+%therefore presents an intriguing possibility 
+%to treat Koopmans' compliance as readily 
+%as the band gap from within the framework of  
+%well-established DFT+$U$ methods.
+
+
+%INVESTIGATION OF JIN VS JOUT
+On the basis of the modest success of 
+our self-consistency schemes for $U$, 
+we are obliged to investigate more thoroughly 
+the extension to the self-consistent $J$.
+%
+A puzzling outcome was the 
+facile agreement of the PBE+$J^{(2)}$ scheme 
+with the H$_2$ total-energy at dissociation, 
+where the expected $J_\textrm{eff}$ scheme 
+was clearly inappropriate.
+%
+We are hence motivated to investigate 
+the difference in the self-consistency calculation schemes 
+presented for the $U$ and $J$ terms, 
+in correcting the SIE and SCE, respectively.
+
+Furthermore,  
+the analysis of the 
+$U_\textrm{in}$ vs $U_\textrm{out}$ 
+and related procedures, 
+raises many questions about the 
+nature of the full 4-dimensional space described by  
+$U_\textrm{in}$, $U_\textrm{out}$, 
+$J_\textrm{in}$, and $J_\textrm{out}$.
+%
+We may ask, 
+what are the self-consistency schemes 
+arising from the intersections of each curve with the axes, 
+in particular the location of the point where 
+$U_\textrm{eff}=J_\textrm{eff}=0$.
+
+
+%U SPIN POLARISED
+The calculation of $U$ heretofore, 
+has only considered uniform  
+perturbations to both spins in a subspace.
+%
+An interesting generalisation of this, 
+which is currently being pursued by our colleague, 
+Edward Linscott, 
+is the calculation of a Hubbard $U$ matrix 
+indexed by spin instead of site.
+%separate perturbation of each spin 
+%while the potential of the other is kept fixed.
+%
+%In this method, 
+%the Dyson equation defined in Eq.~\eqref{eq:dyson_equation2} 
+%generalises to an operation of spin-indexed response matrices 
+%(similar to the treatment of inter-site responses~\cite{PhysRevB.71.035105,0953-8984-22-5-055602}), 
+%which result in a spin-indexed $U$ matrix. 
+\begin{equation}
+U^{\sigma\bar\sigma}=
+\left(\begin{array}{cc}
+F^{\uparrow\uparrow} & F^{\uparrow\downarrow} \\
+F^{\downarrow\uparrow} & F^{\downarrow\downarrow}
+\end{array}
+\right)
+\end{equation}
+%
+The advantage here is one could compute 
+each (screened) spin interaction precisely, 
+%namely, $F^{\uparrow\uparrow}$,
+%$F^{\downarrow\downarrow}$,
+%$F^{\downarrow\uparrow}$,
+%$F^{\uparrow\downarrow}$, 
+and no longer have to rely on averages.
+%
+An encouraging preliminary test 
+shows that the method conveniently reduces 
+to the average on-site $U$ value, 
+at least for closed-shell systems, 
+when averaged over all interactions in the $U$ matrix.
+
+
+%UNIFIED SITES 
+Another modification to DFT+$U$ 
+that we discussed in section~\ref{sec:subspace_projectors},  
+pertains to the definition of the subspace projectors.
+%%
+%In its current format, 
+%the DFT+$U$ functional operates separately 
+%on the individual Hubbard sites $I$, 
+%defined by the projectors $\hat{P}^I$, 
+%with a unique Hubbard $U^I$ parameter for each.
+%
+Our proposal to circumvent the inaccurate population 
+analysis that arises in cases of strong subspace overlap 
+is to redefine the projectors to span 
+the subspaces that belong to a 
+specific group $\mathcal{G}$, 
+characterised by a certain properties 
+in a so-called unified sites (US) approach.
+%
+This proposed scheme is reminiscent 
+of the DFT+$U$+$V$ functional in Ref.~\cite{0953-8984-22-5-055602},  
+which invokes an inter-site $V$ term, 
+and is expected to be advantageous 
+under conditions of strong subspace hybridisation, 
+for example, 
+in the near-bonding regimes for dissociating dimers.
+%where the subspace-bare and bath-screened 
+%on-site interactions computed for individual subspaces 
+%are not a true reflection of the physical reality.
+% 
+Another possible application is 
+in VO$_2$ where the $U$ parameter applied 
+to the individual subspaces of each V atom 
+is known to erroneously cause them to dimerise, 
+and ultimately fails to produce a gap~\cite{PhysRevLett.108.256402}.
+%
+In the US approach, 
+we would compute and apply a $U$ parameter 
+that is bare to the {\it combined} V atom subspace 
+with the intention to avoid the spurious dimerisation.
+%
+Our colleague, Evan Sheridan, 
+is currently working on this approach 
+and initial testing on VO$_2$ has been very promising.
+
+%Moreover, 
+%in the limit where the subspaces are actually well localised, 
+%this scheme simply reduces to the conventional 
+%separate treatment of each localised site $I$, 
+%albeit with the same $U$ parameter.
+%%
+%On that note, 
+%this procedure may also be a remedy 
+%for correcting SIE in the bonding regime, 
+%where the single-site approximation breaks down. 
+
+%DFT+U ON 2D MATERIALS
+Finally, 
+building upon our exercise in two-dimensional materials, 
+we propose some candidates 
+that may benefit from a DFT+$U$ treatment 
+in conjunction with a self-consistent $U$. 
+%
+Some nascent materials in this class  
+include transition metal diborides~\cite{ANIE:ANIE201207972,C5NR04359J}
+such as titanium diboride (TiB$_2$)~\cite{PhysRevB.90.161402,doi:10.1021/acs.chemmater.7b01433,PhysRevB.93.035401}, 
+and magnesium diboride (MgB$_2$)~\cite{PhysRevB.80.134113,doi:10.1063/1.4876129,doi:10.1021/acs.inorgchem.6b01685},
+as well as vanadium oxide (V$_2$O$_5$)~\cite{PhysRevB.91.125116,machej1991monolayer,PhysRevB.71.165437,PhysRevB.89.045109}, 
+for which current literature does 
+not feature DFT+$U$ calculations 
+on the few-layer structures.
+
+
+
+
+%\begin{align}
+%\hat{U}&=\hat{\chi_0}^{-1}-\hat{\chi}^{-1}\\
+%&=\left(\hat{\epsilon}\hat{\chi}\right)^{-1}-\hat{\chi}^{-1}\\
+%&=\hat{\chi}^{-1}{\epsilon}^{-1}-\left(\hat{\chi}^{-1}\right)\\
+%&=\hat{\chi}^{-1}\left({\epsilon}^{-1}-1\right)\\
+%&=\left(\frac{\delta\hat n^{\sigma}}{\delta\hat v^{\bar\sigma}_{\text{ext}}}\right)^{-1}\left({\left(\frac{\delta\hat v_{\text{KS}}^{\sigma}}{\delta\hat v^{\bar\sigma}_{\text{ext}}}\right)}^{-1}-1\right)
+%\end{align}
+
+%\begin{align*}
+%\hat{U}^{\sigma\bar\sigma}&=\left(\hat{\chi_0}^{-1}\right)^{\sigma\bar\sigma}-\left(\hat{\chi}^{-1}\right)^{\sigma\bar\sigma}
+%\\
+%	&=\left(\frac{d n^{\sigma}}{d V_{\text{KS}}^{\bar\sigma}}\right)^{-1} 
+%	-\left(\frac{dn^{\sigma}}{dV_{\text{ext}}^{\bar\sigma}}\right)^{-1}
+%\\
+%	&=\left(\frac{d n^{\sigma}}{d V_{\text{ext}}^{\bar\sigma}}\frac{d V_{\text{ext}}^{\bar\sigma}}{d V_{\text{KS}}^{\bar\sigma}}+\frac{d n^{\sigma}}{d V_{\text{ext}}^{\sigma}}\frac{d V_{\text{ext}}^{\sigma}}{d V_{\text{KS}}^{\bar\sigma}}\right)^{-1} 
+%	- \left(\frac{dn^{\sigma}}{dV_{\text{ext}}^{\bar\sigma}}\right)^{-1}\\
+%\end{align*}
+
+
+
+

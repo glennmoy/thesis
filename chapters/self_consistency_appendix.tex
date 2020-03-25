@@ -1,0 +1,388 @@
+
+%ALERNATIVE JOUT DERIVATION
+\section{Alternative derivation for $U_\textrm{out}$ and $J_\textrm{out}$}
+
+In this section we present an alternative derivation for $J_\textrm{out}$
+when used in the original DFT+$U$+$J$ functional,
+given by
+%
+\begin{equation}
+E_{U+J}
+=\sum_{I\sigma}\left\{\frac{(U^I-J^I)}{2}\mbox{Tr}\left[\hat{n}^{I\sigma}-\hat{n}^{I\sigma}\hat{n}^{I\sigma}\right]
++\frac{J^I}{2}\textrm{Tr}\left[\hat{n}^{I\sigma}\hat{n}^{I\bar\sigma}\right]\right\},
+\end{equation}
+%
+in which the potential for $U$ remains the same, 
+but $J$ now applies to both like and unlike-spins.
+%
+The potential for $J$ in this instance is then
+%
+\begin{equation}
+\hat{V}^\sigma_{J}
+=\frac{\delta E_{J}}{\delta \hat{n}^{I\sigma}}
+=J^I\left(\hat{n}^{I\sigma}+ \hat{n}^{I\bar\sigma}-\frac{1}{2}\right)
+\quad\Rightarrow\quad
+{V}^\sigma_{J}=J\left(N-\frac{1}{2}\right),
+\end{equation}
+%
+which we see is symmetric for both 
+spin up and spin down potentials.
+%
+From this, we follow the same procedure as 
+in Eqs.~\eqref{eq:u_self_consistent_interaction2} ~\&~\eqref{eq:j_self_consistent_interaction2} 
+and find that 
+%
+\begin{align}
+U_\textrm{out}&
+=\frac{1}{2}\left(\frac{dV_\textrm{int}^\uparrow}{dN}+\frac{dV_\textrm{int}^\downarrow}{dN}
++\frac{dV_{U_\textrm{in}}^\uparrow}{dN}+\frac{dV_{U_\textrm{in}}^\downarrow}{dN}
++\frac{dV_{J_\textrm{in}}^\uparrow}{dN}+\frac{dV_{J_\textrm{in}}^\downarrow}{dN}\right)
+\nonumber \\[10pt]
+&=\frac{1}{2}\left(\frac{dV_\textrm{int}^\uparrow}{dN}+\frac{dV_\textrm{int}^\downarrow}{dN}\right)
+-\frac{U_\textrm{in}}{2}\left(\frac{dN^\uparrow}{dN}+\frac{dN^\downarrow}{dN}\right)
++\frac{J_\textrm{in}}{2}\left(\frac{dN}{dN}+\frac{dN}{dN}\right)
+\nonumber \\[10pt]
+&=F_\textrm{Hxc}^{\hat{P}}(U_\textrm{in},J_\textrm{in})-\frac{U_\textrm{in}}{2}+J_\textrm{in}. 
+\label{eq:u_self_consistent_interaction3}
+\end{align}
+%
+Where $U_\textrm{out}$ now depends on $J_\textrm{in}$ 
+instead of $J_\textrm{in}/2$.
+%
+Furthermore, 
+we find with surprise that $J_\textrm{out}$ 
+does not depend on $J_\textrm{in}$ at all 
+since the contributions from the symmetric $J$ potentials now cancel:
+%
+\begin{align}
+J_\textrm{out}&
+=-\frac{1}{2}\left(\frac{dV_\textrm{int}^\uparrow}{dM}-\frac{dV_\textrm{int}^\downarrow}{dM}
++\frac{dV_{U_\textrm{in}}^\uparrow}{dM}-\frac{dV_{U_\textrm{in}}^\downarrow}{dM}
++\frac{dV_{J_\textrm{in}}^\uparrow}{dM}-\frac{dV_{J_\textrm{in}}^\downarrow}{dM}\right)
+\nonumber \\[10pt]
+&=-\frac{1}{2}\left(\frac{dV_\textrm{int}^\uparrow}{dM}-\frac{dV_\textrm{int}^\downarrow}{dM}\right)
++\frac{U_\textrm{in}}{2}\left(\frac{dN^\uparrow}{dM}-\frac{dN^\downarrow}{dM}\right)
++\frac{J_\textrm{in}}{2}\left(\frac{dN}{dM}-\frac{dN}{dM}\right)
+\nonumber \\[10pt]
+&=F_J^{\hat{P}}(U_\textrm{in},J_\textrm{in})+\frac{U_\textrm{in}}{2}. 
+\label{eq:j_self_consistent_interaction3}
+\end{align}
+
+The linear combination 
+of $U_\textrm{out}$ and $J_\textrm{out}$ 
+results in the expression for $U_\textrm{eff}$ 
+now depending explicitly on $J_\textrm{in}$, 
+such that 
+%
+\begin{align}
+U_\textrm{eff}&=U_\textrm{out}-J_\textrm{out} = \left(F_\textrm{Hxc}-F_J\right)-U_\textrm{in}+J_\textrm{in}\nonumber \\
+J_\textrm{eff}&=U_\textrm{out}+J_\textrm{out} = \left(F_\textrm{Hxc}+F_J\right)+J_\textrm{in}.
+\label{eq:uoutjout2}
+\end{align}
+%
+However, 
+invoking the self-consistency condition 
+that completely removes the effective interactions, 
+i.e., $U_\textrm{eff}=J_\textrm{eff}=0$, gives 
+%
+\begin{align}
+U_\textrm{in}-J_\textrm{in} &= \left(F_\textrm{Hxc}-F_J\right)=\frac{1}{2}\left(F^{\uparrow\uparrow}+F^{\downarrow\downarrow}\right)\nonumber \\[10pt]
+J_\textrm{in} &= -\left(F_\textrm{Hxc}+F_J\right)=-\frac{1}{2}\left(F^{\uparrow\downarrow}+F^{\downarrow\uparrow}\right).
+\label{eq:ueffjeff2}
+\end{align}
+%
+Here, the formula for $J$ is unchanged, 
+whereas $U$ is now scaled by $J$, 
+thereby producing an `effective' $U_\textrm{in}$ 
+coupling same-spin interactions, 
+which is exactly the formulation 
+given in Eqs.~\eqref{eq:ueff}~\&~\eqref{eq:jeff}. 
+%
+Thus, the two derivations are equivalent 
+and produce the same effect 
+with this condition when provided 
+with the corresponding $U$ and $J$ parameters.
+\newpage
+
+
+%SUPPLEMENTAL DOS PLOTS FOR NIO
+\section{Supplemental DOS plots for NiO}
+
+
+% Not great - band gap too low
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.45\textwidth]{images/NiO.4.1.J.dos.pdf}
+\caption[NiO DOS with $U=4.1$~eV and $J=2.82$]
+{Although the PBE+$U^{(1)}$ calculation performed well, 
+the addition of a relatively large $J$ here decreases 
+the band gap. 
+However, the magnetic moment is reasonable.}
+\label{fig:NiO.4.1.J.dos}
+\end{figure}
+
+% Second worst result in the batch - U and J too high
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.45\textwidth]{images/NiO.10.5.J.dos.pdf}
+\caption[NiO DOS with $U=10.5$~eV and $J=5.9$]
+{This calculation produces terrible results as the large $J$ pulls 
+the conduction band peak below the Fermi energy 
+and leaves behind depleted conduction states.}
+\label{fig:NiO.10.5.J.dos}
+\end{figure}
+\newpage
+
+% Pretty good - builds on lucky success of U1
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.45\textwidth]{images/NiO.4.1.f.dos.pdf}
+\caption[NiO DOS with $U=4.1$~eV and $F_J=0.78$]
+{This calculation produces excellent agreement 
+with the experimental measurements in this case,
+ but it is generally not the scheme that is mathematically 
+ proven to remove the SIE.}
+\label{fig:NiO.4.1.f.dos}
+\end{figure}
+
+
+
+% Pretty good for gap and magmom but pushes peak up way too much
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.45\textwidth]{images/NiO.10.5.f.dos.pdf}
+\caption[NiO DOS with $U=10.5$~eV and $F_J=0.69$]
+{This calculation, while producing the correct band gap 
+and magnetic moment, has pushed the conduction band 
+peak up too high to be in agreement with experiment.}
+\label{fig:NiO.10.5.f.dos}
+\end{figure}
+\newpage
+
+% Same as U3 + J3 above
+%\subsubsection{PBE+$U^{(3)}$+$F_J^{(3)}$}
+%\begin{figure}[th!]
+%\centering
+%\includegraphics[height=0.494\textwidth]{images/NiO.6.7.f.dos.pdf}
+%\caption{U=6.7, fJ=0.84}
+%\end{figure}
+
+
+% Not great at all - U is too small 
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.45\textwidth]{images/NiO.1.3.dos.pdf}
+\caption[NiO DOS with $U-J=1.3$~eV]
+{This calculation under-estimates all three properties 
+and does not offer much improvement over the PBE 
+as the effective $U$ value is much too small.}
+\label{fig:NiO.1.3.dos}
+\end{figure}
+
+
+% Fairly good - U value is reasonable but mixes terms, i.e. Uin-Jout
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.45\textwidth]{images/NiO.4.6.dos.pdf}
+\caption[NiO DOS with $U-J=4.6$~eV]
+{Similar to the PBE+$U^{(2)}$ calculation, 
+the results produced here are in very good  
+agreement with experiment as the $U$ value 
+is approximately the correct magnitude.}
+\label{fig:NiO.4.6.dos}
+\end{figure}
+\newpage
+
+% Pretty much the same as Ueff2 = 5.2 
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.45\textwidth]{images/NiO.5.9.dos.pdf}
+\caption[NiO DOS with $U-J=5.9$~eV]
+{This calculation produces the best overall agreement 
+with the experimental data but is certainly within 
+the margin of error achieved by the 
+PBE+$U_\textrm{eff}^{(2)}$ calculation discussed earlier.}
+\label{fig:NiO.5.9.dos}
+\end{figure}
+
+
+% Same as (U-J)^3 above
+%\subsubsection{PBE+$U_\textrm{eff}^{(3)}$}
+%
+%\begin{figure}[th!]
+%\centering
+%\includegraphics[height=0.494\textwidth]{images/NiO.5.9.dos.pdf}
+%\caption{Ueff=5.9}
+%\end{figure}
+
+
+% Third worst result result - J is too high
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.45\textwidth]{images/NiO.5.2.J.dos.pdf}
+\caption[NiO DOS with $U_\textrm{eff}=5.2$ and $J=3.48$~eV]
+{While producing a magnetic moment exactly between 
+the experimental measurements, 
+the band gap and transition energy computed here 
+are grossly incorrect.}
+\label{fig:NiO.5.2.J.dos}
+\end{figure}
+\newpage
+
+% Also ok - builds on Ueff2 nicely with J
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.45\textwidth]{images/NiO.5.2.f.dos.pdf}
+\caption[NiO DOS with $U_\textrm{eff}=5.2$ and $F_J=0.84$~eV]
+{This calculation produces reasonable 
+agreement with experiment but it is not the most effective.}
+\label{fig:NiO.5.2.f.dos}
+\end{figure}
+
+
+% Bonkers result altogether - worst of the bunch
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.45\textwidth]{images/NiO.10.5.J.minority.dos.pdf}
+\caption[NiO DOS with $U=10.5$ and $J=5.94$~eV including spin minority term]
+{This calculation produces the worst results 
+by far, where the spin-symmetry of the system 
+is broken rendering a ferromagnetic system.
+%
+The large $J$ here exacerbates 
+the spin-minority term invoked from Ref.~\cite{PhysRevB.84.115108}.}
+\label{fig:NiO.10.5.J.minority}
+\end{figure}
+\newpage
+
+
+%SELF-CONSISTENCY FOR NI(CO)4
+\subsection{Self-consistency calculations for Ni(CO)$_4$}
+
+Here we present the 
+$U_\textrm{in}$ vs $U_\textrm{out}$ 
+curve computed for Ni(CO)$_4$ 
+with non-spin-polarised calculations, 
+such that the corresponding 
+$J_\textrm{out}$ could not be determined.
+%
+We observe that 
+$U^{(2)}\approx U^{(3)}\approx 11$~eV, 
+and in fact, 
+the HOMO-LUMO gap computed with  
+PBE+$U^{(2)}$ is also 4.56~eV, 
+while for PBE+$U^{(1)}$ it is 4.22~eV.
+%
+Hence there is little change 
+in the frontier orbitals of Ni(CO)$_4$ 
+upon application of relatively 
+large $U$ corrections.
+%
+Nonetheless, 
+the gap is in better agreement 
+with the experimental value~\cite{doi:10.1021/ja00274a073} 
+of $4.83$~eV.
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/nico4_uin_vs_uout.pdf}
+\caption[Self-consistency profile for Ni(CO)$_4$]
+{Non-spin-polarised $U_\textrm{in}$ vs $U_\textrm{out}$ 
+profile for Ni(CO)$_4$ with error bars.
+%
+From this we compute 
+$U^{(1)}=5.43\pm0.01$~eV,
+$U^{(2)}=10.94\pm0.03$~eV, 
+and $U^{(3)}=10.80\pm0.01$~eV, 
+for which we see $U^{(2)}\approx U^{(3)}$.}
+\label{fig:nico4_uin_vs_uout}
+\end{figure}
+\newpage
+
+%SELF-CONSISTENCY FOR Cr2O3
+\subsection{Self-consistency calculations for Cr$_2$O$_3$}
+
+Here we present the computed curves, 
+with accompanied error bars, for 
+$U_\textrm{out}$ (solid), 
+$J_\textrm{out}$ (dashed), 
+and  $U_\textrm{eff}$ (dotted) 
+with respect to applied $U_\textrm{in}$ 
+for Cr$_2$O$_3$, 
+which are again very accurately determined.
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/cr2o3_uin_vs_uout.pdf}
+\caption[Self-consistency profile for Cr$_2$O$_3$]
+{Curves, with accompanied error bars, 
+for $U_\textrm{out}$ (solid), 
+$J_\textrm{out}$ (dashed), 
+and $U_\textrm{eff}$ (dot-dashed), 
+with respect to the applied $U_\textrm{in}$ 
+for Cr$_2$O$_3$. 
+%
+From the linear fits we compute 
+$U^{(1)}=1.86\pm0.02$~eV,
+$U^{(2)}=5.3\pm0.1$~eV, 
+and $U^{(3)}=2.87\pm0.02$~eV.}
+\label{fig:cr2o3_uin_vs_uout}
+\end{figure}
+
+Likewise, 
+the evaluated interaction terms 
+are presented in Fig.~\ref{fig:cr2o3_interactions}.
+%
+Here, 
+$F^{\sigma\bar{\sigma}}$ varies between 3.5~eV to 2.5~eV, 
+and $F^{\sigma\sigma}$ varies between 2.5~eV to 2.0~eV, 
+which hints toward desired values of $U$.
+%
+The average on-site interaction $F_\textrm{Hxc}$ 
+ranges from 3~eV to 2.5~eV, 
+while $F_J$ remains approximately $0.5$~eV.
+
+Since we discussed earlier that calculations 
+are relatively unchanged when $J<1$~eV, 
+we assume here that there will be very little difference between 
+the DFT calculation evaluated with 
+$U^{(2)}_\textrm{eff}=2.35\pm0.04$~eV, 
+and that of a DFT+$U$+$J$ calculation 
+using Eq.~\eqref{eq:dft+u+j_functional}
+with $U^{(3)}=2.76$~eV and $J^{(3)}=0.435\pm0.004$~eV, 
+since $(U-J)^{(3)}=2.32\approx U^{(2)}_\textrm{eff}$.
+% 
+We therefore refrain from 
+providing excessive plots 
+and instead refer the reader to 
+the DOS of the latter presented previously in  
+in Fig.~\ref{fig:cr2o3.2.8.J.dos}.
+
+\clearpage
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/cr2o3_interactions.pdf}
+\caption[Profiles of $F_\textrm{Hxc}$, $F_J$,  $F^{\sigma\sigma}$
+and  $F^{\sigma\bar{\sigma}}$ vs $U_\textrm{in}$ for Cr$_2$O$_3$]
+{Curves, with accompanied error bars, 
+for the interaction kernels 
+$F_\textrm{Hxc}$ (circles) and $F_J$ (squares), 
+as well as the average like and unlike-spin interactions 
+$F^{\sigma\sigma}$ (up triangles) and $F^{\sigma\bar{\sigma}}$ (down triangles), 
+with respect to the applied $U_\textrm{in}$ for Cr$_2$O$_3$.}
+\label{fig:cr2o3_interactions}
+\end{figure}
+
+
+
+
+%\begin{figure}[th!]
+%\centering
+%\includegraphics[height=0.494\textwidth]{images/cr2o3.2.8.J.dos.pdf}
+%\caption[Species-resolved DOS for Cr$_2$O$_3$ calculated 
+%with $U=2.8$~eV and $J=0.44$~eV]
+%{As in Fig.~\ref{fig:cr2o3.2.8.dos}. 
+%The species-resolved DOS of Cr$_2$O$_3$, 
+%calculated with PBE+$U=2.8$+$J=0.44$.}
+%\label{fig:cr2o3.2.8.J.dos}
+%\end{figure}

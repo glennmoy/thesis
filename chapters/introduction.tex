@@ -1,0 +1,391 @@
+
+ \setlength\epigraphwidth{.55\textwidth}
+ \renewcommand{\epigraphflush}{center}
+
+\epigraph{\it All models are wrong but some are useful.}
+{George E. P. Box~\cite{doi:10.1080/01621459.1976.10480949}}
+
+\lett{T}{he pillars of modern} 
+physics now comprise the well established 
+fields of theory, experiment and simulation, 
+where the latter addition 
+has been made possible thanks to the 
+technological advances 
+%in micro-processing power 
+of the 20\textsuperscript{th} century, 
+characterised by Moore's law~\cite{5696765}. 
+%
+In the current `Age of Silicon'~\cite{sass1998substance} 
+simulation and modelling 
+have become indispensable tools 
+that find cutting-edge application    
+in the field of quantum physics, 
+in particular for solving the complex 
+many-body Sch{\"o}dinger equation~\cite{Trabesinger2012}.
+%
+Notwithstanding the significant progress made  
+in micro-processors over the last five decades, 
+it is only by the intelligent use of 
+algorithms and suitable approximations  
+that it is possible to quantitatively describe   
+chemical processes 
+and complex material properties  
+with sufficient accuracy and efficiency.
+
+Density-functional theory (DFT) conforms 
+to all of these principles 
+and is one of the most successful 
+and highly acclaimed techniques 
+in modern science. 
+%
+It affords a timely and accurate 
+description of the ground-state properties 
+of many atomic systems on an {\it ab inito} basis 
+that is from an entirely deterministic standpoint  
+with only minimal approximations 
+and without the use of empirical models.
+%
+It enables the straightforward calculation 
+of properties derived from the 
+ground-state total-energy, 
+which includes, but is not limited to, 
+elastic moduli, 
+atomic forces, 
+electro-magentic responses, 
+cohesive binding energies, 
+local magnetic moments, 
+geometrically optimised structures, 
+and charge transfer energies~\cite{martin2004electronic}.
+%
+Its role in computational chemistry and 
+materials science continues to flourish 
+to this day.
+
+
+Indeed, 
+many systems pertinent to 
+chemical, biological or technological applications, 
+which typically comprise first-row transition metal or lanthanide ions, 
+are often largely spatially disordered and electronically complex.
+%
+This special class of extensive system presents 
+numerous challenges to DFT practitioners, 
+as calculations on these so-called {\it strongly-correlated} materials   
+often misrepresent, or directly contradict, experimental observations.
+%
+
+The first is simply a matter of 
+computational economy; 
+the study of these systems 
+requires accurate large-scale simulation, 
+which is unfortunately unattainable with current hardware.
+%
+On the one hand, 
+this is invariably due to the availability of finite resources, 
+while on the other we are confronted with the uneconomical 
+compute time of conventional algorithms for large systems, 
+which scale cubically with system size.
+%
+The design of linear-scaling methods, 
+in which the computational cost 
+scales linearly with system size, 
+has provided considerable aid in this regard.
+
+The second challenge pertains to the physically-relevant, 
+yet poorly described, interactions between correlated electrons 
+responsible for the exotic behaviour, 
+which are demonstrably beyond the scope 
+of the independent-particle approximation.
+%
+The established, and computationally efficient, 
+DFT+$U$ method is now routinely applied to these systems 
+to restore the absent physical character, 
+whereupon the strength of the corrective potential 
+is determined by a set of Hubbard $U$ parameters 
+that must be determined.
+%
+
+
+%WHAT IS THE FOCUS OF THIS RESEARCH?
+The focus of this dissertation concerns
+the {\it ab initio} calculation of 
+Hubbard parameters within linear-scaling DFT, 
+and their subsequent application in an 
+existing linear-scaling DFT+$U$ framework, 
+in order to accurately describe strongly-correlated systems on a large-scale.
+%
+Moreover, 
+the ultimate goal of this body of research  
+is to direct the design of automated first-principles methods 
+for the description of strongly-correlated systems.
+% 
+We intend our work to contribute valuably to  
+techniques involving high-throughput materials informatics, 
+in particular for the provision of a mechanism for 
+computing thermodynamical quantities, 
+by availing ourselves of the computational utility afforded by 
+a combined self-contained, linear-scaling DFT+$U$ procedure.
+
+
+%WHAT IS THE CENTRAL MESSAGE? 
+Notwithstanding 
+this ambitious undertaking 
+towards ever-more accurate 
+and versatile compuational techniques, 
+as a minor player in this venture 
+I am reminded of the words of 
+the eminent statistician, George E. P. Box, 
+whose famous aphorism 
+prefaces this Chapter.
+%
+I believe its lesson fittingly applies 
+in the present context of 
+designing efficient {\it ab initio} practices, 
+to which his words speak to our 
+unending, insatiable pursuit to understand,
+and ultimately replicate, nature.
+
+
+%A procedure that is often employed 
+%to ameliorate these inaccuracies, 
+%when they may be associated with highly-localised electrons, 
+%is the DFT+$U$ method.
+%%
+%DFT+$U$ intends to restore 
+%the physical description of these 
+%strongly-correlated systems 
+%by applying a corrective potential 
+%to the localised electrons, 
+%the strength of which is determined 
+%by the Hubbard $U$ parameters.
+%%
+%
+%largely spatially disordered and electronically complex
+
+%Moreover, 
+%Kohn-Sham DFT concerns itself 
+%only with the ground-state of the system, 
+%and so is unable to reliably  
+%access excited state properties.
+%%
+%DFT is often supplemented, 
+%or even the starting point, 
+%of additional techniques that 
+%supplemented with additional techniques 
+%such
+%%
+
+% OUTLINE
+\section{Outline of dissertation}
+We begin in Chapter~\ref{ch:qm_simulation} 
+by providing an overview of the key developments 
+that have contributed to the formulation of contemporary 
+Kohn-Sham DFT, 
+such as the Hohenberg-Kohn theorems, 
+the Kohn-Sham equations, 
+the construction of approximate exchange-correlation (XC) functionals, 
+and the treatment of the ionic cores 
+with the pseudopotential approximation 
+and projector-augmented wave method.
+%
+We then motivate and outline 
+the framework for enabling the computational expense 
+to scale linearly with system size, 
+which relies on the attenuation of non-local effects 
+in a single-particle density matrix, 
+and discuss some of the central features 
+of the linear-scaling code {\sc ONETEP}, 
+in which our methods are implemented.
+
+
+
+In Chapters~\ref{ch:mech_prop_2d_mater}~\&~\ref{ch:elec_prop_2d_mater} 
+we present the results of extensive 
+calculations on the strained layers of 
+phosphorus, arsenic, and antimony.
+%
+We compare our results to 
+the available experimental data
+for these materials 
+and make qualitative predictions 
+for the mechanical and electronic properties, 
+which includes several electronic transitions 
+and a number of states supporting ballistic conduction.
+
+Following this discussion, 
+we examine in detail the 
+nature and origin of the 
+self-interaction and static correlation errors 
+in Chapter~\ref{ch:self_interaction_error}, 
+and highlight the role they play   
+in undermining the accuracy of 
+many DFT calculations.
+%
+We discuss some of the notable methods 
+developed over the years to effectively treat 
+the inaccuracies affiliated with these errors, 
+and emphasise the importance of 
+%determining accurate first-ionisation energies 
+restoring compliance with Koopmans' theorem.
+%  
+In particular, 
+we outline the construction 
+of the DFT+$U$ correction functional 
+intended to treat the self-interaction error  
+when it stems from highly-localised electrons.
+%
+Finally, we briefly discuss a similar 
+error arising from static-correlation of degenerate states, 
+and suggest a possible mechanism for its treatment  
+within the full DFT+$U$+$J$ framework.
+
+We then proceed to discuss the {\it ab initio} calculation of 
+Hubbard $U$ parameters in 
+Chapter~\ref{ch:calculating_hubbard_u}, 
+in which we address various 
+methods utilised heretofore, 
+in particular the popular linear-response approach 
+conceived by Coccocioni and de Gironcoli.
+%
+We motivate and develop a 
+variational approach modified from this 
+method to be applied more conveniently 
+in codes that employ total-energy direct-minimisation  
+(as opposed to density self-consistency) 
+to locate the DFT ground-state.
+%
+We test this method on a variety of systems
+and consider the similarities and differences 
+between the two approaches.
+%
+Finally, 
+we devise an equivalent scheme 
+to calculate the exchange parameter $J$, 
+and highlight some of the importance consequences 
+of computing interaction parameters 
+as ground-state quantities.
+%particularly at their self-consistency.
+%
+
+Our variational linear-response approach 
+provides a convenient format  
+to investigate the somewhat esoteric  
+practice of parameter self-consistency 
+in Chapter~\ref{ch:self_consistent_hubbard}, 
+for which numerous plausible 
+schemes have been proposed.
+%
+In doing so, 
+we perform extensive calculations 
+on dissociating H$_2^+$ 
+to identify the self-consistency scheme 
+that provides the appropriate 
+correction to one-electron self-interaction, 
+and then generalise the method 
+to treat multi-electronic systems 
+using rock-salt NiO as a case study.
+%
+Moreover, 
+we provide an original formulation 
+for a self-consistent $J$ 
+and use this to correct 
+the static-correlation error 
+in dissociating H$_2$ 
+beyond the Coulson-Fischer point.
+
+\edit{
+Finally, 
+in Chapter~\ref{ch:non_linear_constraints} 
+we focus on the development of a 
+generalised DFT+$U$ functional 
+that can simultaneously target the 
+total-energy SIE and the restoration of Koopmans' condition, 
+which represents an original and novel construct.
+%
+We first approach this challenge by investigating 
+if the automated correction of systems prone to SIE  
+is feasible within the framework of 
+constrained-density-functional theory (cDFT).
+%
+However, we provide a rigorous proof 
+and stringent numerical calculations  
+that verify that the non-linear constraints, 
+including those required to enforce this condition, 
+are impossible to satisfy.
+%
+Rather than adding to the multitude of available approaches, 
+here we make progress by limiting the scope for 
+further proliferation of methods based on this strategy.}
+
+\edit{
+Nonetheless, 
+we show that a generalised DFT+$U$ functional, 
+wherein the Hubbard parameters 
+may be determined from a 
+self-consistent linear-response $U$ parameter, 
+is capable of correcting both the total-energy 
+and eigenvalue of a one-electron system 
+to the same precision.
+%
+This work opens the door to 
+new advances and possibilities 
+using a new class of generalised DFT+$U$ functionals.}
+
+
+We conclude in Chapter~\ref{ch:conclusions} 
+with a synopsis of the major findings of this work, 
+and suggest possible new directions for future research.
+%
+Finally, some appendices are provided 
+to complement the primary text, 
+which are intended to 
+advance the discussion and 
+provide further clarity, when necessary, 
+with supplemental figures, tables, and derivations.
+
+
+
+
+%ASSOCIATED PUBLICATIONS
+\newpage
+\section{Associated publications}
+
+The Chapters that arise entirely, or in part, 
+from previous publications 
+or works intended to be published 
+are as follows
+\vspace{3em}
+
+\hspace{17pt}\makebox[\textwidth][c]{%
+\begin{minipage}{0.8\textwidth}
+
+\begin{itemize}
+\setlength{\itemsep}{-5pt}
+
+\item[Chapter~\ref{ch:mech_prop_2d_mater}:]
+Damien Hanlon, Claudia Backes, {\it et al.} 
+``Liquid exfoliation of solvent-stabilized few-layer black phosphorus for applications beyond electronics." \newline
+{\it Nature Communications} 6, 8563 (2015).\newline
+DOI:~\href{http://europepmc.org/articles/PMC4634220}{10.1038/ncomms9563} 
+\\[1em]
+%
+\item[Chapters~\ref{ch:mech_prop_2d_mater}~\&~\ref{ch:elec_prop_2d_mater}:]
+Glenn Moynihan, Stefano Sanvito, and David D. O'Regan. 
+``Strain-induced Weyl and Dirac states and direct-indirect gap transitions in group-V materials." \newline
+{\it 2D Materials} {\bf 4} 045018 (2017).\newline
+DOI:~\href{https://doi.org/10.1088/2053-1583/aa89d2}{10.1088/2053-1583/aa89d2} 
+\\[1em]
+%
+\item[Chapters~\ref{ch:calculating_hubbard_u}~\&~\ref{ch:self_consistent_hubbard}:]
+Glenn Moynihan, Gilberto Teobaldi, and David D. O'Regan. 
+``A self-consistent ground-state formulation of the first-principles Hubbard U." \newline 
+In preparation. \href{https://arxiv.org/abs/1704.08076}{arXiv:1704.08076}~{\bf [cond-mat.str-el]} 
+\\[1em]
+%
+\item[Chapter~\ref{ch:non_linear_constraints}:]
+Glenn Moynihan, Gilberto Teobaldi, and David D. O'Regan. 
+``Inapplicability of exact constraints and a minimal two-parameter generalization to the DFT+ U based correction of self-interaction error." \newline 
+{\it Physical Review B} {\bf 94}, 220104(R) (2016).\newline
+DOI:~\href{http://link.aps.org/doi/10.1103/PhysRevB.94.220104}{10.1103/PhysRevB.94.220104}
+\end{itemize}
+\end{minipage}}

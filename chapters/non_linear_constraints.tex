@@ -1,0 +1,1892 @@
+
+\lett{W}{hile the construction} of viable, 
+\edit{explicit density functionals 
+free of pathologies such as SIE 
+is extremely challenging~\cite{doi:10.1021/cr200107z}, 
+we discussed in Chapter~\ref{ch:self_interaction_error} 
+{some of the} significant progress made in 
+the development of implicit functionals 
+toward this {goal}. 
+%
+%Examples included methods
+%that correct SIE on a one-electron basis
+%according to variationally optimised definitions, 
+%such as generalised PZ SIC  
+%approaches~\cite{PhysRevB.23.5048,PhysRevLett.65.1148,
+%:/content/aip/journal/jcp/140/12/10.1063/1.4869581,PhysRevB.93.165120}, 
+%%in which much progress has recently been made
+%%by generalising to complex-valued
+%%orbitals~\cite{PhysRevA.85.062514,
+%%PhysRevLett.108.146401,
+%%:/content/aip/journal/jcp/137/12/10.1063/1.4752229}, 
+%and those addressing Koopmans compliance~\cite{PhysRevB.82.115121,
+%PhysRevB.90.075135}.
+%
+Furthermore, 
+we demonstrated in 
+Chapters~\ref{ch:calculating_hubbard_u}~\&~\ref{ch:self_consistent_hubbard} 
+how the DFT+$U$ method~\cite{QUA:QUA24521} 
+may be utilised as an effective and computationally efficient, 
+even linear-scaling~\cite{PhysRevB.85.085107}, 
+treatment for many-body SIE.
+%
+However, 
+as we illustrated in Fig.~\ref{fig:h2+_dft+u_eigenvalue}, 
+it is patently unable to provide 
+any sort of correction to the Kohn-Sham eigenvalue, 
+which is the relevant quantity for, e.g.,
+calculating first ionisation energies, 
+heterogeneous catalysis~\cite{Bliem1215}, 
+and 
+charge transfer energies~\cite{PhysRevB.88.165112,
+PhysRevB.93.165102,
+doi:10.1021/ct0503163,
+doi:10.1021/jp061848y,
+doi:10.1021/jp204962k,
+doi:10.1021/jp103153a,
+:/content/aip/journal/jcp/125/16/10.1063/1.2360263,
+doi:10.1021/jp912049p,
+doi:10.1021/jp106989t,
+doi:10.1063/1.3190169,
+PhysRevB.77.115421,
+Kubas14jcp,
+Kubas15pccp,
+doi:10.1021/acs.chemrev.7b00086}.
+%
+This non-compliance of Koopman's condition~\cite{KOOPMANS1934104,PhysRev.123.420,PhysRevB.82.115121,PhysRevB.90.075135} 
+corresponds to a short-coming in the 
+linear term affecting the potential, 
+which in turn 
+exposes a significant limitation in the 
+applicability of the DFT+$U$.}
+
+\edit{As a solution to this problem, 
+we propose the construction of 
+a generalised DFT+$U$ functional 
+comprising separate $U$ parameters 
+for the linear and quadratic density terms, 
+thereby allowing for an adaptive double-counting correction.
+%
+Our goal is that DFT+$U$ may be simultaneously applied 
+to two important sources of error, 
+namely the many-body SIE and 
+non-compliance with Koopman's condition, 
+which have long hindered the reliability 
+of electronic structure calculations.
+%
+Moreover, 
+the additional degree of freedom provided by two parameters 
+raises the possibility of developing 
+a self-contained, self-consistency scheme for calculating both parameters.
+%
+Hence, the challenge central to this Chapter 
+is the development of such a scheme 
+that is comparable in efficiency and accuracy 
+to the self-consistent linear-response 
+approach described in the previous Chapters.}
+
+
+%However, a considerable degree of care 
+%is needed to calculate the Hubbard $U$ parameters, 
+%the methods of which are varied 
+%and can sometimes pose numerical 
+%challenges~\cite{:/content/aip/journal/jcp/133/11/10.1063/1.3489110,QUA:QUA24521}.
+\edit{
+We begin 
+by first exploring the self-contained calculation of 
+conventional Hubbard $U$ parameters 
+by means of an automated variational extremisation approach.
+%
+Indeed, 
+the automated correction of subspace SIE 
+is a compelling possibility in itself, 
+and one that warrants a rigorous investigation 
+as such a mechanism  
+would be extremely useful for many practitioners    
+and expedient in the context of high-throughput materials informatics~\cite{jain2011high,setyawan2010high,curtarolo,Curtarolo2012218,PhysRevX.5.011006}.
+%
+This procedure may be in fact possible 
+if we can effectively define the state 
+that is free of SIE in terms of 
+relevant constraints on the ground-state density.
+%
+We therefore propose to exploit 
+the efficiency of the optimisation methods encapsulated by 
+constrained density-functional theory 
+(cDFT)~\cite{PhysRevLett.53.2512,Sit2007107,doi10.1021/cr200148b}, 
+to directly and automatically enforce SIE correction 
+with the constraint-like form of the DFT+$U$ functional, 
+for which the $U^I$ resemble the Lagrange multipliers
+of constraints on the eigenvalues of $\hat{n}^{I \sigma}$}.
+
+
+\edit{
+We shall demonstrate, however,  
+that cDFT is fundamentally incompatible with 
+constraints beyond linear order, 
+{and that this prohibits the satisfaction 
+of exact constraints targeting SIE interactions}.
+%
+Fundamentally,  
+we show that one cannot excite a system afflicted with SIE 
+into a state that reliably exhibits less, 
+without breaking a physical symmetry 
+or introducing auxiliary parameters.}
+
+\edit{
+However, 
+we show that a two-parameter method is 
+sufficient to precisely cancel the SIE 
+and attain the exact subspace occupancy 
+or exact eigenvalue 
+when the free energy is considered instead.
+%
+This finding illustrates that a generalised DFT+$U$ 
+functional is effective in treating 
+both the total-energy and ionisation potential 
+of a one-electron system, 
+entirely from first principles.
+%
+Moreover, 
+we derive formulae for estimating 
+these parameters which depend only 
+on ground-state DFT quantities 
+and the self-consistent Hubbard $U$ 
+calculated from linear-response in the previous Chapters.}
+%
+
+%%
+%cDFT formalises and automates the use of 
+%self-consistent~\cite{PhysRevB.94.035159}
+%penalty functionals in DFT 
+%to access excited states, 
+%and imposes them as exact constraints 
+%by locating the lowest-energy excited state 
+%compatible with the underlying functional
+
+%
+%Constrained density-functional theory 
+%(cDFT)~\cite{PhysRevLett.53.2512,Sit2007107,doi10.1021/cr200148b} 
+%formalises and automates the use of self-consistent~\cite{PhysRevB.94.035159}
+%penalty functionals in DFT,
+%and imposes them as exact constraints 
+%by locating the lowest-energy excited state 
+%compatible with the underlying functional.
+%% 
+%The KS potential is supplemented 
+%by an external, constraint potential, 
+%parameterised by a set of 
+%{\it Lagrange multipliers}, 
+%which are then optimised {\it in situ}.
+%
+%{
+%cDFT is often used to access excited states, 
+%which are typically beyond the scope 
+%of Kohn-Sham DFT calculations, 
+%and is sometimes effective 
+%for treating SIE indirectly~\cite{PhysRevLett.97.028303,doi10.1021/cr200148b}, 
+%in which these states are parameterised 
+%by expectation values of the density, 
+%or density-dependent quantities, 
+%within a localised region.}
+%
+%It is effective for treating SIE indirectly 
+%in systems comprising well-separated fragments, 
+%where it may be used to break physical symmetries 
+%and explore the integer-occupancy states 
+%at which SIE is typically 
+%reduced~\cite{PhysRevLett.97.028303,doi10.1021/cr200148b}.
+%
+
+%{
+%The demonstrable utility of cDFT 
+%for ameliorating SIE in its own right, 
+%combined with the constraint-like functional form of DFT+$U$ - 
+%where the $U^I$ resemble the Lagrange multipliers
+%of constraints on the eigenvalues of $\hat{n}^{I \sigma} $ - 
+%therefore suggests the potential use of the 
+%optimisational methods encapsulated by cDFT 
+%to directly and automatically enforce 
+%the objective of DFT+$U$.}
+%
+%This automated correction of 
+%systematic errors in approximate functionals, 
+%such as subspace SIE, 
+%is a compelling possibility, 
+%and one that warrants a rigorous investigation.
+
+%Regardless, we propose circumventing this problem 
+%by expanding the constraint into terms comprising 
+%powers of the target variable,
+%which may be interpreted either as distinct constraints 
+%each with its own Hubbard $U$ type Lagrange multiplier, 
+%or as the components of a generalised DFT+$U$ functional.
+%%
+%The latter approach prevails 
+%in our tests on a model one-electron system, H$_2^+$,
+%in that it readily recovers the exact total-energy
+%while constraints preserving the symmetric 
+%treatment of the density fail to do so.
+%%
+%This motivates the construction of 
+%a generalised DFT+$U$ functional 
+%that circumvents the limitation of the 
+%linear term in original construction to 
+%reconcile Koopmans' condition 
+%and the total-energy concurrently.
+%
+%For this, 
+%we outline a practical, approximate scheme 
+%by which the required pair of Hubbard parameters, 
+%denoted as $U_1$ and $U_2$, 
+%may be calculated from first-principles DFT quantities.
+
+
+%BACKGROUNG TO CDFT
+\section{Constrained-DFT}
+\label{sec:cdft}
+
+Constrained density-functional theory (cDFT)~\cite{doi10.1021/cr200148b}
+is a generalisation of DFT, 
+in which the total-energy functional is augmented by 
+one or more {constraints}.
+%
+{
+These constraints operate on 
+the expectation values of 
+charge or spin-density  
+(or their sums, differences or moments), 
+which are enforced by a set of 
+{\it Lagrange multipliers} $\{V_\textrm{c}\}$.}
+
+The total-energy of a constrained system $W$, 
+in which the total charge density in some region
+(in our case the localised subspace) is constrained, 
+is given as follows
+%
+\begin{align}
+&W[n,V_\textrm{c}]=E_\textrm{DFT}[n]
++V_\textrm{c}E_\textrm{c}[n] \nonumber \\[0.5em]
+\quad\mbox{where}\quad 
+&E_\textrm{c}[n]=\left(\sum_\sigma \int d\br\ w_\textrm{c}^\sigma(\br)n(\br) - N^\sigma_\textrm{c}\right).
+\end{align}
+%
+The {\it weight function}  $w_\textrm{c}^\sigma(\br)$
+specifies the region in which the constraint 
+enforces the target charge $N^\sigma_\textrm{c}$.
+
+Although constraints have long played 
+a significant role in the interpretation of physical processes, 
+the constraint-approach originally gained traction 
+in the DFT community with the work of 
+Dederichs~\cite{PhysRevLett.53.2512} 
+and other contributors~\cite{PhysRevB.44.13319,
+PhysRevLett.56.2407,
+doi:10.1021/j100132a040,
+JCC:JCC12,
+PhysRevLett.94.036104,
+PhysRevB.75.115409,
+Behler:947885}, 
+whose combined efforts facilitated 
+the calculation of states not directly accessed 
+by the unconstrained exchange-correlation functional, 
+such as charge transfer energies, 
+defect states, 
+and magnetic impurities.
+%
+However these calculations were computationally 
+intensive to perform as they required 
+the manual scanning over the space of Lagrange multipliers 
+until the desired state was achieved.
+
+The seminal work of 
+Van Voorhis {\it et al.}~\cite{PhysRevA.72.024502,
+:/content/aip/journal/jcp/125/16/10.1063/1.2360263,
+:/content/aip/journal/jcp/140/18/10.1063/1.4862497,
+doi:10.1021/ct0503163,
+doi:10.1021/jp061848y,
+:/content/aip/journal/jcp/127/16/10.1063/1.2800022,
+PhysRevB.94.035159}, 
+on which the contemporary application of cDFT is now based, 
+later formalised an {optimisation} approach 
+toward the solution of constraints, 
+in which they established 
+that the constraint is satisfied at an extremum of the total-energy 
+with respect to the Lagrange multipliers $V_\textrm{c}$
+%
+\begin{equation}
+\frac{dW}{dV_\textrm{c}}=0 
+\quad\Rightarrow\quad 
+E_\textrm{c}[n]=0
+\label{eq:dwdv}
+\end{equation}
+%
+and that the extremum corresponds to a maximum, 
+guaranteed by a negative-definite curvature, 
+%
+\begin{equation}
+\frac{d^2W}{dV_\textrm{c}^2}\leq 0 
+\quad\mbox{for all}\quad
+V_\textrm{c},\ N_\textrm{c}.
+\label{eq:d2wdv2}
+\end{equation}
+%
+{
+However, 
+it was recently remarked by 
+O'Regan and Teobaldi~\cite{PhysRevB.94.035159}, 
+that the assumption of {stationary} orbitals, 
+which contributes to the derivation of Eq.~\eqref{eq:d2wdv2} 
+is incomplete when 
+extended to variational procedures\footnote{See Eq.~6 in Ref.~\cite{PhysRevA.72.024502}
+vs Eq.~14 in Ref.~\cite{PhysRevB.94.035159}.}.
+%
+%and the condition which must be strictly enforced 
+%is that of {\it orthornormalised} KS orbitals, 
+%i.e, $\braket{\psi^*_{i\sigma}}{\psi_{j\sigma}}=\delta_{ij}$.
+%
+Under this generalisation, 
+the constraint is still satisfied at the energy maximum as in Eq.~\eqref{eq:dwdv}, 
+but with the introduction of the inverse dielectric response $\epsilon^{-1}$ 
+in the expression for Eq.~\eqref{eq:d2wdv2}.
+% 
+This means that the curvature is no longer 
+{\it guaranteed} to be negative-definite for multiple constraints 
+(thereby precluding the existence of a unique maximum) 
+but is proven to be so for single constraints, 
+or those that are not ill-posed.}
+
+
+{
+cDFT has  proven extremely useful in many applications 
+over the years}, including 
+charge transfer calculations~\cite{PhysRevB.88.165112,
+PhysRevB.93.165102,
+doi:10.1021/ct0503163,
+doi:10.1021/jp061848y,
+doi:10.1021/jp204962k,
+doi:10.1021/jp103153a,
+:/content/aip/journal/jcp/125/16/10.1063/1.2360263,
+doi:10.1021/jp912049p,
+doi:10.1021/jp106989t,
+doi:10.1063/1.3190169,
+PhysRevB.77.115421,
+Kubas14jcp,
+Kubas15pccp,
+doi:10.1021/acs.chemrev.7b00086}, 
+electronic coupling parameters~\cite{doi:10.1063/1.3507878,Kubas14jcp,Kubas15pccp}, 
+and in calculating of Hubbard~$U$ 
+parameters in DFT+$U$~\cite{PhysRevB.44.943,PhysRevB.74.235113,PhysRevB.67.153106,PhysRevB.39.9028}.
+%
+cDFT is also practiced in the correction of static correlation error 
+to construction efficient, minimal basis sets for configuration interaction 
+calculations~\cite{:/content/aip/journal/jcp/127/16/10.1063/1.2800022,
+:/content/aip/journal/jcp/140/18/10.1063/1.4862497,
+:/content/aip/journal/jcp/130/3/10.1063/1.3059784,
+:/content/aip/journal/jcp/133/6/10.1063/1.3470106}.
+% 
+For a comprehensive account of the cDFT method, 
+we refer the reader to 
+Refs.~\cite{PhysRevLett.53.2512,
+PhysRevA.72.024502,
+PhysRevB.94.035159,
+doi10.1021/cr200148b,
+doi:10.1021/acs.chemrev.7b00086}.
+
+The broad application of cDFT to date 
+has focused primarily on constraints 
+linear in density-dependent quantities 
+while there have been sparse references
+to non-linear constraints in the prevailing
+literature~\cite{PhysRevLett.79.1337,PhysRevB.59.12173,GIRAUD197023}, 
+particularly in the realm of nuclear physics~\cite{FLOCARD1973433,Staszczak2010,PhysRevC.78.024313}.
+%
+To our knowledge, however, 
+a formal solution to non-linear constraints 
+on the electronic density was not proposed in any,  
+hence motivating our interest in their application.
+
+%FALURE OF NON-LINEAR CONSTRAINTS
+\section{Non-linear constraints}
+\label{sec:non_linear_constraints}
+
+To investigate the efficiency  
+of non-linear constraints for targeting SIE, 
+let us reconsider the one-electron system H$_2^+$, 
+which we showed in the previous Chapters 
+to be highly amenable to DFT+$U$ type corrections.
+%
+The simplest conceivable constraint functional
+that targets SIE assumes a quadratic form
+%
+\begin{equation}
+C_2 =\sum_{I\sigma} ( N^{I\sigma} - N^{I\sigma}_\textrm{c} )^2 
+\quad\mbox{with}\quad
+N^{I\sigma}  = \textrm{Tr} [ \hat{n}^{I\sigma} ], 
+\end{equation}
+%
+where $N^{I\sigma}$ is the total occupancy of 
+the error-prone subspace $I$, 
+and $N^{I\sigma}_\textrm{c}$ is its targeted value, 
+for spin $\sigma$.
+%
+Although this constraint is a 
+functional of subspace total occupancies, 
+rather than the occupancy eigenvalues as in DFT+$U$, 
+it is an unimportant distinction for single-orbital sites.
+%
+For $M$ identical subspaces with  
+$N^{I\sigma}_\textrm{c} = N_\textrm{c}$ for all $I$ and $\sigma$, 
+the total-energy of the system is given by
+%
+{
+\begin{equation}
+W[n,V_\textrm{c}] = E_\textrm{DFT}[n] + M V_\textrm{c}\,C_2[n]
+\end{equation}}
+where $V_\textrm{c}$ is the common 
+cDFT Lagrange multiplier.
+%
+This gives rise to a constraining potential of the form
+%
+\begin{equation}
+\hat{v}^{I\sigma}_\textrm{c} = 
+2 V_\textrm{c} \sum_I ( N^{I\sigma} - N_\textrm{c} ) \hat{P}^{I } 
+\end{equation}
+%
+which depends explicitly 
+on the violation of the constraint, i.e., 
+it is attractive for $N^{I\sigma}<N_\textrm{c}$ 
+and repulsive for $N^{I\sigma}>N_\textrm{c}$.
+%
+This, in turn, 
+generates a corrective 
+interaction-kernel given by
+%
+\begin{equation}
+\hat{f}_\textrm{c}=\frac{\delta \hat{v}^{I\sigma}_\textrm{c}}{\delta\hat{n}}= 2 V_\textrm{c}\, \sum_I \hat{P}^{I }  \hat{P}^{I} 
+\label{eq:cdft_kernel}
+\end{equation}
+%
+which acts to modify the energy-density profile.
+%
+In fact, the interaction-kernel $\hat{f}_\textrm{c}$
+is identical to that generated by DFT+$U$
+when $V_\textrm{c} = - U^I / 2$, 
+and thus motivates 
+our initial choice of a quadratic constraint.
+%
+Moreover, 
+following the procedure prescribed in 
+Ref.~\cite{PhysRevB.94.035159} 
+for the self-consistent cDFT problem,
+the Hellmann-Feynman theorem 
+provides that the first energy derivative 
+with respect to the Lagrange multiplier 
+is simply the constraint functional 
+%
+\begin{equation}
+\frac{d W}{d V_{\textrm{c}}} = C_2 = (N^{I\sigma}-N_\textrm{c})^2,
+\label{eq:energy_deriv1}
+\end{equation}
+%
+so that the total-energy 
+$W \left( V_\textrm{c}  \right)$ 
+always finds a stationary point 
+when the constraint is satisfied, i.e., $C_2 = 0$.
+%
+
+{
+In order to assess the potency 
+of this functional to correct SIE 
+in a one-electron model, 
+we investigate the H$_2^+$ molecule}
+at an intermediate bond-length of 4~a$_0$, 
+using the same calculation parameters 
+outlined in Chapter~\ref{ch:self_interaction_error}.
+%
+{
+At this bond-length, 
+the overlap of the two PBE 1$s$ orbitals   
+yields an intermediate double-counting 
+in the subspace total occupancy of 24\%}. 
+%
+A physically intuitive target occupancy of
+$N_\textrm{c} = 0.5$~e per atom is 
+chosen\footnote{{Henceforth in this analysis, 
+we shall suppress the site and spin indices for brevity.}}, 
+which requires a repulsive constraint 
+and, therefore, a positive $V_\textrm{c}$.
+%
+However, the same qualitative outcome 
+can be composed from the selection of any 
+$N_\textrm{c} \ne N_\textrm{DFT}$, 
+where $N_\textrm{DFT}$ 
+is the unperturbed ground-state subspace density.
+
+The total-energy of the system 
+as a function of the Lagrange multiplier $V_\textrm{c}$ 
+is illustrated in Fig.~\ref{fig:h2+_lagrange_multiplier}, 
+in which it is clearly demonstrated 
+that the $C_2$ constraint cannot be enforced, 
+as was similarly remarked by Staszczak in Ref.~\cite{Staszczak2010}, 
+since $W \left( V_\textrm{c} \right)$ 
+fails to attain a stationary point.
+%
+This is further emphasised by the exponential decay 
+of the total-energy derivatives, 
+the first three of which are also depicted.
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/h2+_lagrange_multiplier}
+\caption[Total-energy of constrained H$_2^+$ vs Lagrange multiplier]
+{The total-energy of constrained H$_2^+$ at 4~a$_0$ bond-length, 
+with a target occupancy of $N_\textrm{c}=0.5$~e per atom 
+against the cDFT Lagrange multiplier $V_\textrm{c}$. 
+%
+Also shown is the constraint functional 
+$C_2=(N-N_\textrm{c})^2$,
+averaged over the two atoms, and its
+first and second derivatives, 
+which all rapidly diminish with $V_\textrm{c}$.}
+\label{fig:h2+_lagrange_multiplier}
+\end{figure}
+
+
+
+Indeed, the key to understanding 
+the failure of the  $C_2$ constraint
+lies in the rapid {decline} in the 
+self-consistent cDFT response 
+functions~\cite{PhysRevB.94.035159} 
+$d^m N/d V_\textrm{c}^m\sim d^{m+1} W/d V_\textrm{c}^{m+1}$, 
+the first three of which are 
+depicted in Fig.~\ref{fig:h2+_response_functions}.
+%
+This results in diminishing returns 
+in regard to the efficacy of the constraining potential 
+as $V_\textrm{c}$ is increased.
+%
+In other words, 
+as the constraint asymptotically 
+approaches satisfaction with
+increasing $V_\textrm{c}$, 
+the density becomes less and less 
+responsive to to the perturbation 
+incurred by $V_\textrm{c}$, 
+and so never attains the target value.
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/h2+_response_functions.pdf}
+\caption[Interacting response functions for H$_2^+$ vs Lagrange multiplier]{
+The magnitudes of the  
+interacting density response 
+$\chi=\mathrm{Tr} \left[ \frac{d N}{d \hat{v}_\textrm{ext}}  \hat{P} \right]$ 
+%calculated by means of Eq.~\eqref{eq:first_order_resp}, 
+and  cDFT response functions $d^m N / d V_\textrm{c}^m$, 
+calculated from a polynomial fit to the
+average subspace occupancy of H$_2^+$ at 4~a$_0$. 
+%as in Fig.~\ref{fig:h2+_lagrange_multiplier}. 
+%
+The responses diminish as we asymptotically 
+approach constraint satisfaction,
+while the occupancy, 
+and hence $\chi$, 
+tends to a constant value.}
+\label{fig:h2+_response_functions}
+\end{figure}
+
+
+\subsection{Proof of the inapplicability of non-linear constraints}
+
+{
+The incapability of the quadratic constraint 
+to attain a stationary point for this simple system 
+presents a surprising result.
+%
+We are therefore motivated to investigate whether 
+non-linear constraints of a general form
+%
+\begin{equation}
+C_n = ( N - N_\textrm{c} )^n
+\quad\mbox{with}\quad
+n\in \{\mathds{N}; n\geq2\}, 
+\end{equation}
+%
+are also unable to be satisfied 
+for a target occupancy 
+$N_\textrm{c} \ne N_\textrm{DFT}$, 
+or if this outcome is specific 
+to quadratic constraints only.}
+%
+To preface this inquiry, 
+it is provided that the $n=0$ case is trivial, 
+and $n=1$ returns a conventional linear constraint.
+%
+Moreover, 
+the constraint is ill-defined for $n<0$
+since the total-energy would diverge 
+upon constraint satisfaction, 
+and $C_n$ becomes imaginary for non-integer $n$
+when  $( N - N_\textrm{c})$ is negative.
+%
+We shall, therefore, 
+limit our discussion to 
+constraints of integer order $n \ge 2$.
+
+{
+To assess the ease of accessing the stationary points 
+sought by non-linear constraints 
+we must investigate the nature of 
+the derivatives of the total-energy
+$W\left( V_\textrm{c} \right)$.
+%
+We begin this analysis with the first derivative, 
+which simply returns the constraint itself 
+%
+\begin{equation}
+\frac{dW}{dV_\textrm{c}}=C_{n},
+\end{equation}
+%
+as in Eq.~\eqref{eq:energy_deriv1}.
+%
+Hence, the first derivative is trivially equal to zero 
+at the stationary point.}
+%
+We proceed then to the second derivative, 
+which follows directly from the first and is 
+%
+\begin{align}
+\frac{d^2W}{dV_\textrm{c}^2}= \frac{d C_n}{dV_\textrm{c}} ={}& 
+ n\left(N-N_\textrm{c}\right)^{n-1}\frac{dN}{dV_\textrm{c}} 
+ = nC_{n-1} \frac{dN}{dV_\textrm{c}}. 
+\label{eq:energy_deriv2}
+\end{align}
+%
+It is constructive from here on
+to express the total-energy derivatives in terms of the 
+subspace-projected interacting response function 
+%
+\begin{equation}
+\chi = \mathrm{Tr} \left[  \frac{d N}{d \hat{v}_\textrm{ext}}  \hat{P} \right], 
+\end{equation}
+%
+since this object 
+- unlike the cDFT response functions - 
+is independent of the form of the constraint, 
+where the external potential is denoted by 
+%
+\begin{equation}
+\hat{v}_\textrm{ext}
+%= \frac{\delta E_\textrm{ext}}{\delta\hat{\rho}}
+=\hat{v}_\textrm{c}
+=V_\textrm{c}\frac{\delta C_n}{\delta\hat{\rho}}
+=n  V_\textrm{c} \left( N - N_\textrm{c} \right)^{n-1} \hat{P}.
+\end{equation}
+%
+An expression for the 
+cDFT response function 
+$dN / d V_\textrm{c}$
+may then be derived 
+by means of the chain rule via 
+the external potential, as follows
+%
+\begin{align}
+\frac{d N}{d V_\textrm{c}}
+&=\mathrm{Tr} \left[ \frac{d N}{d \hat{v}_\textrm{ext} } 
+\frac{d \hat{v}_\textrm{ext} }{d V_\textrm{c} } \right] =\mathrm{Tr} \left[ \frac{d N}{d \hat{v}_\textrm{ext} } 
+\frac{d}{d V_\textrm{c} }\left(n  V_\textrm{c}\left( N - N_\textrm{c} \right)^{n-1} \hat{P}\right) \right] \nonumber  \\[1em]
+&=\mathrm{Tr} \left[ \frac{d N}{d \hat{v}_\textrm{ext} }  \hat{P} \right]
+\frac{d}{d V_\textrm{c} }\left(n  V_\textrm{c}C_{n-1}\right) 
+%&=n \chi \frac{d}{d V_\textrm{c}} \left( V_\textrm{c}\,  C_{n-1}\right) \nonumber \\
+=n \chi\left(C_{n-1}+V_\textrm{c}\,\frac{dC_{n-1}}{dV_\textrm{c}}\right) \nonumber  \\[1em]
+&=n \chi\left(C_{n-1}+V_\textrm{c}\,(n-1)(N-N_\textrm{c})^{n-2}\frac{dN}{dV_\textrm{c}}\right) \nonumber   \\[1em]
+&=n \chi\left(C_{n-1}+V_\textrm{c}\,(n-1)C_{n-2}\frac{dN}{dV_\textrm{c}}\right).
+\label{eq:first_order_resp_derivation}
+\end{align} 
+%
+Thus, simplifying the terms 
+in the last step yields 
+the first cDFT response function
+%
+\begin{equation}
+\frac{d N}{d V_\textrm{c}}
+=\frac{n \chi C_{n-1}}{ 1 - n \left( n-1 \right) \chi V_\textrm{c} C_{n-2}}.
+\label{eq:first_order_resp}
+\end{equation}
+%
+%which can be verified numerically.
+%
+Substituting Eq.~\eqref{eq:first_order_resp} 
+into Eq.~\eqref{eq:energy_deriv2} 
+then gives the second energy derivative 
+in terms of the constraint and 
+subspace interacting response
+%
+\begin{equation}
+\frac{d^2W}{dV_\textrm{c}^2}
+=\frac{\chi n^2 C_{n-1}^2}{ 1 - n \left( n-1 \right) \chi V_\textrm{c} C_{n-2}}.
+\label{eq:energyderive2_full}
+\end{equation}
+%
+
+For any valid stationary point,
+where $N=N_\textrm{c}$,  
+the constraint is satisfied 
+by construction: $C_n = 0$.
+%
+Conversely, 
+the Lagrange multiplier $V_\textrm{c}$,  
+the interacting response $\chi$, 
+and the energy derivatives beyond first order 
+must all remain finite to distinguish  
+the unique inflection point.
+%
+Inspecting Eqs.~\eqref{eq:first_order_resp}~\&~\eqref{eq:energyderive2_full} 
+again, we see that the numerators 
+for the response 
+$d N / d V_\textrm{c}$ 
+and energy curvature 
+$d^2 W / d V_\textrm{c}^2$
+vanish at the stationary point since 
+%
+\begin{equation}
+C_{n-1}=(N-N_\textrm{c})^{n-1} = 0 
+\quad\mbox{for}\quad
+n\geq 2.
+\end{equation}
+%
+The latter is therefore not 
+a stationary point discriminant, 
+and we must inspect higher-order derivatives 
+instead.
+%
+Continuing from Eq.~\eqref{eq:energy_deriv2}, 
+the third derivative of the total-energy is\footnote{In general, 
+the energy derivative of order $m$  involves cDFT
+response functions up to order $m-1$, 
+and positive integer powers of $( N - N_\textrm{c})$, 
+which vanish for all $n\neq m-1$, 
+but do not diverge.} 
+%
+\begin{align}
+\frac{d^3 W }{ d V_\textrm{c}^3 } ={}&
+n  \left(n-1\right) C_{n - 2} 
+\left( \frac{d N}{d V_\textrm{c} }  \right)^2 +
+ n C_{ n - 1} \frac{d^2 N}{d V_\textrm{c}^2 }.
+\end{align}
+%
+which depends on the both the first 
+and second-order responses.
+%
+Since we have shown the former vanishes 
+at the stationary point, 
+it remains to be proven for the latter.
+
+Beginning with the last line in   
+Eq.~\eqref{eq:first_order_resp_derivation}, 
+the second-order response may be derived thence.
+%
+We begin by evaluating the 
+first term in the derivative of the expansion:
+%
+\begin{align}
+T_1=\frac{d}{dV_\textrm{c}}\left[n\chi C_{n-1}\right]
+&=n\frac{d\chi}{dV_\textrm{c}}C_{n-1}+n\chi\frac{C_{n-1}}{V_\textrm{c}}\nonumber \\[1em]
+&=n\frac{d\chi}{dV_\textrm{c}}C_{n-1}+n(n-1)\chi C_{n-2}\frac{dN}{dV_\textrm{c}}.
+\end{align}
+%
+The second term is then given by
+%
+\begin{align}
+T_2&=n(n-1)\frac{d}{dV_\textrm{c}}\left[\chi V_\textrm{c}C_{n-2}\frac{dN}{dV_\textrm{c}}\right] \nonumber \\[1em]
+%
+&=n(n-1)\left[\frac{d\chi}{dV_\textrm{c}}V_\textrm{c}C_{n-2}\frac{dN}{dV_\textrm{c}}
++ \chi C_{n-2}\frac{dN}{dV_\textrm{c}}\right.+\left.\chi V_\textrm{c}\,\frac{dC_{n-2}}{dV_\textrm{c}}\frac{dN}{dV_\textrm{c}}+\chi V_\textrm{c}\,C_{n-2}\frac{d^2N}{dV_\textrm{c}^2}\right] \nonumber  \\[1em]
+%
+&=n(n-1)\frac{dN}{dV_\textrm{c}}\left[\frac{d\chi}{dV_\textrm{c}}V_\textrm{c}C_{n-2}
++ \chi C_{n-2}
++\chi V_\textrm{c}\,(n-2)C_{n-3}\frac{dN}{dV_\textrm{c}}\right] \nonumber \\
+&\qquad\qquad\qquad\qquad +n(n-1)\chi V_\textrm{c}\, C_{n-2}\frac{d^2N}{dV_\textrm{c}^2} \nonumber  \\[0.75em]
+&=T_2^\prime + n(n-1)\chi V_\textrm{c}\, C_{n-2}\frac{d^2N}{dV_\textrm{c}^2},
+\end{align}
+%
+where in the last step we have grouped terms 
+depending on $dN/dV_\textrm{c}$ 
+into the term $T_2^\prime$.
+%
+Gathering the terms from 
+$T_1$ and $T_2$, 
+the second-order response function 
+may be constructed as 
+%
+\begin{align}
+%\frac{d^2N}{dV_\textrm{c}^2}&= T_1+T_2^\prime + n(n-1)\chi V_\textrm{c}\, C_{n-2}\frac{d^2N}{dV_\textrm{c}^2}\nonumber \\
+%\nonumber \\
+%\Rightarrow\quad
+\frac{d^2N}{dV_\textrm{c}^2} &= \frac{T_1+T_2^\prime}{1-n(n-1)\chi V_\textrm{c}\, C_{n-2}\frac{d^2N}{dV_\textrm{c}^2}},
+\label{second_order_resp}
+\end{align}
+%
+where the numerator is given by
+%
+\begin{align}
+\label{second_order_resp_numerator}
+T_1+T_2^\prime &= 
+n\frac{d\chi}{dV_\textrm{c}}C_{n-1}   \\[0.5em]
+&+n(n-1)\frac{dN}{dV_\textrm{c}}\left[\frac{d\chi}{dV_\textrm{c}}V_\textrm{c}C_{n-2}\right.
++ \left. 2\chi C_{n-2} +\chi V_\textrm{c}\,(n-2)C_{n-3}\frac{dN}{dV_\textrm{c}}\right] \nonumber, 
+\end{align} 
+%
+and depends explicitly on the terms 
+$C_{n-1}$ and $dN/dV_\textrm{c}$, 
+which, as we have seen, 
+vanish at the stationary point $N=N_\textrm{c}$ 
+for $n\geq 2$.
+%
+Furthermore, 
+any potentially non-zero terms, 
+such as $C_{n-2}$ or 
+$C_{n-3}$\footnote{For $n=3$, $C_{n-3}=C_0=1$ and the result is still valid.}, 
+are contained in the square brackets, 
+which are pre-multiplied by 
+the vanishing $dN/dV_\textrm{c}$.
+%
+Therefore, 
+the second-order response 
+$d^2 N / d V_\textrm{c}^2 $ 
+and, by extension 
+$d^3 W / d V_\textrm{c}^3 $, 
+both vanish at stationary points for all $n \ge 2$, 
+due to the vanishing $C_{n-1}$
+in the first term in the numerator, 
+and the vanishing 
+$dN/dV_\textrm{c}$ 
+coupled to all remaining terms.
+
+
+In general, 
+the cDFT response function 
+$d^m N / d V_\textrm{c}^m$ 
+comprises terms proportional to 
+response functions of lower order, 
+in addition to mixed terms composed of 
+the interacting response function $\chi$
+and its derivatives 
+$d^{m-1} \chi / d V_\textrm{c}^{m-1}$, 
+and constraint terms $C_{n}$, 
+such that 
+%
+\begin{align}
+\frac{d^mN}{dV_\textrm{c}^m}\equiv&
+\frac{d^mN}{dV_\textrm{c}^m}\left[\left\{\frac{d^{m-k}N}{dV_\textrm{c}^{m-k}}\right\},
+\left\{\frac{d^{m-1-k}\chi}{dV_\textrm{c}^{m-1-k}}\right\},
+\left\{C_{n-k}\right\}\right]=0, \quad \nonumber \\[0.5em]
+&\forall\  m \quad \mbox{with}\quad
+k=\{1,\cdots,m-1\}.
+\end{align}
+%
+It is then always the case 
+that potentially finite terms, 
+such as $\chi$ and its derivatives, 
+or non-divergent powers of $(N-N_\textrm{c})$, 
+are coupled to response functions, 
+or the vanishing constraint $C_{n-1}$.
+%
+It follows, 
+that response functions of all orders 
+vanish as we approach a stationary point, 
+as illustrated in Fig.~\ref{fig:h2+_response_functions}, 
+since each depends successively on 
+vanishing lower-order response functions, 
+beginning with the first: $dN/dV_\textrm{c}$.
+
+Then, 
+since each term in the $m^{\textrm{th}}$ 
+energy derivative is always
+proportional to non-divergent powers of 
+$(N-N_\textrm{c})$ 
+and response functions of (at most) order $m-1$, 
+the same logic applies, 
+and all energy derivatives tend to zero as well, 
+as depicted in Fig.~\ref{fig:h2+_lagrange_multiplier}, 
+thereby proving the conjecture.
+%
+This serves as an inductive proof 
+that non-linear constraints targeting SIE, 
+of the form $C_n$, 
+cannot be enforced.
+%
+
+
+%TWO CONSTRAINTS
+\subsection{Construction of separable constraints}
+\label{sec:two_constraints}
+
+In light of the failure of non-linear constraints 
+to attain a stationary point, 
+one possible option remains: 
+to re-cast the $C_2$ functional targeting SIE  
+into a more viable form 
+comprising separate linear and quadratic constraints.
+%
+For a particular site, 
+this new constraint functional is constructed 
+by expanding the terms in $C_2$ as follows
+%
+\begin{align}
+C_2&=(N-N_\textrm{c})^2\nonumber \\
+&=N^2+N_\textrm{c}^2-2NN_\textrm{c}\nonumber\\
+&=N^2+N_\textrm{c}^2-2NN_\textrm{c}+2N_\textrm{c}^2-2N_\textrm{c}^2\nonumber\\
+&=N^2-N_\textrm{c}^2+2N_\textrm{c}(N_\textrm{c}-N)\nonumber\\
+&=-2N_\textrm{c}(N-N_\textrm{c})-(N_\textrm{c}^2-N^2).
+\end{align}
+%
+Invoking separate Lagrange multipliers 
+in this reformulation 
+may then afford the system 
+an additional degree of freedom 
+to satisfy the individual constraints.
+
+It is instructive to write this result 
+in the notation of DFT+$U$.
+%
+By invoking a small  change of variables, 
+we arrive at the constraint energy 
+for all sites (neglecting spin)
+%
+\begin{align}
+E_{C_2}&=\sum_{I} \frac{U_1}{2} \left(N^I-N_\textrm{c}\right) 
+ + \sum_{I} \frac{U_2}{2} \left(N^{ 2}_\textrm{c}- \left(N^{I}\right)^{2}\right)\nonumber \\[0.5em]
+& \mbox{where}\quad
+ U_1=-2N_\textrm{c}V_\textrm{c}
+ \quad\mbox{and}\quad
+ U_2=-V_\textrm{c}.
+\label{eq:dft+nu}
+\end{align}
+%
+The vanishing response problem
+can now be circumvented by 
+decoupling the linear and quadratic
+Hubbard-like parameters 
+$U_1$ and $U_2$, 
+and interpreting them 
+as separate Lagrange multipliers.
+%
+The corrective potential is then modified to 
+%
+\begin{equation}
+\hat{V}_{U_1,U_2}=\sum_{I\sigma}\sum_{mm'}\ket{\varphi^I_m}\left(\frac{U_1^I}{2}-U_2^I\,\hat{n}^{I\sigma}_{mm'}\right)\bra{\varphi^I_{m'}}, 
+\label{eq:corrective_potential}
+\end{equation}
+%
+so that the characteristic occupancy eigenvalue
+dividing an attractive from a repulsive  potential 
+is changed from $1/2$ to $U_1/ 2 U_2 $.
+%
+Here, the $U_2$ parameters are responsible 
+for correcting the interaction  
+and for any modification to the gap.
+%
+The $U_1$ parameters, meanwhile, 
+may be used to adjust 
+the linear dependence of the energy
+on the subspace occupancies, 
+and thereby refine eigenvalue derived
+properties such as the ionisation potential (IP).
+
+
+Fig.~\ref{fig:h2+_u1_u2_total_energy} 
+shows the total-energy $W$ contour plot 
+of the H$_2^+$ system as before 
+against the $U_1$ and $U_2$
+defined in Eq.~\eqref{eq:dft+nu}.
+%
+The subspace target occupancy is 
+$N_\textrm{c}=N_\textrm{exact}=0.602$~e, 
+where the population of each of the
+two PBE $1s$ orbital subspaces  
+was calculated using the exact functional.
+%
+We see that the total-energy is 
+maximised along the heavy white line 
+at $\sim 0.92$~eV below the exact energy, 
+for which the constraint is satisfied 
+for non-unique pairs of $(U_1,U_2)$.
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/h2+_u1_u2_total_energy_new.pdf}
+\caption[Constraint energy landscape of H$_2^+$ vs Lagrange multipliers $U_1$ and $U_2$]{
+The constrained energy of H$_2^+$ at 4~a$_0$ 
+relative to the exact total-energy, 
+against $U_1$and $U_2$,  
+with target occupancy $N_\textrm{c} = N_\textrm{exact}$.
+%
+The constraint is satisfied at the  
+total-energy maximum along the 
+solid white line, 
+which lies $\sim 1$~eV below 
+the exact energy.
+%
+The ionisation potential (IP) is exact  
+along the thick yellow line.
+%
+The linear-response Hubbard $U_2$, 
+together with the  $U_1$,  
+needed to recover the 
+exact subspace density and maximise the total-energy, 
+are shown using thin dashed lines.}
+\label{fig:h2+_u1_u2_total_energy}
+\end{figure}
+
+
+To understand why the total-energy 
+stationary points are always degenerate, 
+and hence why the occupancy condition 
+fails to distinguish a unique 
+$\left( U_1,U_2 \right)$,
+we must conduct a second derivative test 
+on the Hessian of the constraint 
+functional\footnote{Total-derivatives are used here
+to indicate that self-consistent
+density response effects are included. 
+The Hubbard parameters
+remain independent variables.}, 
+given by
+%
+\begin{equation}
+H_{ij}=\frac{d^2 W}{d U_i d U_j}.
+\end{equation}
+%
+It directly follows that the determinant of ${\bf H}$ is
+conveniently calculated
+in terms of the response functions
+%
+\begin{align}
+|{\bf H}| 
+&=\frac{1}{2}\left|\begin{array}{cc}
+	dN/dU_1 & -dN^2/dU_1 \\
+	dN/dU_2 & -dN^2/dU_2 \\
+	\end{array}\right| 
+=\frac{1}{2}\left|\begin{array}{cc}
+	dN/dU_1 & -2NdN/dU_1 \\
+	dN/dU_2 & -2Nd/NdU_2 \\
+	\end{array}\right| \nonumber \\[0.75em]
+&=N\left(\frac{dN}{dU_1}\frac{dN}{dU_2}-\frac{dN}{dU_1}\frac{dN}{dU_2}\right)=0,
+\end{align}
+%
+since 
+%
+\begin{equation}
+\frac{dW}{dU_1}=\frac{1}{2}(N-N_\textrm{c})
+\quad\mbox{and}\quad
+\frac{dW}{dU_2}=\frac{1}{2}(N_\textrm{c}^2-N^2).
+\end{equation}
+%
+Given an inconclusive second derivative test, 
+this implies a vanishing energy curvature 
+along the lines which contain 
+a constant corrective potential and, 
+hence, no unique maximum, 
+as shown by Fig.~\ref{fig:h2+_u1_u2_total_energy}.
+
+Suppose we may identify a unique maximum by  
+directly calculating the $U_2$ parameter first, 
+and then optimising the total-energy along $U_1$.
+%
+The self-consistent linear-response $U$ 
+calculated at this bond-length is $4.84$~eV. 
+%
+If we intuitively set $U_2 = U$, 
+based on the correspondence between 
+the interaction corrections in both approaches, 
+then an associate $U_1 = 3.16$~eV 
+is required to recover the exact subspace density.
+%
+These values are indicated by the intersecting 
+white dashed lines in Fig.~\ref{fig:h2+_u1_u2_total_energy}.
+%
+However, the maximum constrained total-energy 
+is still bounded by the choice of target occupancy
+and remains $\sim 1$~eV below the exact energy 
+unless supplemented with an additional energy correction.
+
+Alternatively, 
+if we select another plausible target occupancy  
+$N_\textrm{c} = 0.511$~e 
+the constrained energy can be tuned 
+to reach a maximum at the exact energy, 
+however it requires an unphysical 
+$U_1= U_2 \approx -444$~eV 
+to do so.
+
+Finally, 
+the line on which the IP is exact  
+intercepts $U_1 = 0$~eV 
+at the linear-response $U_2 \approx U$, 
+echoing the `SIC' double-counting 
+correction proposed in Ref.~\cite{PhysRevB.76.033102}.
+%
+However, 
+the IP is also irreconcilable with the exact total-energy, 
+for any $U_1$ and $U_2$, 
+unless subsidised with an energy correction as well.
+%
+We conclude, therefore, 
+that a ground-state susceptible to SIE 
+cannot be excited in a systematic way 
+to a state that is free from SIE 
+by means of exact constraints 
+on the density, 
+without breaking a physical symmetry.
+% 
+In other words, 
+the total-energy cannot typically be corrected of SIE 
+in this scheme by altering the density alone, 
+and a non-zero energy correction term is typically required.
+
+%GENERALISED DFT+U FORMULA
+\section{A generalised DFT+{$U$} formula}
+\label{sec:generalised_dft+u}
+
+We have heretofore shown that 
+non-linear constraints 
+targeting the SIE of a one-electron system 
+cannot restore the exact total-energy 
+by means of automated methods.
+%
+Moreover, 
+we have observed that attaining 
+the exact total-energy or eigenvalue 
+from a linear combination of 
+occupancy-dependent  constraints 
+is not feasible without 
+a supplemental energy term.
+%
+Motivated by these findings,  
+we return toward the development 
+of a generalised DFT+$U$ functional - 
+one that can simultaneously correct 
+the SIE and restore Koopmans' condition. 
+%
+{The strategy we elect to explore 
+in the remainder of this Chapter then  
+is that of computing the $U_1$ and $U_2$ parameters 
+from first-principles from  linear-response methodology.}
+
+%We demonstrated in Fig.~\ref{fig:h2+_dft+u_eigenvalue} 
+%that a persistent deficiency 
+%in the Hubbard functional 
+%lay in restoring Koopmans compliance, 
+%which we affiliated with 
+%an insufficiency in the linear term 
+%in relation to amending the eigenvalue.
+%
+
+Returning again to Eq.~\eqref{eq:dft+nu}, 
+let us omit the target density dependence 
+(by setting $N^I_\textrm{c}=0$) 
+and extract the free-energy~\cite{PhysRevA.72.024502} 
+while adapting the treatment of 
+the subspace occupancy to 
+multi-orbital sites and 
+neglecting inter-eigenvalue terms 
+by resetting 
+$N\to \textrm{Tr}[\hat{n}]$, 
+in the spirit of DFT+$U$.
+%
+By the above modifications, 
+we arrive at the generalised DFT+$U$ functional,
+given by
+%
+\begin{align}
+E_{U_1,U_2} = \sum_{I \sigma} \frac{U^I_1}{2} 
+\mathrm{Tr} \left[ \hat{n}^{I \sigma} \right]  
+-  \sum_{I \sigma}  \frac{U^I_2}{2}
+  \mathrm{Tr} 
+\left[ (\hat{n}^{I \sigma})^{ 2} \right], 
+\label{eq:dft+u1+u2}
+\end{align}
+%
+where the conventional DFT+$U$ functional of 
+Eq.~\eqref{eq:dft+u_functional} is recovered 
+by simply setting $U^I_1=U^I_2$\footnote{
+We also note a resemblance between Eq.~\eqref{eq:dft+u1+u2} 
+and the three-parameter DFT+$U\alpha\beta$ functional
+proposed in Ref.~\cite{dabo2008towards}, 
+however the functional forms are quite different.}.
+
+The supplemental energy correction 
+we previously sought in 
+order to reconcile the eigenvalue 
+is hereby provided by the 
+linear term in Eq.~\eqref{eq:dft+u1+u2}, 
+the total-energy generated by which is shown in 
+Fig.~\ref{fig:h2+_u1_u2_free_energy} 
+against $U_1$ and $U_2$ as before.
+ %
+The zero of energy is again 
+set to the exact energy $E_\textrm{exact}$, 
+the intercept of which with 
+the PBE+$U_1$+$U_2$ energy is 
+indicated by the heavy dashed line.
+%
+The thin dashed lines then indicate 
+the previously calculated Hubbard 
+$U_2 = 4.84$~eV, 
+and the corresponding
+$U_1 = 4.44$~eV 
+required to recover it.
+%
+We note these are remarkably similar to 
+the $U$ value needed by a 
+traditional DFT+$U$ calculation 
+($U_1=U_2 = 3.85$~eV) 
+to do the same.
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/h2+_u1_u2_free_energy_new.pdf}
+\caption[DFT+$U_1$+$U_2$ free energy landscape of H$_2^+$]{
+The free energy of H$_2^+$ at 4~a$_0$ 
+relative to the exact total-energy, 
+obtained from the generalised DFT+$U$ 
+functional in Eq.~\eqref{eq:dft+u1+u2}
+against $U_1$and $U_2$,  
+with target occupancy $N_\textrm{c} = N_\textrm{exact}$.
+%
+The thick orange line is the 
+exact energy intercept, 
+and the thin dashed lines show 
+the linear-response $U_2$ 
+together with the corresponding $U_1$ 
+needed to recover the exact energy.
+%
+The solid white line 
+indicates where the exact subspace
+occupancy is recovered,
+as in Fig.~\ref{fig:h2+_u1_u2_total_energy}.
+}
+\label{fig:h2+_u1_u2_free_energy}
+\end{figure}
+
+The heavy white line, 
+indicates where the exact 
+subspace occupancy is acquired, 
+as in Fig.~\ref{fig:h2+_u1_u2_total_energy}, 
+which intersects with the exact total-energy 
+(orange dashed line) 
+at  $U_1=5.73$~eV and  $U_2=6.98$~eV,
+at which point 
+$E_\textrm{exact}$ and $N_\textrm{exact}$
+are simultaneously attained.
+%
+At the same point, however, 
+the KS eigenvalue 
+$\varepsilon_\textrm{DFT}$
+lies $\sim 2.8$~eV above $\varepsilon_\textrm{exact}$.
+%
+This highlights that an accurate total-energy 
+at a particular occupancy 
+may coincide with an inaccurate ionisation energy, 
+and vice versa,
+as was recently shown in detailed analyses 
+of the residual SIE in hybrid 
+functionals~\cite{PhysRevB.94.035140}
+and in DFT+$U$ itself~\cite{:/content/aip/journal/jcp/145/5/10.1063/1.4959882}, 
+at fractional total occupancies.
+
+However, 
+the generalised DFT+$U$ functional 
+does in fact enable the simultaneous correction of the IP 
+(yellow line in  Fig.~\ref{fig:h2+_u1_u2_total_energy}) 
+and the total-energy at 
+$U_1=10.03$~eV and $U_2=14.18$~eV.
+%
+This preliminary finding is very encouraging
+and in the following section, 
+we will endeavour to invoke 
+these exact conditions 
+across the entire dissociation of H$_2^+$.
+%
+We have shown, however, 
+that the generalised DFT+$U$ formula 
+may provide the correction of any two of 
+the exact energy, eigenvalue, or occupancy,  
+but not all three simultaneously.
+%
+This {highlights} the inherent limitation 
+of this generalised functional going forward.
+
+
+%CALCULATING U1 AND U2
+\subsection{Non-self-consistent estimates for {$U_1$} and  {$U_2$}}
+\label{sec:calculating_u1+u2}
+
+We have thus far been able 
+to effectively estimate  
+the $U_1$ and $U_2$ values 
+required to attain the 
+exact total-energy and IP 
+by exploring the energy landscape and 
+taking reasonable extrapolations.
+%
+This procedure, however, 
+is not practical to follow for all bond-lengths, 
+and a more efficient means of computing 
+$U_1$ and $U_2$ must be employed.
+%
+Fortuitously, 
+in a one-electron case such as H$_2^+$, 
+the degrees of freedom afforded by 
+the two Hubbard parameters  
+allow us to simultaneously 
+resolve the exact total-energy and IP 
+using simple linear algebra.
+
+As demonstrated by the  
+occupancy curves in Fig.~\ref{fig:h2+_occ}, 
+there is a negligible charge and kinetic screening effect
+upon applying a $+U$ correction.
+%
+We may therefore estimate the required 
+$U_1$ and $U_2$ values non-self-consistently  
+by simply supplementing the PBE total-energy 
+(Fig.~\ref{fig:h2+_total_energy})
+with the DFT+$U_1$+$U_2$  functional, 
+and the ionisation potential 
+(Fig.~\ref{fig:h2+_eigenvalues}) 
+with the corresponding correction potential 
+given in Eq.~\eqref{eq:corrective_potential}.
+%
+We may then fit these curves 
+against the exact total-energy profile 
+with respect to the 
+$U_1$ and $U_2$ parameters, 
+to acquire reliable estimates.
+
+Here, we have also used 
+the convenient feature of H$_2^+$ 
+that the PBE $1s$ orbital 
+subspace projectors closely match
+the KS orbitals in spatial profile, 
+and almost exactly so at dissociation.
+%
+Consequently, the red and blue open circles in
+Fig.~\ref{fig:h2+_koopmans} 
+illustrate the values of 
+$U_1$ and $U_2$ required to perform this task, 
+as a function of internuclear distance, 
+which at first seem very large but, 
+nonetheless, deliver the desired result.
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/h2+_koopmans.pdf}
+\caption[Estimated $U_1$ and $U_2$ parameters to restore 
+exact total-energy and Koopmans' condition in dissociating H$_2^+$]{
+Generalised Hubbard $U_1$ and $U_2$ parameters 
+(red, blue) estimated to recover the exact total-energy 
+and Koopmans' condition in dissociating H$_2^+$ 
+using Eq.~\eqref{eq:U1U2}.
+%
+Open circles show the corresponding 
+quantities estimated from linear regression 
+of the exact total-energy and the PBE+$U$ total-energy. 
+%
+The Koopmans $U_K$ is also shown (orange), 
+which dominates $U_1$ at short bond-lengths.
+}
+\label{fig:h2+_koopmans}
+\end{figure}
+
+Let us now attempt to derive formulae to estimate 
+$U_1$ and $U_2$  
+from ground-state DFT quantities.
+%
+Upon the application of a 
+conventional DFT+$U$ correction, 
+stiffening in the subspace response is typically 
+observed~\cite{doi:10.1021/jp070549l,PhysRevLett.97.103001}, 
+as demonstrated by the comparable 
+occupancies in Fig.~\ref{fig:h2+_occ} 
+for $U=0$~eV and $U=8$~eV.
+%
+It is therefore reasonable to construct 
+a charge non-self-consistent first-principles
+calculation scheme for  $U_1$ and $U_2$, 
+e.g., for use in refining DFT+$U$ calculations in 
+order to approximately enforce Koopmans' condition, 
+and we may ask if we can conveniently 
+estimate $U_1$ and $U_2$ 
+using intrinsic quantities of a PBE calculation, 
+without explicit access to the exact values.
+%
+It would also be advantageous to establish a relationship 
+between $U_1$ and $U_2$ 
+and the linear-response $U$.
+%
+In this section, 
+we shall therefore outline a procedure 
+to estimate the charge non-self-consistent 
+$U_1$ and $U_2$ parameters for H$_2^+$ 
+without relying on the fitting of curves 
+with the exact energy profile post-process.
+
+%
+For $M$ equivalent one-orbital subspaces 
+contributing to the energy band responsible for 
+the eigenvalue  
+$\varepsilon_{\textrm{DFT}}$, 
+the exact total-energy and eigenvalue   
+may be approximated from 
+their corresponding PBE quantities 
+as follows 
+%
+\begin{align}
+\label{eq:e_approximated}
+E_{\textrm{exact}} 
+&\approx E_{\textrm{DFT} } + M\left( \frac{U_1}{2} N_{\textrm{DFT}} - \frac{U_2}{2} N_{\textrm{DFT}}^2\right)  \\[0.5em]
+\varepsilon_{\textrm{exact}} 
+&\approx \varepsilon_{\textrm{DFT}} + \frac{U_1}{2} -  U_2 N_{\textrm{DFT}}
+\end{align}
+%
+with density non-self-consistent $U_1$ and $U_2$, 
+where $N_\textrm{DFT} = \mathrm{Tr}  \left[ \hat{n}_\textrm{DFT} \right]$, 
+and neglecting overlap and spillage.
+
+
+Let us now suppose that we have calculated 
+a conventional $U$ which 
+reconciles the total-energy reasonably, 
+so that
+%
+\begin{equation}
+E_{\textrm{exact}} \approx E_{\textrm{DFT}} +  M\frac{U}{2} \left( N_{\textrm{DFT}} - N^2_{\textrm{DFT}} \right).
+\label{eq:dft+u_approximated}
+\end{equation}
+%
+ Finally, we wish to exactly satisfy Koopmans' condition:
+%
+\begin{equation}
+\varepsilon_{\textrm{exact}} = E_\textrm{DFT} [N] - E_\textrm{DFT} [N-1],
+\label{eq:koopmans_approximated}
+\end{equation} 
+%
+where the term $E[N-1]$ is the DFT-estimated 
+total-energy of the ionised system, 
+which in this case, is simply 
+the ion-ion energy $E_\textrm{ion-ion}$.
+ 
+Thus, combining Eqs.~\eqref{eq:e_approximated}~-~\eqref{eq:koopmans_approximated}, 
+where only convenient, approximate 
+DFT quantities have been used, 
+we arrive at 
+%
+\begin{align}
+U_1 &{}\approx  U \left( 1 - N_{\textrm{DFT}} \right) 
+\left( 2 - M N_{\textrm{DFT}}  \right) 
++ U_K \nonumber \\[0.5em]
+\mbox{and}\quad 
+N_\textrm{DFT}U_2 &{}\approx  U \left( 1 - N_{\textrm{DFT}} \right) 
+\left( 1 - M N_{\textrm{DFT}}  \right) + U_K , 
+\label{eq:U1U2}
+\end{align}
+%
+where we have defined the `Koopmans  $U$' as follows 
+%
+\begin{equation}
+U_K =  2 \left(\varepsilon_\textrm{DFT} - \left\{E_\textrm{DFT}[N] - E_\textrm{DFT}[N-1]\right\}\right).
+\end{equation} 
+%
+This term is the part of the correction that 
+effectively imposes Koopmans' condition, 
+primarily affecting $U_1$.
+%
+These results correspond remarkably 
+well with the exact values required, 
+as shown by the solid lines in Fig.~\ref{fig:h2+_koopmans}, 
+and confirms the validity of approximating  
+a negligible density response.
+
+The interdependence between the parameters 
+for any value of $M$ 
+%
+\begin{equation}
+U_1 - U_2 N_\textrm{DFT} \approx U \left( 1 - N_\textrm{DFT} \right)
+\end{equation}
+%
+also reveals the role
+of $U$ in characterising the degree of 
+splitting between $U_1$ and $U_2$.
+ %
+Moreover, 
+enforcing Koopmans' condition in H$_2^+$ 
+pushes both $U_1$ and $U_2$ 
+up to considerably higher values
+than are commonplace~\cite{QUA:QUA24521} 
+in conventional DFT+$U$.
+%
+In Fig.~\ref{fig:h2+_koopmans}, 
+we see that 
+$U_1$ is dominated by $U_K$ at short bond-lengths, 
+where $U_1 \approx N_\textrm{DFT} U_2$, 
+before ultimately falling off to 
+the average of $U$ and $U_2$ in
+the fully dissociated limit.
+%
+Over the same range, 
+$U_K$ composes 75\% - 50\% of $U_2$.
+
+
+
+
+
+
+%RECALCULATING H2+ CURVE
+\subsection{Application to H$_2^+$}
+\label{sec:h2+_with_dft+u1+u2}
+
+Using the estimated $U_1$ and $U_2$ values in Eq.~\eqref{eq:U1U2}, 
+we performed density non-self-consistent 
+DFT+$U_1$+$U_2$ calculations on H$_2^+$ 
+using the non-self-consistent formulae 
+for the PBE total-energy 
+and occupied KS eigenvalue 
+given in 
+Eqs.~\eqref{eq:dft+u_approximated}~\&~\eqref{eq:koopmans_approximated}.
+%
+To put the method on a first-principles footing, 
+we invoke the self-consistent $U^{(2)}$ value, 
+(calculated using the methods described 
+in Chapters~\ref{ch:calculating_hubbard_u}~\&~\ref{ch:self_consistent_hubbard}) 
+to determine $U_1$ and $U_2$.
+%
+The resulting corrections to the 
+total-energy $E$ and eigenvalue $\varepsilon$ take the form 
+%
+\begin{align}
+\Delta E = U^{(2)} (N - N^2)
+\quad\mbox{and}\quad&
+\Delta v_U =  \frac{U^{(2)}}{2} (1 -2N) - \frac{U_K}{2}, \nonumber \\[0.5em]
+\mbox{where}\quad\quad
+U_K/2= \varepsilon_\textrm{PBE}&-(E_\textrm{PBE}-E_\textrm{ion-ion}) .
+\end{align}
+
+Fig.~\ref{fig:h2+_koopmans_total_energy} 
+illustrates the result of this simple technique, 
+which simultaneously reconciles the 
+total-energy and eigenvalue-derived 
+binding curves with the 
+exact result\footnote{
+The total-energy here is that of PBE+$U^{(2)}$ 
+given in Fig.~\ref{fig:h2+_pbe+uout}.} 
+in Fig.~\ref{fig:h2+_total_energy}.
+%
+
+Although the correction is imprecise, 
+since this is a non-self-consistent post-processing step, 
+it nonetheless presents a compelling possibility 
+toward extending DFT+$U$ 
+to ameliorate the IP.
+%
+Indeed, in the dissociating limit, 
+where changes to the occupied Kohn-Sham 
+orbital are negligible and $N\to1/2$, 
+we find that
+%
+\begin{align}
+\varepsilon_{\textrm{PBE}+U_1+U_2} 
+%&= \varepsilon_\textrm{PBE} + \Delta v_U  \nonumber \\
+&= \varepsilon_\textrm{PBE} - ( E_\textrm{ion-ion} - E_\textrm{PBE} + \varepsilon_\textrm{PBE}) \nonumber \\
+&= - ( E_\textrm{ion-ion} - E_{\textrm{PBE}+U_1+U_2} )\equiv - \textrm{IP}, 
+\end{align}
+%
+which restores Koopmans compliance 
+for a SIE correction strength $U$.
+
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/h2+_koopmans_total_energy}
+\caption[Total-energy and eigenvalue binding curves for H$_2^+$ calculated with generalised DFT+$U$ functional]{
+Exact (red),
+total-energy based $E_{\textrm{PBE}+U_1+U_2}$ (blue), 
+and eigenvalue based $\varepsilon_{\textrm{PBE}+U_1+U_2}$ (orange)
+binding curves for H$_2^+$, calculated
+using DFT+$U_1$+$U_2$, 
+which enables the simultaneous  
+SIE correction of the total-energy and Kohn-Sham eigenvalue 
+to precisely the same accuracy.}
+\label{fig:h2+_koopmans_total_energy}
+\end{figure}
+
+
+
+%%POSSIBLE EXTENSIONS
+%\subsection[{Possible extensions to the generalised DFT+$U$ scheme}]{Possible extensions to the generalised\break DFT+$U$ scheme}
+%\label{sec:possible_extensions_dft+u1+u2}
+%
+%If the proposed scheme described above,  
+%is applied to supplement an 
+%existing DFT+$U$ calculation 
+%that has already accurately 
+%recovered the total-energy, 
+%then it is sufficient to set $U = 0$~eV 
+%in our approximate formulae of 
+%Eq.~\eqref{eq:U1U2}.
+%%
+%This is because the SIE interaction has 
+%already been treated by an appropriate $+U_0$ correction.
+%%
+%An approximately Koopmans-compliant  
+%DFT+$U$ calculation may then be 
+%performed by a simple change of parameters 
+%%
+%\begin{equation}
+%(U_1,N_\textrm{DFT}U_2) \to \left(U_K,U_K\right), 
+%\end{equation}
+%%
+%which only requires knowledge of 
+%the ionised state $E[N-1]$.
+%
+%The scheme may also be generalised to 
+%multi-orbital subspaces straightforwardly, 
+%by replacing $N_\textrm{DFT}$ 
+%with a sum over the eigenvalues of 
+%$\hat{n}^I_\textrm{DFT}$, 
+%given as follows 
+%%
+%\begin{equation}
+%N_\textrm{DFT} \to \sum_{m}\left[\hat{n}^I_{mm'}\right]
+%\quad\mbox{and}\quad
+%N_\textrm{DFT}^2 \to \sum_{m}\left[\hat{n}^I_{mm'}\hat{n}^I_{m'm}\right], 
+%\end{equation}
+%%
+%which ignores intra-subspace interactions 
+%in the spirit of DFT+$U$.
+%
+%Finally, the approximation of constant $N_\textrm{DFT}$ 
+%may be replaced by a linear-response approximation, 
+%in terms of the response function $\chi$, 
+%%
+%\begin{equation}
+%N_\textrm{DFT}\to \chi \textrm{Tr}[\hat{v}_\textrm{ext}\hat{P}]
+%\end{equation}
+%%
+%or lifted entirely by means of
+%a  parametrisation of the occupancies in terms of 
+%$\textrm{Tr}\left[ \hat{v}_{U_1 U_2} \right] $ 
+%and a numerical solution of 
+%the resulting equations.
+
+
+%CONCLUSION
+\section{Conclusion}
+%
+To conclude, 
+we have proven analytically, 
+and with stringent numerical tests,
+that non-linear constraints are incompatible 
+with the correction of SIE with cDFT.
+%
+It is not possible, therefore, to automate 
+systematic SIE corrections of the type 
+provided by DFT+$U$ by means of cDFT, 
+notwithstanding the great utility of the latter.
+
+
+We demonstrated that progress can be made, however,  
+by constructing separate constraints 
+for the linear and quadratic density terms 
+and decoupling the corresponding Lagrange multipliers.
+%
+As we have shown, 
+the resultant non-uniqueness of stationary points 
+of such a scheme requires the 
+introduction of additional physics, 
+such as linear-response theory for $U_2$.
+%
+%The additional freedom provided 
+%by a third parameter, 
+%admitting a constant energy shift as suggested
+%in Ref.~\cite{dabo2008towards}, 
+%could also make up the difference.
+
+Our conclusion that 
+a ground-state afflicted by SIE cannot be systematically
+excited to a state that is less so, 
+by means of constraints,
+is reinforced by the fact that it is 
+the target-independent free-energy, 
+and not total-energy, 
+that agrees with the exact energy.
+%
+Indeed, 
+the free-energy of this functional, 
+equivalent to a generalised DFT+$U$ energy, 
+allows both the exact occupancy and energy 
+to be recovered for a reasonable pair of $U$ parameters, 
+which improves upon the performance of conventional DFT+$U$.
+%
+It also provides for the correction of the 
+eigenvalue and the exact energy simultaneously, 
+but at the forfeit of the exact density.
+
+Nonetheless, 
+we have found that the free-energy functional 
+offers the capability of simultaneously 
+correcting two central quantities in DFT, 
+the total-energy and the highest occupied orbital energy.
+%
+This provides further motivation 
+for our so-called `generalised DFT+$U$' functional, 
+the results of which highlight the potential of 
+the DFT+$U_1+U_2$ functional 
+and its immediate compatibility with 
+self-consistently calculated Hubbard $U$ parameters.
+
+The approximate formulae for the required parameters, 
+which may differ greatly from the familiar Hubbard $U$ 
+(even in a one-electron system), 
+offer a novel framework in which to further
+develop double-counting techniques and first-principles 
+schemes for the promising class of methods correcting SIE  
+based on DFT+$U$~\cite{QUA:QUA24521,
+PhysRevLett.97.103001,
+:/content/aip/journal/jcp/145/5/10.1063/1.4959882,
+:/content/aip/journal/jcp/133/11/10.1063/1.3489110}, 
+as well as opening up possibilities for their diverse application.
+%
+For example, we envisage that SIE  correction schemes
+of two or more parameters may also be useful 
+for generalising the exchange fraction of
+hybrid functionals~\cite{PhysRevB.94.035140}, 
+and for DFT+$U$ type corrections of perturbative many-body 
+approximations such as $GW$~\cite{PhysRevB.82.045108}, 
+the deviation from linearity of which is somewhat 
+analogous~\cite{PhysRevA.75.032505,PhysRevB.93.121115}.
+%
+More pragmatically, 
+we expect the extra degree of freedom furnished by $U_1$ 
+to be beneficial in cases where  the quadratic
+approximation to the subspace-averaged
+self-interaction does not remain valid 
+all the way down to the ionised state, 
+which is particularly relevant for H$_2^+$, 
+since that is where the state corresponds 
+to the low-density limit.
+%
+
+
+Interesting avenues for the 
+immediate development of this method 
+include its extension to multi-electron, heterogeneous,
+and non-trivially spin-polarised systems, as well as to
+perform self-consistency over the density 
+and to lift the fixed-occupancy approximation, 
+as outlined in Ref.~\cite{PhysRevB.94.220104}.
+%
+For compliance with Koopmans' condition, 
+it seems unavoidable for now that data must be collected 
+from both the approximate neutral and ionised systems
+(the total-energy of which may be sufficient), 
+to calculate $U_1$ and $U_2$.
+%
+In the manner in which we have performed it  here, 
+non-self-consistent DFT+$U_1+U_2$ 
+requires only one total-energy calculation 
+at the ionised state, 
+on top of the usual apparatus
+of a linear-response DFT+$U$ calculation,  
+in order to simultaneously 
+(albeit approximately) 
+correct the total-energy
+and the HOMO eigenvalue for SIE.
+%
+In principle, a further refinement of the
+method might entail the self-consistent
+linear-response calculation of $U_1$ and $U_2$
+separately for the neutral and ionised states.
+
+Nonetheless, 
+what is revealed in this Chapter is a convenient scheme 
+for correcting the exact energy and eigenvalue, 
+in conjunction with a $U$ 
+calculated via self-consistent ground-state linear-response approach (or otherwise), 
+for a system with negligible variance in 
+average subspace occupancy 
+under an applied $U$.
+%
+%In the following Chapter, 
+%we will focus on the practical calculation 
+%of Hubbard $U$ parameters 
+%via linear-response in a direct-minimisation code, 
+%which may be then put to use 
+%in a generalised scheme described above,  
+%or in conventional DFT+$U$ calculations.
+
+
+
+
+%%EXTRA STUFF I DIDNT INCLUDE
+%Despite the success of DFT+$U$  in SIE-correcting 
+%the total-energy   using a suitably
+%calculated $U$ value, 
+%the fact remains that 
+%it is incapable of simultaneously correcting the highest 
+%occupied Kohn-Sham eigenvalue to minus the ionisation potential
+%in compliance with Koopmans' condition,
+%as indicated in Fig.~\ref{figure1b}. 
+%%
+%This issue has previously been  explored  
+%in Ref.~\cite{:/content/aip/journal/jcp/145/5/10.1063/1.4959882}, 
+%and by us in Ref.~\cite{PhysRevB.94.220104} 
+%where we constructed a generalised, 
+%two-parameter DFT+$U$ functional, 
+%comprising separate parameters for the linear ($U_1$) 
+%and quadratic ($U_2$) terms.
+%%
+%In fact, Eq. 9 of Ref.~\cite{PhysRevB.94.220104}
+%indicates that if a symmetric system of two one-orbital subspaces
+%(a very good approximation for H$_2^+$, with approximately
+%constant subspace occupancies $N$) is Koopmans compliant
+%(so that the Koopmans' $U_K = 0$), and it is then corrected 
+%using DFT+$U$ for the SIE in the total-energy
+%(it is possible for the interaction strength to be inaccurate,
+%but for the system still to comply with Koopmans'  condition), then
+%DFT+$U$ will act to spoil that condition unless  
+%$U_1 = 2 U_2 ( N - N^2) / ( 1 - 2 N )$.
+
+%Motivated by the great utility cDFT for correcting SIE by 
+%promoting broken symmetry, 
+%integer-occupancy configurations
+%with well described by approximate 
+%functionals~\cite{PhysRevLett.97.028303,doi10.1021/cr200148b},
+%quadratic or higher-order constraints are
+%required to change the  inter-electron interaction
+%in DFT, and thus to systematically correct SIE.
+%
+%The gross disagreement of the occupied Kohn-Sham eigenvalue
+%with the exact energy for all relevant calculations, 
+%in any case, reveals a glaring failure of 
+%DFT+$U$ type functionals 
+%to simultaneously reconcile the energy and
+%the ionisation potential with that of the exact system.
+%%
+%To our knowledge, the SIE of approximate DFT 
+%has not previously been  simultaneously
+%addressed for the total-energy and the occupied
+%Kohn-Sham eigenvalue using a
+%first-principles correction method of DFT+$U$ type,
+%even for a  one-electron system such as this. 
+%%
+%
+%%
+%For the analysis and correction of spuriously self-interacting
+%multi-reference systems,  we may
+%learn much from the exact solution of minimal  
+%models~\cite{doi:10.1063/1.4871875}.}
+%

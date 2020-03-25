@@ -1,0 +1,106 @@
+\BOOKMARK [0][-]{Doc-Start}{declaration}{}% 1
+\BOOKMARK [0][-]{chapter*.1}{summary}{}% 2
+\BOOKMARK [0][-]{chapter*.2}{acknowledgments}{}% 3
+\BOOKMARK [0][-]{chapter*.3}{list of figures}{}% 4
+\BOOKMARK [0][-]{chapter.1}{introduction}{}% 5
+\BOOKMARK [1][-]{section.1.1}{Outline of dissertation}{chapter.1}% 6
+\BOOKMARK [1][-]{section.1.2}{Associated publications}{chapter.1}% 7
+\BOOKMARK [0][-]{chapter.2}{quantum mechanical simulation}{}% 8
+\BOOKMARK [1][-]{section.2.1}{The Schr\366dinger equation}{chapter.2}% 9
+\BOOKMARK [1][-]{section.2.2}{The Hohenberg-Kohn theorems}{chapter.2}% 10
+\BOOKMARK [1][-]{section.2.3}{The Kohn-Sham equations}{chapter.2}% 11
+\BOOKMARK [1][-]{section.2.4}{Exchange-correlation functionals}{chapter.2}% 12
+\BOOKMARK [1][-]{section.2.5}{Treatment of the ionic potential}{chapter.2}% 13
+\BOOKMARK [2][-]{subsection.2.5.1}{Norm-conserving pseudopotentials}{section.2.5}% 14
+\BOOKMARK [2][-]{subsection.2.5.2}{Projector-augmented wave method}{section.2.5}% 15
+\BOOKMARK [1][-]{section.2.6}{An overview of linear-scaling DFT}{chapter.2}% 16
+\BOOKMARK [2][-]{subsection.2.6.1}{Density matrix formalism in DFT}{section.2.6}% 17
+\BOOKMARK [2][-]{subsection.2.6.2}{Psinc basis sets}{section.2.6}% 18
+\BOOKMARK [2][-]{subsection.2.6.3}{Non-orthogonal generalised Wannier functions}{section.2.6}% 19
+\BOOKMARK [2][-]{subsection.2.6.4}{Brillouin zone sampling in ONETEP}{section.2.6}% 20
+\BOOKMARK [1][-]{section.2.7}{Conclusion}{chapter.2}% 21
+\BOOKMARK [0][-]{chapter.3}{mechanical properties of two-dimensional group-V materials}{}% 22
+\BOOKMARK [1][-]{section.3.1}{Recent advances in black phosphorus}{chapter.3}% 23
+\BOOKMARK [1][-]{section.3.2}{Methodology}{chapter.3}% 24
+\BOOKMARK [2][-]{subsection.3.2.1}{Calculation details}{section.3.2}% 25
+\BOOKMARK [2][-]{subsection.3.2.2}{The Voigt-Reuss-Hill scheme}{section.3.2}% 26
+\BOOKMARK [2][-]{subsection.3.2.3}{In-plane Voigt-Reuss-Hill average}{section.3.2}% 27
+\BOOKMARK [2][-]{subsection.3.2.4}{Composite mixture models}{section.3.2}% 28
+\BOOKMARK [1][-]{section.3.3}{Results}{chapter.3}% 29
+\BOOKMARK [2][-]{subsection.3.3.1}{Calculated lattice constants}{section.3.3}% 30
+\BOOKMARK [2][-]{subsection.3.3.2}{Isotropic bulk properties}{section.3.3}% 31
+\BOOKMARK [2][-]{subsection.3.3.3}{In-plane elastic properties}{section.3.3}% 32
+\BOOKMARK [2][-]{subsection.3.3.4}{Polymer-nano-flake composite}{section.3.3}% 33
+\BOOKMARK [1][-]{section.3.4}{Conclusion}{chapter.3}% 34
+\BOOKMARK [0][-]{chapter.4}{electronic properties of two-dimensional group-V materials}{}% 35
+\BOOKMARK [1][-]{section.4.1}{Weyl and Dirac semi-metals}{chapter.4}% 36
+\BOOKMARK [1][-]{section.4.2}{Methodology}{chapter.4}% 37
+\BOOKMARK [1][-]{section.4.3}{Electronic properties}{chapter.4}% 38
+\BOOKMARK [1][-]{section.4.4}{Conclusion}{chapter.4}% 39
+\BOOKMARK [0][-]{chapter.5}{the nature and origin of pervasive errors in approximate DFT}{}% 40
+\BOOKMARK [1][-]{section.5.1}{Fractional charges}{chapter.5}% 41
+\BOOKMARK [1][-]{section.5.2}{One-electron self-interaction correction}{chapter.5}% 42
+\BOOKMARK [1][-]{section.5.3}{Koopmans' compliance}{chapter.5}% 43
+\BOOKMARK [1][-]{section.5.4}{Strongly correlated systems}{chapter.5}% 44
+\BOOKMARK [1][-]{section.5.5}{The DFT+U method}{chapter.5}% 45
+\BOOKMARK [2][-]{subsection.5.5.1}{A one-electron assessment of DFT+U}{section.5.5}% 46
+\BOOKMARK [1][-]{section.5.6}{Static Correlation Error}{chapter.5}% 47
+\BOOKMARK [1][-]{section.5.7}{Conclusion}{chapter.5}% 48
+\BOOKMARK [0][-]{chapter.6}{calculation of hubbard parameters from variational linear response}{}% 49
+\BOOKMARK [1][-]{section.6.1}{Overview of the linear-response method}{chapter.6}% 50
+\BOOKMARK [1][-]{section.6.2}{Construction of a variational linear-response approach}{chapter.6}% 51
+\BOOKMARK [2][-]{subsection.6.2.1}{The non-interacting response}{section.6.2}% 52
+\BOOKMARK [2][-]{subsection.6.2.2}{Choice of projection for the interacting kernel}{section.6.2}% 53
+\BOOKMARK [2][-]{subsection.6.2.3}{Comparing the SCF and variational linear-response methods}{section.6.2}% 54
+\BOOKMARK [2][-]{subsection.6.2.4}{The subspace contribution to SIE: global vs local curvatures}{section.6.2}% 55
+\BOOKMARK [2][-]{subsection.6.2.5}{A one-electron test case: H2+}{section.6.2}% 56
+\BOOKMARK [1][-]{section.6.3}{Application to multi-electronic systems}{chapter.6}% 57
+\BOOKMARK [2][-]{subsection.6.3.1}{Dissociating H2}{section.6.3}% 58
+\BOOKMARK [2][-]{subsection.6.3.2}{Molecular Ni\(CO\)4}{section.6.3}% 59
+\BOOKMARK [2][-]{subsection.6.3.3}{Bulk NiO}{section.6.3}% 60
+\BOOKMARK [2][-]{subsection.6.3.4}{Bulk Cr2O3}{section.6.3}% 61
+\BOOKMARK [1][-]{section.6.4}{Calculating J using the variational linear-response method}{chapter.6}% 62
+\BOOKMARK [2][-]{subsection.6.4.1}{Correcting static correlation error in H2}{section.6.4}% 63
+\BOOKMARK [2][-]{subsection.6.4.2}{Calculating J for NiO and Cr2O3}{section.6.4}% 64
+\BOOKMARK [1][-]{section.6.5}{Conclusion}{chapter.6}% 65
+\BOOKMARK [0][-]{chapter.7}{calculation of self-consistent hubbard parameters}{}% 66
+\BOOKMARK [1][-]{section.7.1}{A note on the direct comparison of DFT+U total-energies}{chapter.7}% 67
+\BOOKMARK [1][-]{section.7.2}{A self-consistent U in a one-electron model}{chapter.7}% 68
+\BOOKMARK [2][-]{subsection.7.2.1}{Which self-consistency scheme?: revisiting H2+}{section.7.2}% 69
+\BOOKMARK [1][-]{section.7.3}{Coupled self-consistent parameters in multi-electronic systems}{chapter.7}% 70
+\BOOKMARK [2][-]{subsection.7.3.1}{Generalised, self-consistent U and J formulae}{section.7.3}% 71
+\BOOKMARK [2][-]{subsection.7.3.2}{Application to NiO}{section.7.3}% 72
+\BOOKMARK [2][-]{subsection.7.3.3}{Comparison of self-consistency schemes}{section.7.3}% 73
+\BOOKMARK [1][-]{section.7.4}{A self-consistent J applied to H2}{chapter.7}% 74
+\BOOKMARK [2][-]{subsection.7.4.1}{Correcting SCE with J}{section.7.4}% 75
+\BOOKMARK [2][-]{subsection.7.4.2}{Will Ueff and Jeff improve H2?}{section.7.4}% 76
+\BOOKMARK [1][-]{section.7.5}{Choice of subspace projectors}{chapter.7}% 77
+\BOOKMARK [1][-]{section.7.6}{Conclusion}{chapter.7}% 78
+\BOOKMARK [0][-]{chapter.8}{the investigation of non-linear constraints and a generalised DFT+U functional}{}% 79
+\BOOKMARK [1][-]{section.8.1}{Constrained-DFT}{chapter.8}% 80
+\BOOKMARK [1][-]{section.8.2}{Non-linear constraints}{chapter.8}% 81
+\BOOKMARK [2][-]{subsection.8.2.1}{Proof of the inapplicability of non-linear constraints}{section.8.2}% 82
+\BOOKMARK [2][-]{subsection.8.2.2}{Construction of separable constraints}{section.8.2}% 83
+\BOOKMARK [1][-]{section.8.3}{A generalised DFT+U formula}{chapter.8}% 84
+\BOOKMARK [2][-]{subsection.8.3.1}{Non-self-consistent estimates for U1 and U2}{section.8.3}% 85
+\BOOKMARK [2][-]{subsection.8.3.2}{Application to H2+}{section.8.3}% 86
+\BOOKMARK [1][-]{section.8.4}{Conclusion}{chapter.8}% 87
+\BOOKMARK [0][-]{chapter.9}{concluding remarks}{}% 88
+\BOOKMARK [1][-]{section.9.1}{Synopsis}{chapter.9}% 89
+\BOOKMARK [1][-]{section.9.2}{Future work}{chapter.9}% 90
+\BOOKMARK [0][-]{appendix.A}{Sample input files}{}% 91
+\BOOKMARK [1][-]{section.A.1}{Sample QuantumEspresso input file}{appendix.A}% 92
+\BOOKMARK [1][-]{section.A.2}{Sample ONETEP input file}{appendix.A}% 93
+\BOOKMARK [0][-]{appendix.B}{Supplemental data for group-V 2D materials}{}% 94
+\BOOKMARK [1][-]{section.B.1}{Deriviation of the Voigt-Reuss-Hill Equations}{appendix.B}% 95
+\BOOKMARK [1][-]{section.B.2}{Calculated elastic tensor elements}{appendix.B}% 96
+\BOOKMARK [1][-]{section.B.3}{Group-V in-plane elastic extrema}{appendix.B}% 97
+\BOOKMARK [1][-]{section.B.4}{Black phosphorus experimental data}{appendix.B}% 98
+\BOOKMARK [1][-]{section.B.5}{Summary of electronic properties}{appendix.B}% 99
+\BOOKMARK [1][-]{section.B.6}{Summary of electronic transitions}{appendix.B}% 100
+\BOOKMARK [1][-]{section.B.7}{Band structures figures}{appendix.B}% 101
+\BOOKMARK [0][-]{appendix.C}{Further discussion on self-consistency schemes}{}% 102
+\BOOKMARK [1][-]{section.C.1}{Alternative derivation for Uout and Jout}{appendix.C}% 103
+\BOOKMARK [1][-]{section.C.2}{Supplemental DOS plots for NiO}{appendix.C}% 104
+\BOOKMARK [2][-]{subsection.C.2.1}{Self-consistency calculations for Ni\(CO\)4}{section.C.2}% 105
+\BOOKMARK [2][-]{subsection.C.2.2}{Self-consistency calculations for Cr2O3}{section.C.2}% 106

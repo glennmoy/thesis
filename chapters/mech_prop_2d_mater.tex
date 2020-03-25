@@ -1,0 +1,1273 @@
+%Introduction to 2D Materials
+
+\lett{A}{ paradigm shift} 
+in materials science occurred in 2004  
+with the successful isolation of a 
+stable sample of few-layer graphite 
+by Novoselov and Geim~\cite{Novoselov666}.
+%
+Dubbed the `wonder material'~\cite{Geim1530,2058-7058-22-08-33},
+graphene quickly captured the imaginations 
+of researchers and the public~\cite{Geim2007,graphenetheguardian,doi:10.1021/cr900070d}, 
+boasting almost limitless potential 
+- from revolutionising electronics~\cite{Geim2007,RevModPhys.81.109} 
+to water desalination~\cite{MISHRA201139} - 
+and was envisioned to be 
+the answer to our material woes.
+%
+The prowess of graphene 
+lies in the extraordinary 
+electronic and mechanical properties 
+that it exhibits 
+- most notably 
+ballistic electron transport~\cite{RevModPhys.81.109}  
+and unrivalled mechanical strength~\cite{PhysRevB.76.064120}.
+%
+However, enabling a viable band gap in graphene, 
+without compromising on the 
+conductive properties, 
+has posed many challenges~\cite{2053-1613-1-2-020204}
+and 
+researchers have struggled to 
+find a scalable, inexpensive 
+method of producing quality samples~\cite{C5TA00252D}.
+
+%
+During the interim, 
+focus has shifted to the 
+characterisation and synthesis of other 
+two-dimensional (2D) structures 
+derived from their, 
+primarily layered, bulk analogues,
+such as
+boron-nitride (BN)~\cite{PhysRevB.76.073103,R.2010,PENG201211,doi:10.1021/nl1022139}, 
+molybdenum-disulfide (MoS\textsubscript{2})~\cite{doi:10.1021/nl903868w,RadisavljevicB.2011,ANIE:ANIE201000009} 
+and, notably, black phosphorus (BP).
+%
+Like graphene, 
+the appeal of these materials 
+lies in the emergence of 
+exotic electro-mechanical phenomena, 
+and a rapid increase in surface-area, 
+with the reduction of a degree of freedom  
+along one dimension.
+%
+The technological 
+impact of 2D materials 
+is predicted to 
+revolutionise existing practices 
+and launch new innovations,
+with wide-ranging potential applications in 
+photovoltaics~\cite{Xie2016433,doi:10.1021/nl401544y,ADMA:ADMA200800366,doi:10.1063/1.3204698,Wang2012}, 
+energy storage~\cite{ADMA:ADMA200602592,doi:10.1021/jp302265n,Sun2015,Bonaccorso1246501,doi:10.1021/nl800957b,ADMA:ADMA200903328,doi:10.1021/nl802484w}, 
+composite materials~\cite{PMID:26469634,doi:10.1021/nl501617j},
+and catalysis~\cite{ADMA:ADMA201204453,ADFM:ADFM201505380,ANIE:ANIE201307475}.
+%
+The successful simulation of these materials, 
+in either a predictive or analytical capacity, 
+is therefore an important component of their exploration, 
+and DFT calculations have provided  
+an extensive and valuable 
+complement to experiments.
+%
+
+In the following two Chapters, 
+we provide a comprehensive analysis of 
+DFT calculations performed on puckered ($\alpha$-phase) 
+phosphorus (P), arsenic (As) and antimony (Sb) 
+in the monolayer, bilayer and bulk forms.
+%  
+We identify and compare the qualitative 
+strain-related properties of each structure 
+from a consistent set of calculations, 
+thus treating each material on the same footing.
+
+In this Chapter specifically, 
+we compute the elastic properties, 
+such as the Young's modulus $Y$; 
+shear modulus $G$; 
+bulk modulus $\mathcal{B}$; 
+and Poisson ratio $\nu$ 
+and present their in-plane and isotropic averages 
+according to the Voigt-Reuss-Hill (VRH) averaging scheme, 
+for which the relevant expressions are derived.
+%
+In the following Chapter, 
+we will continue the discussion and 
+explore the qualitative electronic properties 
+that are predicted to occur at various 
+levels of strain.
+%
+We shall observe that, 
+while the mechanical behaviour 
+of atomic systems is generally 
+well reproduced by high-level DFT, 
+the corresponding electronic properties, 
+such as band structures and 
+optical gaps, are typically not.
+ 
+
+%RECENT ADVANCES IN BP
+\section{Recent advances in black phosphorus}
+\label{sec:recent_advances}
+%
+Two-dimensional black phosphorus (BP), 
+or {\it phosphorene}, 
+is one of several predicted stable allotropes of 
+few-layer phosphorus~\cite{doi:10.1021/acs.nanolett.5b01041,PhysRevLett.113.046804,PhysRevLett.112.176802,doi:10.1021/nn5059248}; 
+it has attracted considerable attention since its recent 
+successful synthesis~\cite{Li2014,Xia2014,doi:10.1063/1.4868132,doi:10.1021/nn501226z,Ling14042015}, 
+which is now possible with liquid phase exfoliation~\cite{C4CC05752J,PMID:26469634}.
+%
+The excitement behind BP 
+is driven by the growing list of 
+predicted technologically properties, 
+which includes
+a tuneable band-gap~\cite{PhysRevLett.112.176801,PhysRevB.90.085402,PhysRevB.91.235118,doi:10.1021/jp508618t,PhysRevB.91.115412,0957-4484-25-45-455703,doi:10.1021/nn501226z}, 
+a negative Poisson's ratio~\cite{Jiang2014}, 
+anisotropic conduction~\cite{doi:10.1021/nl500935z,C4CS00257A}, 
+and linear dichroism~\cite{Qiao2014,PhysRevB.89.235319}.
+%  
+So far, we have seen experimentally verification of  
+a high hole-mobility 
+between $300-1000$~cm\textsuperscript{2}/Vs~\cite{doi:10.1021/nn501226z,PhysRev.92.580,doi:10.1063/1.4868132,Qiao2014}, 
+considerable mechanical flexibility~\cite{doi:10.1063/1.4885215}, 
+and a layer-dependent band gap~\cite{9909120720141024,PhysRevB.89.235319,Zant2014} ranging from 0.3~eV in bulk to 2.0~eV in the monolayer.
+%
+The anisotropic crystal structure of BP, 
+as shown in Fig.~\ref{fig:phos_structure},
+is largely responsible for its 
+wide range of exotic
+electro-mechanical properties, 
+which are predicted to be strongly directional-dependent 
+and highly responsive to 
+mechanically strain~\cite{doi:10.1021/nl500935z,PMID:26469634}. 
+
+\begin{figure}[th!]
+%\begin{tabular}{cc}
+%\begin{tabular}{c}
+%\begin{subfloat}[]{
+\centering
+\includegraphics[height=0.494\textwidth]{images/crystal2.jpg}
+  \label{fig:crystalstructure}
+  %}
+%\end{subfloat} 
+%\end{tabular}
+%&
+%\begin{tabular}{c}
+%\smallskip
+%\begin{subfloat}[]{
+%\centering
+%\includegraphics[width=0.40\textwidth]{images/3dbz.jpg}
+% \label{fig:bz}}
+%\end{subfloat}
+%\\
+%\begin{subfloat}[]{
+%\centering
+%\includegraphics[height=0.494\textwidth]{images/buckled1.jpg}
+%\label{fig:buckled}}
+%\end{subfloat}
+%\end{tabular}\\
+%\end{tabular}
+\caption[Crystal structure of orthorhombic black phosphorus]
+{Top and side view of the 
+2D orthorhombic puckered structure 
+of the Cmca space group and D$_{2h}$ point group 
+%(generated in VESTA~\cite{Momma:db5098}) 
+with the primary vectors along the 
+zigzag ($\vec x$) and puckered ($\vec y$) directions shown. 
+The unit cell, 
+given by the shaded region, 
+is described by the lattice parameters $a$ and $b$ 
+with the in-plane angle $\theta$ also defined.
+%%
+%b) 3D Brillouin zone with high-symmetry points 
+%\{$\Gamma$, $X$, $S$, $Y$, $Z$\}.
+%%
+%c) Side-view of the buckled Sb state  
+%at $\varepsilon_{yy}=-4\%$ compressive strain.
+}
+\label{fig:phos_structure}
+\end{figure}
+
+With this renewed interest in BP, 
+attention has quickly turned to 
+few-layer phases of the other pnictogen materials, namely 
+arsenic (As)~\cite{PhysRevB.91.085423}, 
+antimony (Sb)~\cite{doi:10.1021/acsami.5b02441}, 
+bismuth (Bi)~\cite{PhysRevB.91.075429,doi:10.1021/nl502997v}, 
+and their alloys~\cite{doi:10.1021/acs.nanolett.5b02227,doi:10.1021/acs.jpcc.5b07323,Xie2016433,ADMA:ADMA201501758,doi:10.1021/acs.jpcc.5b02096}.
+%
+In fact, many of the predicted strain-induced properties 
+of these materials, such as 
+direct-indirect band gap transitions~\cite{ANIE:ANIE201411246,PhysRevB.91.085423,doi:10.1021/acsami.5b02441,PhysRevB.90.085402,0957-4484-26-7-075701},
+a negative Poisson's ratio~\cite{Jiang2014,1882-0786-8-4-041801},
+as well as 
+electronic~\cite{PhysRevLett.113.046804,PhysRevB.91.161404,ANIE:ANIE201411246}, 
+structural~\cite{PhysRevB.92.064114}, 
+and 
+topological~\cite{Lu2016,PhysRevLett.115.186403,PhysRevB.93.195434,PhysRevB.91.195319} transitions, 
+are already spurring emergent technologies in  
+field-effect transistors~\cite{doi:10.1021/nn501226z,C4CS00257A},
+gas sensors~\cite{doi:10.1021/acsnano.5b01961,doi:10.1021/jz501188k}, 
+optical switches~\cite{PhysRevB.90.075434,1347-4065-28-11A-2104}, 
+solar-cells~\cite{Xie2016433},
+energy storage~\cite{ADMA:ADMA200602592,doi:10.1021/jp302265n,Sun2015},
+ reinforcing fillers~\cite{PMID:26469634,doi:10.1021/nl501617j}, 
+ and topological insulators~\cite{PhysRevLett.115.186403,Lu2016,PhysRevB.93.195434,PhysRevB.91.195319,Yao2013}.
+
+
+
+\section{Methodology}
+\label{sec:methodology1}
+\subsection{Calculation details}
+\label{sec:calc_details}
+%
+The calculations in the following two Chapters 
+were performed with the 
+{\sc QuantumEspresso} 
+package~\footnote{QE is not linear-scaling and uses a plane-wave 
+basis as discussed in section~\ref{sec:linear_scaling_dft}.}~\cite{0953-8984-21-39-395502}
+using the Perdew-Burke-Ernzerhof (PBE)  form of 
+the generalised-gradient approximation (GGA) 
+exchange-correlation functional~\cite{PhysRevLett.77.3865}. 
+%
+An ultrasoft pseudopotential~\cite{PhysRevB.41.7892}
+from the SSSP Library\footnote{http://theossrv1.epfl.ch/Main/Pseudopotentials}~\cite{kucukbenli2014projector} 
+(with 5 valence electrons) was used 
+to represent the core electrons.
+%
+Calculations in this Chapter 
+were performed without spin-orbit coupling (SOC)
+for convenience but it was later 
+included to confirm some aspects of their electronic behaviour 
+(see Chapter~\ref{ch:elec_prop_2d_mater}).
+%
+In all calculations, van der Waals (vdW) interactions 
+were incorporated using the B97-D empirical 
+dispersion correction functional~\cite{JCC:JCC20495}. 
+%
+In order to achieve 
+an energy convergence of at least 1~meV/atom 
+and force convergence of at least $1.3\times 10^{-4}$~eV/a$_0$, 
+we found it sufficient to use a common 
+plane-wave energy cutoff of 1100~eV
+with `cold' Fermi-surface smearing~\cite{PhysRevLett.82.3296} 
+of $10^{-4}$~K for all elements.
+%
+Meanwhile, 
+the Brillouin zone sampling for bulk systems
+was $15\times15\times15$, 
+and $15\times15\times1$ 
+for monolayers and bilayers.
+%
+Uniaxial and shear strains 
+between $\pm$5\% were applied 
+in increments of 1\% to the unit cell 
+with internal relaxation subject 
+to the same force convergence 
+criterion as above.
+%
+A sample input file containing the 
+preceding parameters is included in Appendix~\ref{ch:input_files}.
+
+%
+The elements of the stiffness matrix $C$ 
+were computed from the gradients of the 
+resultant stress-strain profiles 
+$c_{ij} = \partial \sigma_i/\partial\varepsilon_j$, 
+from which all elastic properties were derived.
+%
+In practice, however, 
+the calculated stiffness tensors 
+are not exactly symmetric 
+due to numerical noise 
+but we make them so by taking 
+the average of $C$ and its transpose $C^T$ 
+as the \emph{effective} stiffness tensor, 
+which, henceforth, 
+shall be refered to as $C$.
+%
+We begin our discussion with 
+a brief overview of the the 
+VRH scheme, 
+which is a popular model 
+used for computing effective isotropic 
+elastic properties.  
+
+%VOIGT-Reuss-HILL MODELS
+\subsection{The Voigt-Reuss-Hill scheme}
+\label{sec:vrh_scheme}
+%
+In order to effectively preserve, study and strain-engineer
+few-layer nano-structures, 
+such as BP~\cite{2053-1583-4-2-021032}, 
+or graphene~\cite{R.2010},
+the nano-flakes are typically 
+deposited onto a suitable substrate.
+% 
+{
+The macroscopic elastic properties 
+that are measured by experiment 
+are the result of microscopic 
+interactions between 
+the nano-flakes dispersed  
+on or within a bulk medium.}
+%
+The theoretical calculation of 
+these elastic properties 
+requires an appropriate mixture model, 
+such as the rule-of-mixtures (ROM)~\cite{askeland2011science}
+or the Halpin-Tsai (HT)~\cite{doi:10.1177/002199836900300419,PEN:PEN760160512} models 
+(see sections~\ref{sec:mixture_models}~\&~\ref{sec:comparison_to_exp}), 
+which require the (typically averaged)
+elastic properties of the interstitial nano-flakes.
+%
+
+In the theory of effective media, 
+isotropic bulk properties are 
+computed by averaging the stiffness tensor $C$ 
+over all possible rotated reference frames~\cite{MULLEN19972247,hearmon1969elastic,0965-0393-7-6-301}, 
+the approach for which is 
+outlined in Appendix~\ref{sec:vrh_derivation}.
+%
+The result is called the Voigt average~\cite{ZAMM:ZAMM19290090104,cook1999advanced} 
+and it gives isotropic averages for the bulk 
+Young's modulus $Y_V$, 
+and shear modulus $G_V$, 
+given in Eq.~\eqref{eq:voigt1}.
+%
+The same scheme applied 
+to the compliance tensor $S=C^{-1}$ results in 
+the corresponding Reuss averages~\cite{ANDP:ANDP18892741206}, 
+$Y_R$ and $G_R$, 
+given in Eq.~\eqref{eq:reuss1}.
+%
+The Voigt scheme assumes that 
+the material is subject to homogeneous strain 
+and tends to produce over-estimated elastic constants.
+%
+Conversely, 
+the Reuss scheme assumes homogeneous stress 
+and it tends to under-estimate the elastic constants.
+%
+The Hill averages~\cite{0370-1298-65-5-307}, given by  
+%
+\begin{equation}
+Y_{H}=\frac{Y_V+Y_R}{2}
+\quad\mbox{and}\quad
+G_{H}=\frac{G_V+G_R}{2},
+\label{eq:hillaverage}
+\end{equation}
+%
+are widely considered as reliable estimates of 
+the actual physical values~\cite{0965-0393-7-6-301}
+%
+and from these, the isotropic Poisson's ratio $\nu_H$ and 
+bulk modulus  $\mathcal{B}_H$ may also be calculated 
+by means of 
+%
+\begin{equation}
+\nu_H=\frac{Y_H}{2G_H}-1 
+\quad\mbox{and}\quad
+\mathcal{B}_H=\frac{Y_HG_H}{3(3G_H-Y_H)}.
+\label{eq:poisson_ratio}
+\end{equation}
+%
+The VRH approach described above 
+is used in the present work to 
+determine the isotropic averages of the 
+Young's, shear and bulk moduli, 
+and the Poisson ratio  
+of the bulk structures using 
+the computed elastic tensors.
+%
+We will now discuss how the above 
+approach may be adapted 
+to derive the relevant equations 
+for the specific case 
+of two-dimensional materials.
+
+% Effective 2D averaging for composite materials
+\subsection{In-plane Voigt-Reuss-Hill average}
+\label{sec:in_plane_vrh_scheme}
+%
+If the interstitial nano-flakes in a bulk medium 
+form high-quality planar sediments~\cite{PMID:26469634,PMID:23203296,Mahmoud20111534,ADFM:ADFM200801776,APP:APP38645,Young20121459,Yang2013,C4NR01208A}, 
+the random orientation is observed
+in the plane of the flakes 
+and one must calculate 
+isotropic-averages {\it in-plane}. 
+%
+Due to the weak vdW bonds 
+between layers, 
+strains related to out-of-plane directions 
+can be consequently ignored, 
+resulting in the reduced-stiffness tensor $C_\textrm{2D}$ 
+as in Eq.~\eqref{eq:2dmatrix}.
+%
+In Appendix~\ref{sec:vrh_derivation}, 
+we re-derive the angular dependence  
+of the rotated tensor-elements 
+$C_{ij}\left(\theta\right)$ and $S_{ij}\left(\theta\right)$
+about the $\vec{z}$-axis 
+as a function of the elements in the original 
+reference frame, 
+similar to the isotropic VRH scheme.
+%  
+The angular dependence of the in-plane  
+elastic constants are then expressed, 
+from the elements in Eq.~\eqref{eq:rot2dmatrix}, as     
+%
+\begin{equation}
+\begin{aligned}
+&Y_{V}\left(\theta\right)=\frac{C_{11}^2-C_{12}^2}{C_{11}},
+\quad
+&G_{V}\left(\theta\right)=C_{66},
+\quad\quad
+&\nu_{V}\left(\theta\right)=\frac{C_{12}}{C_{11}},
+\\[0.75em]
+&Y_{R}\left(\theta\right)=\frac{1}{S_{11}},
+\quad
+&G_{R}\left(\theta\right)=\frac{1}{S_{66}},
+\quad\quad
+&\nu_{R}\left(\theta\right)=-\frac{S_{12}}{S_{11}},
+\end{aligned}
+\label{eq:elasticconsts2d}
+\end{equation}
+%
+with the Hill-average taken as in Eq.~\eqref{eq:hillaverage}.
+%
+The in-plane averages are then 
+computed analogously 
+by first integrating the elastic tensors 
+$C_{ij}\left(\theta\right)$ and $S_{ij}\left(\theta\right)$ 
+over $2\pi$, 
+ before substituting back into Eqs.~\eqref{eq:elasticconsts2d}.
+
+\subsection{Composite mixture models}
+\label{sec:mixture_models}
+
+The successful simulation of 
+the macroscopic elastic behaviour
+ of a composite material  
+requires an appropriate mixture model 
+that strongly depends on the interplay  
+between the dispersed filler 
+and the bulk matrix material. 
+%
+In addition to the overt chemical interaction 
+between the two constituents, 
+the macroscopic response 
+can also rely on the shape of the filler -  
+for example planar, fibre or particulate - 
+a feature which is predominantly governed, 
+in the nano-scale, 
+by the crystal structure.
+%
+Here, we shall outline two simple models 
+that could possibly describe a 
+composite material composed of 
+puckered group-V nano-flakes dispersed 
+in a bulk polymer matrix.
+
+\subsubsection{The Rule-of-Mixtures model}
+%
+The rule-of-mixtures (ROM) model~\cite{askeland2011science} 
+invokes a simple weighted mean to determine 
+the properties of a macroscopic composite material, 
+which, for our purposes, is the Young's modulus $Y$.
+%
+In the absence of any formal mathematical description 
+of the underlying interactions 
+between the filler and matrix, 
+it may be regarded as 
+an empirical, first-order approximation 
+to the composite behaviour. 
+%
+Similar to the VRH scheme, 
+the ROM defines a composite 
+lower-bound $Y^R_C$ 
+and upper-bound $Y^V_C$ 
+in terms of the Young's modulus of the filler $Y_f$, 
+the Young's modulus of the matrix $Y_m$, 
+and the filler volume-fraction\footnote{These are formulated under similar 
+assumptions of homogeneous 
+strain and stress, respectively.} $\phi$, 
+where
+%
+\begin{equation}
+Y^V_C=\phi Y_f+ (1-\phi)Y_m 
+\quad\mbox{and}\quad
+Y^R_C=\left(\frac{\phi}{Y_f}+\frac{1-\phi}{Y_m}\right)^{-1}.
+\label{eq:rom_models}
+\end{equation}
+%
+The true Young's modulus is thus 
+predicted to lie somewhere between the two.
+%
+Furthermore, since the ROM model 
+has no explicit dependence 
+on filler shape or orientation, 
+it is unclear how to strictly 
+define the Young's modulus of the filler, 
+i.e. as an isotropic or in-plane average, 
+thus the model parameters 
+are likely to represent broad estimations.
+
+
+\subsubsection{The Halpin-Tsai model}
+
+The equations of Halpin and Tsai (HT)~\cite{doi:10.1177/002199836900300419,PEN:PEN760160512} 
+were developed as a simplified and extended form 
+of earlier composite models 
+derived by Hill~\cite{0370-1298-65-5-307} 
+and Hermans~\cite{hermans1967koninklijke}.
+%
+Unlike the ROM model, 
+the HT equations make explicit the dependence on 
+the geometry and orientation of the filler, 
+parameterised by the factor $\zeta$.
+%
+The particular alignment 
+between filler and matrix
+can potentially augment 
+their interaction, 
+and thus the efficient transfer of stress, 
+due, at least in part, to a large filler aspect ratio 
+that provides a larger interfacial region.
+%
+The HT equation for the 
+Young's modulus of a composite material 
+composed of a planar filler 
+of length $l$ and thickness $t$ 
+is given by 
+%
+\begin{equation}
+Y_{HT}=Y_m\left(\frac{1+\zeta\eta\phi}{1-\eta\phi}\right)
+\quad\mbox{with}\quad
+\eta=\frac{Y_f/Y_m-1}{Y_f/Y_m+\zeta}
+\quad\mbox{and}\quad
+\zeta=\frac{2l}{t}.
+\end{equation}
+%
+The HT equations provide 
+an empirical extension to the ROM model, 
+since the parameter $\zeta$ 
+has no scientific basis 
+and was determined 
+by experimental fitting.
+%
+In fact, it can be shown 
+that the ROM model can 
+be derived from the HT model 
+by taking the limiting values of $\zeta$.
+%
+The first limit corresponds to the 
+transverse arrangement of fibres 
+in a bulk matrix, 
+i.e $\zeta \to 0$, such that  
+%
+\begin{align}
+\lim_{\zeta\to0}E_{HT}(\zeta)&=Y_m\left(\frac{1}{1-\eta\phi}\right) =Y_m\left(\frac{1}{1-(1-\frac{Y_m}{Y_f})\phi}\right) \nonumber\\[10pt]
+&=Y_m\left(\frac{1}{1-\phi+\frac{Y_m}{Y_f}\phi}\right)=\left(\frac{1-\phi}{Y_m}+\frac{\phi}{Y_f}\right)^{-1}, 
+\end{align}
+%
+which reproduces exactly the 
+(iso-stress) ROM Reuss model.
+
+The second limit assumes 
+the longitudinal arrangement of fibres 
+within the matrix, 
+i.e $\zeta \to \infty$, such that  
+%
+\begin{align}
+\lim_{\zeta\to\infty}E_{HT}(\zeta)
+&=\lim_{\zeta\to\infty}Y_m\left(\frac{\frac{Y_f}{Y_m}+\zeta+\zeta(\frac{Y_f}{Y_m}-1)\phi}{\frac{Y_f}{Y_m}+\zeta+(\frac{Y_f}{Y_m}-1)\phi}\right)\nonumber\\[10pt]
+&=Y_m\left(1+\left\{\frac{Y_f}{Y_m}-1\right\}\phi\right) \quad\mbox{(by L'H\^opital's rule)}\nonumber \\[10pt]
+&=Y_m(1-\phi)+Y_f\phi,
+\end{align}
+%
+which is precisely the 
+(iso-strain) ROM Voigt estimate.
+%
+Thus, for $0<\zeta<\infty$, 
+an intermediate value 
+between that of the 
+Voigt and Reuss estimates 
+of the Young's modulus 
+is attained.
+
+% 2D RESULTS 1
+\section{Results}
+\label{sec:mechanical_results}
+
+In this section, 
+we report the mechanical properties 
+computed using plane-wave DFT, 
+and compare them to the 
+available experimental data.
+%
+We begin with the lattice parameters 
+of the fully-relaxed structures, 
+and then discuss 
+the isotropically averaged bulk properties, 
+as well as the elastic properties as a function of 
+in-plane orientation.
+%
+Finally, we compare the 
+aforementioned mixture models 
+fitted to experimental data 
+of a polymer-nano-flake composite, 
+as described in our own Ref.~\cite{PMID:26469634}, 
+and with this confirm our DFT results.
+
+% LATTICE CONSTANTS
+\subsection{Calculated lattice constants}
+\label{sec:lattice_constants}
+
+The lattice constants $\{a,\ b,\ c\}$ 
+of the fully-relaxed structures 
+are presented in Table~\ref{table:lattice_consts}, 
+where, in the monolayer and bilayer cases,  
+we quote the layer thickness $c^\prime$ 
+instead of the unit cell height $c$.
+%
+Our computed lattice parameters  compare well 
+with other recent theoretically predicted values~\cite{PhysRevB.92.064114,PhysRevB.86.035105,PhysRevB.94.205410,PhysRevB.91.085423,1882-0786-8-5-055201,doi:10.1021/acsami.5b02441,ANDP:ANDP201600152,Lu2016}
+and the available experimental data~\cite{doi:10.1063/1.438523,doi:10.1080/14786437508229285}.
+%
+\begin{table}[th!]
+\centering
+%\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrr}
+\hline\hline
+&$a$ (\AA) &$b$ (\AA)&$c$ (\AA)\\
+\hline
+P\textsubscript{mono}	&4.57	&3.31	&2.11\\
+P\textsubscript{bi}		&4.51	&3.31 	&7.34\\
+P\textsubscript{bulk} 		&4.43	&3.32	&10.47\\
+Ref.\cite{doi:10.1063/1.438523}&4.37& 3.31 	&10.47 \\
+\hline
+As\textsubscript{mono}	&4.70	&3.67	&2.39\\
+As\textsubscript{bi}		&4.64	&3.69	&7.86\\
+As\textsubscript{bulk} 	&4.56	&3.71	&10.94\\
+Ref~\cite{doi:10.1080/14786437508229285}&4.47&3.65&11.0\\
+\hline
+Sb\textsubscript{mono}	&5.02	&4.23	&2.79\\
+Sb\textsubscript{bi}		&4.88	&4.26	&8.83&\\
+Sb\textsubscript{bulk} 	&4.73	&4.29	&2.09 \\
+Ref~\cite{Barrett:a03833}	&		&4.3		&11.2\\
+\hline\hline
+\end{tabular}
+%}
+\caption{
+Lattice parameters (\AA)  for monolayer, bilayer and bulk phases of P, As, and Sb 
+compared to experimental data~\cite{doi:10.1063/1.438523,doi:10.1080/14786437508229285,Barrett:a03833} quoted in parentheses. 
+For the monolayers and bilayers the layer thickness $c^\prime$ is given.
+}
+\label{table:lattice_consts}
+\end{table}
+
+For a given element, 
+we find that the lattice parameter `$a$' 
+along the puckered direction, 
+shortens as the number of layers increases.
+%
+This is attributed to the increased 
+vdW forces between layers 
+leading to increased binding primarily 
+in the softer puckered direction.
+
+%ISOTROPIC BULK PROPERTIES
+\subsection{Isotropic bulk properties}
+
+The computed elements of the stiffness tensor
+of each structure 
+are presented in Table~\ref{table:cmatrix_data}, 
+where those pertaining to bulk P 
+compare well to experiments~\cite{doi:10.1143/JPSJ.55.1196,doi:10.1143/JPSJ.60.1612} 
+and similarly computed values~\cite{PhysRevB.86.035105,Wang2015}.
+%
+For the elements related  
+to in-plane strains 
+$\{c_{11},\ c_{22},\ c_{66},\ c_{12}\}$
+we observe the expected increase in stiffness 
+as the layer number increases 
+and for decreasing atomic number.
+%
+However, for the other elements 
+related to out-of-plane and shear stresses
+$\{c_{33},\ c_{44},\ c_{55},\ c_{23},\ c_{13}\}$
+the stiffness is seen to, in general, increase 
+with the atomic number.
+
+
+The Hill-averaged bulk properties 
+are presented in Table~\ref{table:3dhill_data}, 
+which compare well to other DFT values~\cite{PhysRevB.86.035105,Wang2015}, 
+while our calculated  
+bulk modulus for bulk P (37.2~GPa) 
+is also within reasonable range of 
+ the experimental values
+(32.32~\cite{doi:10.1063/1.438523} - 
+36.02~GPa~\cite{doi:10.1080/08957958908201013}).
+%
+We also observe that the bulk properties 
+remain largely comparable for all the species, 
+but generally decrease from P to As to Sb 
+(except for the Poisson's ratio and bulk modulus, 
+which are largest for As).
+%
+While bulk P has the largest in-plane responses, 
+As and Sb have larger out-of-plane 
+and shear responses, 
+which enable the net isotropic properties 
+for all three species to remain comparable overall.
+
+
+\begin{table}[th!]
+\centering
+\begin{tabular}{lrrrr}
+\hline\hline
+&$Y_H$ (GPa) &$G_H$ (GPa)&$\nu_H$&$\mathcal{B}_H$ (GPa)\\
+\hline
+P\textsubscript{bulk}	&61.1	&24.9	&0.23	&37.2\\
+%, 32.32~\footnote{\label{f1:3dhill_data}Ref.~\cite{doi:10.1063/1.438523}}, 36.02~\footnote{\label{f2:3dhill_data}Ref.~\cite{doi:10.1080/08957958908201013}})
+As\textsubscript{bulk} &60.0	&23.8	&0.26	&41.4\\
+Sb\textsubscript{bulk}&52.5	&21.1	&0.24	&33.8\\
+Ref.~\cite{PhysRevB.86.035105}&70.3&29.4&0.30	&38.5\\
+\hline\hline
+\end{tabular}
+\caption{
+The Hill-averaged 
+Young's modulus $Y_H$,
+shear modulus $G_H$ 
+and bulk modulus $\mathcal{B}$ in GPa, 
+and Poisson's ratio $\nu_H$ 
+for bulk P, As and Sb 
+compared to similarly calculated DFT values~\cite{PhysRevB.86.035105} 
+and available experimental data~\cite{doi:10.1063/1.438523,doi:10.1080/08957958908201013}.
+}
+\label{table:3dhill_data}
+\end{table}
+
+% GRAPHS OF IN-PLANE ELASTIC PROPS
+\subsection{In-plane elastic properties}
+\label{sec:in_plane_elastic_props}
+
+In Appendix~\ref{sec:vrh_derivation}, 
+we re-derive the 
+equations for the elastic properties as a 
+function of the in-plane orientation angle $\theta$, 
+defined in Fig.~\ref{fig:phos_structure}, 
+as outlined in Ref.~\cite{jones1975mechanics}.
+%
+The mechanical properties 
+as functions of orientation angle 
+are presented 
+for P in Fig.~\ref{fig:p_2d_in_plane_figs}, 
+As in Fig.~\ref{fig:as_2d_in_plane_figs},
+and Sb in Fig.~\ref{fig:sb_2d_in_plane_figs}, 
+and  illustrate   
+the Young's modulus $Y\left(\theta\right)$ 
+and its average $\left<Y\left(\theta\right)\right>$,
+the shear modulus $G\left(\theta\right)$,
+and Poisson's ratio $\nu\left(\theta\right)$.
+%
+We summarise this data 
+in Table~\ref{table:2d_extrema}.
+%
+In contrast to the isotropic averages for 
+the bulk properties in Table~\ref{table:3dhill_data}, 
+which remained largely similar for P, As and Sb, 
+a much clearer trend across the species emerges 
+once we have eliminated contributions from 
+the out-of-plane and shear stresses.
+%
+In this instance, P clearly possesses superior 
+in-plane mechanical strength in both moduli, 
+which expectedly increase with increasing layers.
+%
+Meanwhile, As and Sb are largely similar in the monolayer, 
+though less so in the bilayer and bulk phases, 
+where they are stronger in the $\vec{x}$-direction.
+%
+In contrast,  
+the Poisson's ratio tends to remain relatively consistent 
+aside from generally decreasing with increasing 
+number of layers.
+
+%PHOSPHORUS FIGS
+\begin{figure}[th!]
+\begin{subfloat}[Monolayer P]{
+\includegraphics[height=0.494\textwidth]{images/Pmono1.pdf}
+  \label{fig:pmono1}}
+\end{subfloat}
+%
+\begin{subfloat}[Bilayer P]{
+\includegraphics[height=0.494\textwidth]{images/Pbi1.pdf}
+  \label{fig:pbi1}}
+\end{subfloat}
+%
+\begin{subfloat}[Bulk P]{
+\includegraphics[height=0.494\textwidth]{images/Pbulk1.pdf}
+  \label{fig:pbulk1}}
+\end{subfloat}
+%
+\caption[Phosphorus in-plane mechanical properties]{
+In-plane functions for P  
+Young's modulus $Y\left(\theta\right)$ (blue)
+and its isotropic average $\left<Y\left(\theta\right)\right>$ 
+(red) in units of GPa; 
+shear modulus $G\left(\theta\right)$ in GPa (red);
+and Poisson's ratio $\nu\left(\theta\right)$ 
+(scaled by 100).
+}
+\label{fig:p_2d_in_plane_figs}
+\end{figure}
+
+
+The anisotropy of the underlying crystal structure 
+is clearly reflected in the mechanical profiles 
+where the Young's modulus  
+appears to have a 2-fold symmetry 
+about the $x$-axis, 
+in contrast to the 
+shear modulus and Poisson's ratios, 
+which display 4-fold symmetry about both the axes 
+(except for the Poisson's ratio of P, 
+which remains 2-fold symmetric).
+%
+Indeed, for a given species, 
+the general shape of each profile 
+appears to remain relatively consistent 
+with respect to the number of layers, 
+while the range of each 
+quantity tends to increase.
+%
+This insight is advantageous 
+in the strain-engineering of nano-flakes 
+since one may forecast in advance the 
+response of a material to in-plane strain, 
+once the underlying profile 
+and number of layers are known.
+
+
+%ARSENIC FIGS
+\begin{figure}[th!]
+\begin{subfloat}[Monolayer As]{
+\includegraphics[height=0.494\textwidth]{images/Asmono1.pdf}
+  \label{fig:asmono1}}
+\end{subfloat}
+%
+\begin{subfloat}[Bilayer As]{
+\includegraphics[height=0.494\textwidth]{images/Asbi1.pdf}
+  \label{fig:asbi1}}
+\end{subfloat}
+%
+\begin{subfloat}[Bulk As]{
+\includegraphics[height=0.494\textwidth]{images/Asbulk1.pdf}
+  \label{fig:asbulk1}}
+\end{subfloat}
+%
+\caption[Arsenic in-plane mechanical properties]{
+In-plane functions for As 
+Young's modulus $Y\left(\theta\right)$ (blue)
+and its isotropic average $\left<Y\left(\theta\right)\right>$ 
+(red) in units of GPa; 
+shear modulus $G\left(\theta\right)$ in GPa (red);
+and Poisson's ratio $\nu\left(\theta\right)$ 
+(scaled by 50).
+}
+\label{fig:as_2d_in_plane_figs}
+\end{figure}
+
+
+Another interesting feature is that 
+the extrema of the elastic functions 
+do not necessarily coincide 
+with the coordinate-axes.
+%
+For instance the Young's modulus 
+for monolayer Sb is maximal at $22^{\degree}$.
+%
+Table~\ref{table:2d_extrema} summarises   
+the global minima and maxima of each function 
+and the angles at which they occur.
+%
+While most of the function extrema occur 
+expectedly at $0^{\degree}$, $45^{\degree}$ or $90^{\degree}$, 
+many are incident away from the coordinate-axes.
+%
+This result lends further insight into  
+the mechanical anisotropy of the 
+orthorhombic group-$V$ materials 
+of the Cmca space group and D$_{2h}$ point group.
+%
+
+%The emergence of a negative Young's modulus 
+%of $-2.1$~GPa in monolayer As (Fig.~\ref{fig:asmono1}), 
+%at first glance, may give cause for concern.
+%%
+%It arises due to a negative Voigt estimate for 
+%the Young's modulus at $90^{\degree}$ 
+%where  
+%$(c_{22}^2-c_{12}^2)/c_{22} = -8.9$~GPa 
+%(since $c_{12}>c_{22}$), 
+%which is larger in absolute magnitude 
+%than the Reuss estimate at $90^{\degree}$ 
+%given by $1/s_{22}=4.7$~GPa  
+%and results in a net negative Hill-average.
+%%
+%In this instance, we surmise that 
+%either the assumptions of the 
+%Voigt model break down, 
+%or the Hill-method
+%is not universally appropriate 
+%in arbitrary directions in-plane 
+%and a more robust averaging 
+%scheme must be employed.
+%%
+%Nevertheless, 
+%the qualitative in-plane 
+%functions and their isotropic averages 
+%remain physically meaningful 
+%and in general can provide valuable physical insight.
+
+
+%ANTIMONY FIGS
+\begin{figure}[th!]
+\begin{subfloat}[Monolayer Sb]{
+\includegraphics[height=0.494\textwidth]{images/Sbmono1.pdf}
+  \label{fig:sbmono1}}
+\end{subfloat}
+%
+\begin{subfloat}[Bilayer Sb]{
+\includegraphics[height=0.494\textwidth]{images/Sbbi1.pdf}
+  \label{fig:sbbi1}}
+\end{subfloat}
+%
+\begin{subfloat}[Bulk Sb]{
+\includegraphics[height=0.494\textwidth]{images/Sbbulk1.pdf}
+  \label{fig:sbbulk1}}
+\end{subfloat}
+%
+\caption[Antimony in-plane mechanical properties]{
+In-plane functions for Sb 
+Young's modulus $Y\left(\theta\right)$ (blue)
+and its isotropic average $\left<Y\left(\theta\right)\right>$ 
+(red) in units of GPa; 
+shear modulus $G\left(\theta\right)$ in GPa (red);
+and Poisson's ratio $\nu\left(\theta\right)$ 
+(scaled by 50).
+}
+\label{fig:sb_2d_in_plane_figs}
+\end{figure}
+
+
+\clearpage
+%COMPARISON TO EXP
+\subsection{Polymer-nano-flake composite}
+\label{sec:comparison_to_exp}
+%
+In our paper in Ref.~\cite{PMID:26469634}, 
+we demonstrated that the 
+controlled production of large quantities 
+of few-layer BP can be achieved by 
+liquid-phase exfoliation (LPE)~\cite{Nicolosi1226419}, 
+in which the BP fragments are immersed in 
+a solution of $N$-cyclohexyl-2- pyrrolidone (CHP), 
+and separated into layers 
+by sonication, or shearing.
+%
+The particular choice of CHP 
+as a solution is two-fold: 
+to lubricate the exfoliation process, 
+and to guard the produced samples from oxidation~\cite{Li2014,Zant2014,doi:10.1021/nl5032293}, 
+a problem that has been reported  
+to hinder the large-scale production of BP. 
+%
+The advantage of sonication is 
+not only the effective mass-production of samples, 
+but the means to control the size-dispersion 
+of the produced stock, 
+which varied from 50~nm to 2500~nm.
+
+Our study focused in particular on two batches:
+one containing small samples 
+with mean-length $L_s=130\pm111$~nm 
+and one containing large samples 
+with mean-length $L_l=2260\pm1000$~nm.
+% 
+A monolayer of BP was measured 
+to be $2.06\pm0.02$~nm thick, 
+which is a factor of 4 greater than the 
+monolayer thickness estimated from 
+the bulk value in Table~\ref{table:lattice_consts}, 
+however this was acknowledged to be overestimated.
+%
+The samples were then determined to be 
+8 layers thick on average, 
+which corresponds to a bulk calculation
+for our purposes.
+%
+The nano-flakes were dispersed in PVC, 
+up to 0.3\% volume, 
+and subject to mechanical stress to 
+determine the composite PVC:BP 
+Young's modulus.
+%
+The pristine PVC Young's modulus 
+was measured to be $Y_m=511\pm118$~MPa.
+%
+The experimental data in this section was 
+provided by the experiments 
+conducted by our colleagues, 
+Damien Hanlon, 
+Conor Boland, and Johnny Coleman 
+and may be found in Table~\ref{table:bp_exp_data}.
+
+Since the ROM models 
+in Eq.~\eqref{eq:rom_models} make
+no distinction between flake sizes, 
+they may be fit to all the data simultaneously, 
+as shown in Fig.~\ref{fig:rom_plot}.
+%
+The upper-bound BP Young's modulus, 
+given by the Voigt ROM model, 
+is determined as  
+$Y_f^V=184\pm 38$~GPa, 
+and is in excellent agreement 
+with the calculated DFT values.
+%
+In fact, the Young's modulus 
+%lies precisely between the average in-plane 
+%bulk modulus 
+%$\langle Y_\textrm{bulk}\rangle=85.7$~GPa 
+%(Table~\ref{table:cmatrix_data})
+coincides precisely with the elastic stiffness in 
+the zigzag direction $c_{11}=187.9$~GPa 
+(Table~\ref{table:2d_extrema}), 
+and, thus, supports our earlier assumption 
+that the flakes are naturally aligned in-plane.
+%
+On the other hand, 
+the Reuss model 
+%returns a much lower result 
+%on the order of the PVC modulus 
+%$Y_f^R=0.537\pm 41$~GPa, 
+%and 
+cannot be feasibly extrapolated 
+to a Young's modulus at 100\% volume fraction
+since the fit quickly diverges 
+beyond the limited range of the data.
+%
+Nonetheless, 
+%the result trivially represents 
+%the absolute lower-bound 
+%of the BP Young's modulus 
+%to be that of 
+the PVC Young's modulus was determined 
+by both models to be 
+$Y_m^V=541\pm 44$~MPa, 
+as expected.
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/rom_plot.pdf}
+\caption[PVC:BP Young's modulus fit to rule-of-mixtures model]{
+Young's modulus of PVC:BP composite (MPa) 
+against BP nano-flake volume fraction (\%)
+fit to the Voigt (blue) and Reuss (red) ROM models.
+}
+\label{fig:rom_plot}
+\end{figure}
+
+
+The HT model, meanwhile, 
+must accommodate the flake sizes 
+according to the parameter $\zeta=2l/t$, 
+which, for small flakes, is $\zeta_S=15.8$ 
+and for large flakes is $\zeta_L=274.3$.
+%
+The models were then fit to the corresponding 
+data where the matrix Young' modulus $Y_m=511$~MPa is kept fixed, 
+and are shown by the solid lines in Fig.~\ref{fig:ht_plot}, 
+keeping all other variables fixed.
+%
+The resulting Young's modulus
+for the small flakes is 
+$Y_S=117\pm71$~GPa, 
+and for the large flakes is 
+$Y_L=215\pm28$~GPa, 
+which are very reasonable indeed 
+and closely resemble the values we 
+obtained in the VRH model.
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/ht_plot.pdf}
+\caption[PVC:BP Young's modulus fit to Halpin-Tsai model]{
+Young's modulus of PVC:BP composite (MPa) 
+against BP nano-flake volume fraction (\%) 
+for large (orange) and small (green) flakes.
+%
+Halpin-Tsai models are shown for the 
+large (blue) and small (red) flakes, 
+where the parameters in parentheses indicate 
+which variables are optimised in the models.
+%
+The solid line indicates the model where just $Y_f$ is optimised 
+while the dashed lines indicate where $Y_f$ and $Y_m$ are optimised. 
+%
+}
+\label{fig:ht_plot}
+\end{figure}
+
+Furthermore, 
+if we allow the model 
+to be simultaneously optimised according to 
+$Y_f$ and $Y_m$ 
+shown by the dashed lines in Fig.~\ref{fig:ht_plot}, 
+we can find the best fit for $Y_m$ as well.
+%
+In this instance, 
+the model parameters for the small flakes 
+were calculated as 
+$Y_S=140\pm148$~GPa 
+and   
+$Y_m=494\pm84$~MPa.
+%
+While $Y_S$ has a large associated uncertainty, 
+$Y_m$ is at least close enough to the margin of 
+experimental uncertainty.
+%
+Meanwhile, 
+the model parameters for the large flakes, 
+given by  
+$Y_L=167\pm26$~GPa 
+and 
+$Y_m=622\pm41$~MPa
+are slightly larger but have smaller uncertainties 
+and are also broadly in line 
+with all other results up to now.
+%
+%Remarkably, the large value for $\zeta_L$ 
+%is also not too concerning 
+%as it is an empirical parameter 
+%and, thus, has no strict grounding 
+%in the particular geometry 
+%of the BP nano-flakes.
+%%
+%Moreover, its large value coincides 
+%with the limiting regime, 
+%i.e. 
+%where $\zeta\to\infty$ 
+%where the HT model is 
+%equivalent to a Voigt ROM, 
+%and, thus, supports the agreement 
+%of the latter with our DFT calculations.
+
+A summary of the model results 
+is presented in Table~\ref{table:model_results}, 
+where it is clear that the 
+Voigt ROM and HT models 
+are in very reasonable agreement
+with experimental and theoretical data.
+%
+Moreover, 
+with the various models we can estimate  
+the Young's modulus of BP to be 
+approximately between 
+120~GPa and 200~GPa.
+%
+\begin{table}[th!]
+\centering
+%\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrr}
+\hline\hline
+Model&$Y_f$ (GPa) &$Y_m$ (MPa)&$\zeta$\\
+\hline
+ROM Voigt				&$184\pm38$	&$541\pm44$	&-\\
+ROM Reuss				&-			&$541\pm44$ 	&-\\
+HT\textsubscript{S}$[Y_f]$	&$117\pm71$	&(511) 	&(15.8)\\
+HT\textsubscript{L}$[Y_f]$		&$215\pm28$	&(511) 	&(273.9)\\
+HT\textsubscript{S}$[Y_f,Y_m]$&$140\pm148$	&$494\pm84$	    	&(15.8)\\
+HT\textsubscript{L}$[Y_f,Y_m]$	&$167\pm26$	&$622\pm41$	    	&(273.9)\\
+\hline\hline
+\end{tabular}
+%}
+\caption{
+ROM and HT model results 
+for the Young's moduli of BP (GPa) and PVC (MPa), 
+and $\zeta$ parameter.
+%
+Variables in parentheses 
+are not optimised by the model.
+}
+\label{table:model_results}
+\end{table}
+
+
+\newpage
+\section{Conclusion}
+\label{sec:2d_conclusion1}
+%
+In this Chapter, 
+we have quantified the qualitative mechanical properties 
+of puckered 
+phosphorus, arsenic and antimony, 
+in the few-layer and bulk phases, 
+from comprehensive 
+DFT calculations.
+%
+We have found that these materials exhibit 
+a broad range of elastic properties 
+and in-plane behaviour 
+that are reflective of the underlying 
+anisotropic crystal structure, 
+which potentially provide for widespread 
+technological application.
+%
+Moreover, 
+the calculated mechanical properties, 
+from lattice constants to Young's moduli, 
+are in excellent agreement  
+with experimental observations.
+%
+We have provided further confirmation 
+of these values  
+from the experimental measurements 
+of a PVC:BP composite material
+and appropriate mixture models, 
+which place the Young's modulus 
+between 120~GPa and 200~GPa.
+
+This work, 
+detailing the macroscopic physical 
+behaviour of 
+mono-crystalline, alloyed,
+or composite structures, 
+is a typical example of 
+the utility DFT provides.
+%
+While the predictive capability of DFT 
+is largely dependent on 
+the system under consideration, 
+the quality of the pseudopotential 
+and, crucially, 
+the choice of exchange-correlation functional, 
+quantities such as lattice constants 
+and mechanical properties are generally 
+well reproduced~\cite{MUSIC2016178}.
+%
+However, 
+DFT suffers from inherent, systematic failures, which, 
+as we shall discuss in the next Chapter, 
+can lead to qualitative miscalculation 
+of electronic properties, 
+in particular the band gap.
+%
+
+

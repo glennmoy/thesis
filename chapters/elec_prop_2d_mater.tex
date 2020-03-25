@@ -1,0 +1,1666 @@
+
+\lett{T}{he search for graphene} alternatives 
+that are capable of supporting 
+ballistic electron transport 
+has driven intense research 
+toward the development of a 
+new class of materials termed   
+Weyl and Dirac semi-metals~\cite{Xuaaa9297,PhysRevLett.102.166803,Shekhar2015,PhysRevB.83.205101,NIELSEN1983389,turner2013beyond,PhysRevX.4.031035,PhysRevLett.108.140405,PhysRevB.85.195320,PhysRevB.88.125427,C3CP53257G,doi:10.1093/nsr/nwu080,Weyl1929,doi:10.1146/annurev-conmatphys-031016-025458,C3CP53257G,doi:10.1093/nsr/nwu080}.
+%
+Weyl and Dirac states 
+in semi-metals  
+result from the 
+manifestation of massless quasi-particle states in 
+bulk or low-dimensional 
+condensed matter systems, respectively.
+%
+These states lead to unique topological properties 
+characterised, primarily, 
+by ballistic conduction.
+
+In this Chapter, 
+we continue our analysis  
+of the calculation results of 
+puckered phosphorus (P), arsenic (As) and antimony (Sb)
+in relation to the electronic properties, 
+with particular emphasis 
+on the identification 
+of qualitative electronic transitions.
+%
+Specifically, 
+we investigate the Kohn-Sham band gaps and 
+charge-carrier effective masses
+from the computed electronic band structures, 
+insofar as the Kohn-Sham eigenvalues 
+are physically relevant, 
+which, strictly speaking, 
+they are not.
+%
+Nonetheless, 
+reasonable confidence can be afforded 
+in the reproduction of 
+electronic trends~\cite{1402-4896-2004-T109-001,doi:10.1021/cr200107z}
+and, thus, we make tentative predictions 
+of strain-induced Dirac and  
+Weyl states in particular cases, 
+numerous band gap transitions,  
+one-dimensional conductivity, 
+and a structural phase-transition 
+for moderate in-plane stresses.
+%
+%{These phases are predicted to support charge velocities 
+%up to $10^6$~$\textrm{ms}^{-1}$ 
+%and, in some highly anisotropic cases, 
+%permit one-dimensional ballistic conductivity 
+%in the puckered direction.}
+%
+Our predicted results contribute to the 
+mounting evidence for the 
+utility of these materials, 
+as outlined in the previous Chapter, 
+but are undermined by 
+the failure of DFT to accurately resolve 
+specific electronic properties 
+which, as we shall observe, 
+can differ dramatically from 
+experimental observations.
+
+
+% WEYL AND DIRAC SEMI-METALS
+\section{Weyl and Dirac semi-metals}
+\label{sec:weyl_and_dirac}
+
+In 1929, Herman Weyl derived    
+a solution to the Dirac equation~\cite{dirac1928quantum} 
+that proposed the existence of 
+relativistic, massless fermions~\cite{Weyl1929},
+which have come to bear his name.
+%
+As of yet, 
+Weyl fermions have not been 
+observed as fundamental particles in nature, 
+but persistent breakthroughs in 
+topological insulators have lead 
+to their recent discovery     
+by Xu {\it et al.}~\cite{Xuaaa9297}
+as emergent quasi-particles 
+in tantalum arsenide (TaAs), 
+among other  
+predicted candidates~\cite{PhysRevB.83.205101,PhysRevLett.107.186806,PhysRevB.89.081106}.
+%
+Weyl semi-metals are primarily 
+characterised by the crossing 
+of linearly-dispersive energy bands 
+through nodes at the Fermi energy, 
+termed Weyl {\it points} or {\it cones}, 
+which support ballistic charge 
+transport~\cite{doi:10.1146/annurev-conmatphys-031016-025458}.
+%
+Weyl points emerge as the result of 
+underlying symmetries of the crystal lattice,
+namely time-reversal and 
+inversion or reflection symmetries~\cite{doi:10.1093/nsr/nwu080}, 
+but can also be produced by mirror symmetries~\cite{PhysRevB.93.035401}, 
+which affect the solutions of the Hamiltonian.
+%
+As such, 
+Weyl cones are highly robust 
+and always occur in pairs 
+of opposite chirality~\cite{doi:10.1146/annurev-conmatphys-031016-025458}.
+%
+
+A Dirac semi-metal, 
+on the other had, 
+is the two-dimensional 
+analogue of a Weyl semi-metal, 
+the most famous exhibition of which 
+is seen in graphene~\cite{PhysRevLett.115.126803}. 
+%
+The particular difficulty in attaining Dirac points 
+in two-dimensional materials  
+is well documented~\cite{C3CP53257G,doi:10.1093/nsr/nwu080} 
+and is due to the difficulty attaining  
+the required symmetry-protection mechanisms 
+in reduced dimensions.
+%
+Nonetheless, 
+a Dirac semi-metal in few-layer  BP 
+was observed experimentally by Kim \emph{et al.}~\cite{Kim723}, 
+while arsenic~\cite{doi:10.1063/1.4943548}, 
+antimony~\cite{Yao2013,Lu2016,Zhao2015}, 
+and bismuth~\cite{Lu2016} 
+%and P~\cite{Lu2016,PhysRevB.93.245303,Zhao2015,2053-1583-4-2-025071} 
+are also predicted candidates.
+%
+The ambitious development 
+of Weyl and Dirac semi-metals 
+is driven by highly anticipated applications 
+in high-speed electronics and computing. 
+%
+We refer the reader to Refs.~\cite{Weyl1929,Xuaaa9297,PhysRevLett.108.140405,doi:10.1146/annurev-conmatphys-031016-025458,C3CP53257G,doi:10.1093/nsr/nwu080} 
+for further information on 
+Weyl and Dirac semi-metals.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% METHODOLOGY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Methodology}
+\label{sec:methodology2}
+
+The run-time calculation parameters 
+and straining procedure for this Chapter  
+were the same as those outlined 
+in section~\ref{sec:calc_details}.
+%
+Calculations without SOC 
+were initially performed for convenience 
+and those strains that exhibit potential Dirac or Weyl states 
+were reassessed at representative strains 
+including non-perturbative SOC~\cite{PhysRevB.71.115106}.
+%
+Electronic band structures 
+were calculated along the high-symmetry points 
+of the Brillouin zone 
+{\{$\Gamma$, $X$, $S$, $Y$, $Z$\}}, 
+shown in Fig.~\ref{fig:bz} below, 
+from which the Kohn-Sham band gaps 
+were determined.
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/3dbz.jpg}
+\caption[Brillouin zone of orthorhombic phosphorus]
+{The Brillouin zone for orthorhombic phosphorus 
+of the Cmca space group and D$_{2h}$ point group 
+with high-symmetry points 
+\{$\Gamma$, $X$, $S$, $Y$, $Z$\} labelled.}
+\label{fig:bz}
+\end{figure}
+%
+Under shear strain, the Brillouin zone 
+deforms into an asymmetric honeycomb 
+in the $x$-$y$ plane, 
+yet we retained sampling along the original  
+path since the deformation 
+up to 5\% strain is negligible 
+and the effective masses were all
+calculated at the $\Gamma$-point.
+%
+We determined 
+charge-carrier effective masses 
+according to the nearly-free electron model 
+$m_{ij}^\star=\hbar^2\left(\partial^2E/\partial k_i\partial k_j \right)^{-1}$ 
+using a cubic spline fit to 
+9 data points about the $\Gamma$-point.
+%
+The charge velocities were similarly 
+determined according to the dispersion relation 
+$v=\hbar^{-1}dE(k)/dk$ 
+from the linear fit to 
+the Dirac and Weyl states.
+%
+To confirm the existence of linear-dispersion, 
+we also plotted three-dimensional band structures 
+in the region of the Dirac and Weyl points with SOC, 
+as well as lines intersecting the points 
+at $0^\circ$, $30^\circ$, $60^\circ$, and $90^\circ$ 
+with respect to the $\Gamma-X$ line.
+%
+Following the convention of terminology 
+found in the Refs.~\cite{doi:10.1021/acs.nanolett.5b04106,Kim723,Shekhar2015}, and other sources, 
+we henceforth classify Dirac or Weyl states 
+as those associated with regions 
+of sustained linear dispersion 
+in the band structure, 
+at or near the Fermi level, 
+in at least one direction.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% RESULTS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Electronic properties}
+\label{sec:electronic_results}
+
+All of the band structures 
+pertaining to the following analysis 
+%may be found in the supplemental material 
+%for Ref.~\cite{2053-1583-4-4-045018}.
+are presented in 
+the supplemental material of Ref.~\cite{2053-1583-4-4-045018}.
+%
+This section is divided 
+into nine parts detailing 
+the electronic properties  
+derived from the plane-wave DFT calculations 
+for each species at each layer-number. 
+%
+We discuss the trends 
+in Kohn-Sham band gaps 
+and charge carrier effective masses, 
+and identify the qualitative transitions that occur, 
+which are summarised in Table~\ref{table:transitions}.
+%
+Where applicable, 
+we discuss the predicted 
+existence of Dirac and Weyl states 
+and reassess those examples 
+with high resolution 
+two- and three-dimensional band structures, 
+including SOC.
+
+In the following discussion, 
+directions along $\Gamma-Y$ 
+pertain to the zig-zag direction in the crystal structure, 
+while those along $\Gamma-X$ 
+pertain to the puckered direction.
+
+%MONOLAYER PHOSPHORUS
+\subsubsection{Monolayer Phosphorus}
+
+For the relaxed P monolayer, 
+our calculations produced  
+a direct band gap of 0.88~eV 
+at the $\Gamma$-point, 
+as shown in Fig.~\ref{fig:pmonobg}, 
+which falls within range of other gaps 
+determined by DFT: 0.7~eV from DFT-PBEsol~\cite{PhysRevLett.112.176801}
+and 1.0~eV from DFT-HSE06~\cite{doi:10.1021/nn501226z}.
+%
+On the other hand, quasi-particle calculations~\cite{PhysRevB.89.235319}, 
+which treat electronic addition and removal events on an explicit footing, 
+predict a larger band gap of 2~eV
+with significant exciton binding~\cite{PhysRevB.90.205421} 
+(between 0.4~eV to 0.83~eV).
+
+This discrepancy is a classic example of 
+the systematic 
+band gap problem inherent to approximate 
+semi-local functionals
+such as PBE~\cite{PhysRevB.77.115123}.
+%
+These errors not only misrepresent  
+band gaps and other electronic properties, 
+but may also adversely 
+affect the critical strains of the identified transitions 
+and, thus, must be treated cautiously.
+%
+Nevertheless, 
+it is important to emphasise that
+band alignments and rates of change 
+are quite often reliably reproduced~\cite{PhysRevB.90.155405}.
+%as are direct-indirect transitions
+%in two-dimensional materials~\cite{PhysRevB.90.085402}. 
+
+While absolute band gaps 
+are therefore not expected to be accurate,  
+we can expect reasonable agreement 
+with trends in electronic and 
+mechanical behaviour~\cite{1402-4896-2004-T109-001,doi:10.1021/cr200107z}.
+%
+While discussing the remaining results, 
+we shall omit further discussion of these errors 
+until section~\ref{sec:2d_conclusion2}.
+
+The application of uniaxial in-plane strain 
+was found to open the band gap for tensile strain 
+and diminished it for compressive strain,  
+while shear strain had a negligible effect.
+%
+The electron and hole effective masses 
+(Figs.~\ref{fig:pmonomeff}~\&~\ref{fig:pmonomhff}), 
+compare well to the figures computed in Ref.~\cite{Wang2015},
+where, at $\varepsilon_{xx}=+5\%$ tensile strain,  
+the electron and hole effective masses   
+coincide at 0.9~$m_0$ while, 
+for compressive strains, 
+the hole effective mass along 
+$\Gamma-X$ rises significantly.
+
+\begin{figure}[th!]
+\begin{subfloat}[Mono P band gap (eV)]{
+\includegraphics[height=0.315\textwidth]{images/p_mono_bandgap.pdf}
+  \label{fig:pmonobg}}
+\end{subfloat}
+%
+\begin{subfloat}[Monolayer P $m_e/m_0$]{
+\includegraphics[height=0.315\textwidth]{images/p_mono_meff.pdf}
+  \label{fig:pmonomeff}}
+\end{subfloat}
+%
+\begin{subfloat}[Monolayer P $m_h/m_0$]{
+\includegraphics[height=0.315\textwidth]{images/p_mono_mhff.pdf}
+  \label{fig:pmonomhff}}
+\end{subfloat}
+%
+\caption[Electronic properties of monolayer phosphorus for in-plane strains]
+{The relationships for monolayer P between 
+the applied in-plane strains $\varepsilon_{xx}$ (blue),
+$\varepsilon_{yy}$ (red) and $\varepsilon_{xy}$ (green) against 
+%
+\protect\subref{fig:pmonobg}
+the direct $E$ (solid  squares) and 
+indirect $E^\star$ (dashed triangles) band gaps (eV);
+%
+\protect\subref{fig:pmonomeff}
+the effective electron masses $m_e/m_0$ 
+along $\Gamma-X$ (solid squares) and 
+$\Gamma-Y$ (dashed triangles);
+%
+\protect\subref{fig:pmonomhff} 
+the effective hole masses $m_h/m_0$ 
+along $\Gamma-X$ (solid squares) and 
+$\Gamma-Y$ (dashed triangles).}
+\label{fig:p_mono_elec_properties}
+\end{figure}
+
+
+%BILAYER PHOSPHORUS
+\subsubsection{Bilayer Phosphorus}
+Relaxed bilayer P was also found 
+to have a direct band gap of 
+0.43~eV (Fig.~\ref{fig:pbibg}), 
+and exhibits broadly the same 
+electronic behaviour as the monolayer.
+%
+This includes 
+the convergence of the electron effective masses 
+(Fig.~\ref{fig:pbimeff}) 
+at $+4\%$ strain, 
+and increasing hole effective masses 
+(Fig.~\ref{fig:pbimhff})
+for compressive strains.
+%
+A direct-indirect band gap transition 
+was also observed at 
+$+2\%$ uniaxial tensile strain. 
+
+\begin{figure}[th!]
+\begin{subfloat}[Bilayer P band gap (eV)]{
+\includegraphics[height=0.315\textwidth]{images/p_bi_bandgap.pdf}
+  \label{fig:pbibg}}
+\end{subfloat}
+%
+\begin{subfloat}[Bilayer P $m_e/m_0$]{
+\includegraphics[height=0.315\textwidth]{images/p_bi_meff.pdf}
+  \label{fig:pbimeff}}
+\end{subfloat}
+%
+\begin{subfloat}[Bilayer P $m_h/m_0$]{
+\includegraphics[height=0.315\textwidth]{images/p_bi_mhff.pdf}
+  \label{fig:pbimhff}}
+\end{subfloat}
+%
+\caption[Electronic properties of bilayer phosphorus for in-plane strains]
+{The relationships for bilayer P between 
+the applied in-plane strains $\varepsilon_{xx}$ (blue),
+$\varepsilon_{yy}$ (red) and $\varepsilon_{xy}$ (green) against 
+%
+\protect\subref{fig:pmonobg}
+the direct $E$ (solid  squares) and 
+indirect $E^\star$ (dashed triangles) band gaps (eV);
+%
+\protect\subref{fig:pmonomeff}
+the effective electron masses $m_e/m_0$
+ along $\Gamma-X$ (solid squares) and 
+$\Gamma-Y$ (dashed triangles);
+%
+\protect\subref{fig:pmonomhff} 
+the effective hole masses $m_h/m_0$ 
+along $\Gamma-X$ (solid squares) and 
+$\Gamma-Y$ (dashed triangles).}
+\label{fig:p_bi_elec_properties}
+\end{figure}
+
+
+Incidentally, the band gap closes 
+around $-5\%$ uniaxial compressive strain, 
+at which point a Dirac {state} emerges 
+at the $\Gamma$-point. 
+%
+{The effect of SOC 
+on the band structure 
+(Fig.~\ref{fig:pbixxdiracbs}) 
+induces no qualitative difference 
+in the bands 
+and the three-dimensional 
+bands plotted about the Dirac points 
+(Fig.~\ref{fig:pbixx3ddiracbs})
+confirm the linear-dispersion,  
+albeit in only one direction.
+%
+A linear fit to the 
+surface of the bands 
+(Fig.~\ref{fig:pbixxcutdiracbs}) 
+ returns a maximum charge velocity 
+of $v=3.80(1)\times 10^6$~$\textrm{ms}^{-1}$ 
+along $\Gamma-Y$, 
+while, in the orthogonal direction, 
+the bands are flat with a  
+a charge velocity that is relatively negligible.
+%
+This high anisotropy in charge velocities, 
+dominated by ballistic conduction along $\Gamma-Y$, 
+is indicative of effective one-dimensional conductivity 
+that is supported by 
+the large disparity in effective 
+masses at $\varepsilon_{xx}=-5\%$, 
+evident in Figs.~\ref{fig:pbimeff}~\&~\ref{fig:pbimhff}.}
+%
+The Dirac state for $\varepsilon_{yy}=-5\%$, 
+which is due to band inversion, 
+occurs off the $\Gamma-Y$ symmetry line
+at a point $X^\prime$, 
+as illustrated in Figs.~\ref{fig:pbixxdiracbs}~-~\ref{fig:pbixxcutdiracbs}.
+%
+Here the maximum charge velocity is
+$v=3.22(1)\times 10^6$~$\textrm{ms}^{-1}$.
+%
+These results are supported by 
+the work of Doh \emph{et al.}~\cite{2053-1583-4-2-025071}, 
+who demonstrated the effect of strain 
+on hopping parameters 
+can lead to a Dirac semi-metallic state in bilayer P.
+%
+Similarly, Baik \emph{et al.}~\cite{doi:10.1021/acs.nanolett.5b04106} 
+found that the SOC 
+did not induce a band gap 
+in potassium-doped multi-layer P,  
+but did lift the spin-degeneracy of the Dirac points.
+
+\begin{figure}[th!]
+\centering
+\begin{tabular}{ccc}
+\begin{subfloat}[Bi P band structure $\varepsilon_{xx}=-5\%s$]{
+  \centering
+\includegraphics[height=0.247\textwidth]{images/p_bi_xx_diracbs.pdf}
+  \label{fig:pbixxdiracbs}}
+\end{subfloat}
+&
+%
+\begin{subfloat}[]{
+  \centering
+\includegraphics[height=0.247\textwidth]{images/p_bi_xx_3ddirac_cut.pdf}
+  \label{fig:pbixx3ddiracbs}}
+\end{subfloat}
+&
+%
+\begin{subfloat}[$\Gamma$-point Dirac state]{
+  \centering
+\includegraphics[height=0.247\textwidth]{images/p_bi_xx_dirac_cut.pdf}
+  \label{fig:pbixxcutdiracbs}}
+\end{subfloat}
+\\
+%
+\begin{subfloat}[Bi P band structure $\varepsilon_{yy}=-5\%$]{
+  \centering
+\includegraphics[width=0.4\textwidth]{images/p_bi_yy_diracbs.pdf}
+    \label{fig:pbiyydiracbs}}
+\end{subfloat}
+&
+%
+\begin{subfloat}[]{
+  \centering
+\includegraphics[width=0.18\textwidth]{images/p_bi_yy_3ddirac_cut.pdf}
+  \label{fig:pbiyy3ddiracbs}}
+\end{subfloat}
+&
+%
+\begin{subfloat}[$X^\prime$-point Dirac state]{
+  \centering
+\includegraphics[width=0.27\textwidth]{images/p_bi_yy_dirac_cut.pdf}
+  \label{fig:pbiyycutdiracbs}}
+\end{subfloat}
+\end{tabular}
+\caption[Predicted Dirac states of strained bilayer phosphorus]
+{\protect\subref{fig:pbixxdiracbs} Band structure of bilayer P at $\varepsilon_{xx}=-5\%$ 
+with SOC (thick lines), 
+and without SOC (thin lines) 
+%
+\protect\subref{fig:pbixx3ddiracbs} 
+three-dimensional bands about 
+the predicted Dirac point at $\Gamma$
+\protect\subref{fig:pbixxcutdiracbs} 
+slices through the Dirac point 
+at $0^\circ$, $30^\circ$, $60^\circ$ and $90^\circ$ 
+relative to the $\Gamma-X$ line 
+that indicate highly anisotropic conduction. 
+%
+[\protect\subref{fig:pbiyydiracbs}~-~\protect\subref{fig:pbiyycutdiracbs}] 
+Illustrates the same for bilayer P at $\varepsilon_{yy}=-5\%$, 
+where the Dirac state occurs at the non-symmetry point $X^\prime$ 
+along $\Gamma-X$.
+}
+\label{fig:p_dirac_states}
+\end{figure}
+
+
+%BULK PHOSPHORUS
+\subsubsection{Bulk Phosphorus}
+
+In the bulk, however, 
+we found the band gap to be completely 
+closed (Fig.~\ref{fig:pbulkbg}), 
+and therefore the system is predicted to be metallic, 
+in contrast to 
+numerous experiments~\cite{Morita1986,doi:10.1063/1.1729699,NARITA1983422,MARUYAMA198199},
+which have measured a direct gap in 
+the range of 0.31-0.36~eV. 
+%
+We concluded after investigation 
+that this was, in part, 
+due to an effect  
+of the Fermi surface smearing functionality~\cite{PhysRevLett.82.3296} 
+in the ionic geometry relaxation procedure.
+%
+When relaxed under fixed-occupancy 
+conditions, instead, a band gap of 
+0.35~eV was produced.
+
+
+The electron effective masses 
+were found to be quite responsive to strain 
+(Fig.~\ref{fig:pbulkmeff}), 
+where those along 
+$\Gamma-Y$ rose for 
+both tensile strain along $\varepsilon_{xx}$, 
+due to falling conduction bands,  
+and compressive strain along $\varepsilon_{yy}$, 
+due to flattening bands along $\Gamma-Y$.
+%
+In comparison, the hole effective masses 
+were found to vary to a lesser extent 
+(Fig.~\ref{fig:pbulkmhff}).
+%
+The effective masses along $\Gamma-X$ 
+were not computed once 
+the band gap closed below $+2\%$ strain.
+%
+Finally, shear strain was seen  
+to have a negligible effect on the gap.
+
+\begin{figure}[th!]
+\begin{subfloat}[Bulk P band gap (eV)]{
+\includegraphics[height=0.315\textwidth]{images/p_bulk_bandgap.pdf}
+  \label{fig:pbulkbg}}
+\end{subfloat}
+%
+\begin{subfloat}[Bulk P $m_e/m_0$]{
+\includegraphics[height=0.315\textwidth]{images/p_bulk_meff.pdf}
+  \label{fig:pbulkmeff}}
+\end{subfloat}
+%
+\begin{subfloat}[Bulk P $m_h/m_0$]{
+\includegraphics[height=0.315\textwidth]{images/p_bulk_mhff.pdf}
+  \label{fig:pbulkmhff}}
+\end{subfloat}
+%
+\caption[Electronic properties of bulk phosphorus for in-plane strains]
+{The relationships for bulk P between 
+the applied in-plane strains $\varepsilon_{xx}$ (blue),
+$\varepsilon_{yy}$ (red) and $\varepsilon_{xy}$ (green) against 
+%
+\protect\subref{fig:pmonobg}
+the direct $E$ (solid  squares) and 
+indirect $E^\star$ (dashed triangles) band gaps (eV);
+%
+\protect\subref{fig:pmonomeff}
+the effective electron masses $m_e/m_0$ 
+along $\Gamma-X$ (solid squares) and 
+$\Gamma-Y$ (dashed triangles);
+%
+\protect\subref{fig:pmonomhff} 
+the effective hole masses $m_h/m_0$ 
+along $\Gamma-X$ (solid squares) and 
+$\Gamma-Y$ (dashed triangles).}
+\label{fig:p_bulk_elec_properties}
+\end{figure}
+
+
+While the PBE gap remained 
+incorrectly closed in the relaxed state, 
+a possible Weyl {state} was observed 
+at 2\% uniaxial strain 
+(Fig.~\ref{fig:pbulkxxdiracbs}), 
+before a direct gap opened 
+that subsequently transitioned to an 
+indirect gap at $+3\%$.
+%
+The SOC slightly 
+reduced the band gap by approximately $0.05$~eV 
+but did not qualitatively 
+affect the overall results.
+%
+The three-dimensional band structure with SOC 
+is shown in Fig.~\ref{fig:pbulkxx3ddiracbs}, 
+in which a pair of potential Weyl points occur  
+on an off-symmetry point $X^\prime$ 
+along $\Gamma-X$.
+%
+{
+The maximum charge velocity, 
+computed from Fig.~\ref{fig:pbulkxxdiracbs},
+is $v=2.40(1)\times 10^6$~$\textrm{ms}^{-1}$  
+for both $\varepsilon_{xx}=+2\%$
+and  $\varepsilon_{yy}=+2\%$ 
+(Figs.~\ref{fig:pbulkyydiracbs}~-~\ref{fig:pbulkyycutdiracbs})
+and occurs along a line parallel to $\Gamma-Y$.}
+%
+This band-inversion may 
+also lead to further Weyl {states}
+under greater compression,    
+which have been predicted 
+at similar pressures~\cite{PhysRevLett.115.186403,PhysRevB.93.195434,PhysRevB.91.195319}.
+
+\begin{figure}[th!]
+\centering
+\begin{tabular}{ccc}
+%
+\smallskip
+\begin{subfloat}[Bulk P band structure $\varepsilon_{xx}=2\%$]{
+\centering
+\includegraphics[width=0.4\textwidth]{images/p_bulk_xx_diracbs.pdf}
+\label{fig:pbulkxxdiracbs}}
+\end{subfloat}
+&
+\begin{subfloat}[]{
+\centering
+\includegraphics[width=0.18\textwidth]{images/p_bulk_xx_3ddirac_cut.pdf}
+\label{fig:pbulkxx3ddiracbs}}
+\end{subfloat}
+&
+\begin{subfloat}[$X^\prime$-point Dirac state]{
+\centering
+\includegraphics[width=0.27\textwidth]{images/p_bulk_xx_dirac_cut.pdf}
+\label{fig:pbulkxxcutdiracbs}}
+\end{subfloat} 
+\\
+%
+\smallskip
+\begin{subfloat}[Bulk P band structure $\varepsilon_{yy}=2\%$]{
+\centering
+\includegraphics[width=0.4\textwidth]{images/p_bulk_yy_diracbs.pdf}
+\label{fig:pbulkyydiracbs}}
+\end{subfloat}
+&
+\begin{subfloat}[]{
+\centering
+\includegraphics[width=0.18\textwidth]{images/p_bulk_yy_3ddirac_cut.pdf}
+\label{fig:pbulkyy3ddiracbs}}
+\end{subfloat}
+&
+\begin{subfloat}[$X^\prime$-point Weyl state]{
+\centering
+\includegraphics[width=0.27\textwidth]{images/p_bulk_yy_dirac_cut.pdf}
+\label{fig:pbulkyycutdiracbs}}
+\end{subfloat} 
+%
+\end{tabular}
+\caption[Predicted Weyl states of strained bulk phosphorus]{
+\protect\subref{fig:pbulkxxdiracbs} 
+Band structure of  bulk P at $\varepsilon_{xx}=+2\%$ 
+with SOC (thick lines), 
+and without SOC (thin lines) 
+where the off-symmetry point $X^\prime$, 
+located along $\Gamma-X$, 
+is indicated by the dashed vertical line 
+%
+\protect\subref{fig:pbulkxx3ddiracbs}  
+three-dimensional bands with SOC about 
+the potential Weyl points  
+%
+\protect\subref{fig:pbulkxxcutdiracbs} 
+slices through one Weyl point 
+at $0^\circ$, $30^\circ$, $60^\circ$ and $90^\circ$ 
+relative to the $\Gamma-X$ line, also with SOC.
+%
+[\protect\subref{fig:pbulkyydiracbs}~-~\protect\subref{fig:pbulkyycutdiracbs} ] 
+The same is illustrated for $\varepsilon_{yy}=+2\%$.}
+\label{fig:p_bulk_highres}
+\end{figure}
+
+%SUMMARY P
+To summarise, 
+we predict the onset of $\Gamma$-point 
+Dirac {states} in bilayer P 
+at -5\% uniaxial compression, 
+which is supported by previous 
+studies~\cite{2053-1583-4-2-025071,doi:10.1021/acs.nanolett.5b04106}.
+%
+We also predict effective one-dimensional conductivity 
+at $\varepsilon_{xx}=-5\%$, 
+and a direct-indirect band gap transition at 
+$+2\%$ tensile strain. 
+%
+We observe possible Weyl {states} 
+at $+2\%$ tensile strain in bulk P, 
+followed by a direct-indirect 
+band gap transition at +3\%.
+%
+Finally, effective masses  
+are found to vary widely 
+between phases and strain directions 
+and seem strongly susceptible to tuning. 
+
+
+%MONOLAYER ARSENIC
+\subsubsection{Monolayer Arsenic}
+In contrast to P, 
+we identifed an indirect 
+band gap of 0.15~eV along the 
+$\Gamma-Y$ direction
+in the relaxed As monolayer (Fig.~\ref{fig:asmonobg}),
+which was significantly lower than the  
+predicted DFT-HSE06 gap of 0.83~eV~\cite{1882-0786-8-5-055201}.
+%
+However, 
+the relaxed band structure and band gap profiles 
+closely resemble the band structures in 
+Refs.~\cite{PhysRevB.91.085423,doi:10.1063/1.4943548}.
+ 
+\begin{figure}[th!]
+\begin{subfloat}[Mono As band gap (eV)]{
+\includegraphics[height=0.315\textwidth]{images/as_mono_bandgap.pdf}
+  \label{fig:asmonobg}}
+\end{subfloat}
+%
+\begin{subfloat}[Monolayer As $m_e/m_0$]{
+\includegraphics[height=0.315\textwidth]{images/as_mono_meff.pdf}
+  \label{fig:asmonomeff}}
+\end{subfloat}
+%
+\begin{subfloat}[Monolayer As $m_h/m_0$]{
+\includegraphics[height=0.315\textwidth]{images/as_mono_mhff.pdf}
+  \label{fig:asmonomhff}}
+\end{subfloat}
+\caption[Electronic properties of monolayer arsenic for in-plane strains]
+{The relationships for bulk As between 
+the applied in-plane strains $\varepsilon_{xx}$ (blue),
+$\varepsilon_{yy}$ (red) and $\varepsilon_{xy}$ (green) against 
+%
+\protect\subref{fig:asmonobg}
+the direct (solid  squares) and indirect 
+(dashed triangles) band gaps (eV);
+%
+\protect\subref{fig:asmonomeff}
+the effective electron masses $m_e/m_0$ 
+along $\Gamma-X$ (solid squares) and 
+$\Gamma-Y$ (dashed triangles);
+%
+\protect\subref{fig:asmonomhff}
+the effective hole masses $m_h/m_0$ 
+along $\Gamma-X$ (solid squares) and 
+$\Gamma-Y$ (dashed triangles).}
+\label{fig:as_mono_elec_properties}
+\end{figure}
+
+The band gap diminishes for tensile  
+strain along $\varepsilon_{xx}$ 
+and at $+2\%$ 
+the material becomes semi-metallic 
+with a Dirac {state} at the $\Gamma$-point  
+emerging at $\varepsilon_{xx}=+5\%$ 
+{accompanied by an electron pocket 
+above the Fermi-level 
+(Fig.~\ref{fig:as_mono_highres}), 
+which is unaffected by the SOC.}
+% 
+{
+The maximum charge velocity here 
+is $v=3.01(1)\times10^6$~$\textrm{ms}^{-1}$ 
+and lies along $\Gamma-Y$.
+%
+In the orthogonal direction 
+the bands are flat, 
+similarly to monolayer P, 
+with a relatively small charge velocity.
+%
+This high anisotropy in charge velocities, 
+dominated by the ballistic conduction along $\Gamma-Y$, 
+is again indicative of effective one-dimensional conductivity 
+and is further supported by 
+the large disparity in effective 
+masses at $\varepsilon_{xx}=5\%$, 
+shown in Figs.~\ref{fig:asmonomeff}~\&~\ref{fig:asmonomhff}.}
+
+%
+For compressive strain along $\varepsilon_{xx}$ 
+an indirect-direct transition occurs~\cite{PhysRevB.91.085423} 
+at $\varepsilon_{xx}$ =-2\%.  
+%
+For tensile strain along $\varepsilon_{yy}$ 
+the band gap opens, where at  $\varepsilon_{yy}$=-3\%, 
+the indirect band gap closes along $\Gamma-Y$.
+%
+Similar to monolayer phosphorus, 
+there is no appreciable effect due to shear-strain.
+%
+Meanwhile, the charge-carrier effective masses 
+(Figs.~\ref{fig:asmonomeff}~\&~\ref{fig:asmonomhff}) 
+respond linearly to uniaxial strain and compare 
+well to other works~\cite{doi:10.1080/14786437508229285}, 
+where, in particular valence band broadening along $\Gamma-X$
+leads to an increasing hole effective mass.
+
+\begin{figure}[th!]
+\centering
+\begin{tabular}{ccc}
+%
+\smallskip
+\begin{subfloat}[Mono As band structure $\varepsilon_{xx}=5\%$]{
+\centering
+\includegraphics[height=0.247\textwidth]{images/as_mono_xx_diracbs.pdf}
+\label{fig:asmonoxxdiracbs}}
+\end{subfloat}
+&
+\begin{subfloat}[]{
+\centering
+\includegraphics[height=0.247\textwidth]{images/as_mono_xx_3ddirac_cut.pdf}
+\label{fig:asmonoxx3ddiracbs}}
+\end{subfloat}
+&
+\begin{subfloat}[$\Gamma$-point Dirac state]{
+\centering
+\includegraphics[height=0.247\textwidth]{images/as_mono_xx_dirac_cut.pdf}
+\label{fig:asmonoxxcutdiracbs}}
+\end{subfloat} 
+%
+\end{tabular}
+\caption[Predicted Dirac states of strained monolayer arsenic]{
+\protect\subref{fig:asmonoxxdiracbs} 
+Band structure of  monolayer As at $\varepsilon_{xx}=+5\%$ 
+with SOC (thick lines), 
+and without SOC (thin lines)
+%
+\protect\subref{fig:asmonoxx3ddiracbs} 
+ three-dimensional bands  with SOC about 
+the predicted Dirac point at $\Gamma$ 
+%
+\protect\subref{fig:asmonoxxcutdiracbs} 
+slices through the Dirac point 
+at $0^\circ$, $30^\circ$, $60^\circ$ and $90^\circ$ 
+relative to the $\Gamma-X$ line, also with SOC.
+}
+\label{fig:as_mono_highres}
+\end{figure}
+
+%BILAYER ARSENIC
+\subsubsection{Bilayer Arsenic}
+For bilayer As, we identify a 
+direct band gap of $0.45$~eV 
+(Fig.~\ref{fig:asbibg}), 
+in contrast to the indirect band gap 
+observed in the monolayer.
+%
+Here, the band gap opens 
+for uniaxial tensile strain 
+and diminishes for compressive strain.
+%
+The direct band gap transitions
+to an indirect gap at both 
+$\varepsilon_{yy}=-3\%$ and 
+$\varepsilon_{yy}=+2\%$, 
+while at 
+$\varepsilon_{xx}=+2\%$ 
+it also transitions to an indirect gap 
+before resuming to a 
+direct gap again at $\varepsilon_{xx}=+3\%$.
+
+\begin{figure}[th!]
+\begin{subfloat}[Bilayer As band gap (eV)]{
+  \centering
+\includegraphics[height=0.315\textwidth]{images/as_bi_bandgap.pdf}
+  \label{fig:asbibg}}
+\end{subfloat}
+%
+\begin{subfloat}[Bilayer As $m_e/m_0$]{
+\includegraphics[height=0.315\textwidth]{images/as_bi_meff.pdf}
+  \label{fig:asbimeff}}
+\end{subfloat}
+%
+\begin{subfloat}[Bilayer As $m_h/m_0$]{
+\includegraphics[height=0.315\textwidth]{images/as_bi_mhff.pdf}
+  \label{fig:asbimhff}}
+\end{subfloat}
+\caption[Electronic properties of bilayer arsenic for in-plane strains]
+{The relationships for bulk As between 
+the applied in-plane strains $\varepsilon_{xx}$ (blue),
+$\varepsilon_{yy}$ (red) and $\varepsilon_{xy}$ (green) against 
+%
+\protect\subref{fig:asbibg} 
+the direct (solid  squares) and indirect 
+(dashed triangles) band gaps (eV);
+%
+\protect\subref{fig:asbimeff}
+the effective electron masses $m_e/m_0$ 
+along $\Gamma-X$ (solid squares) and 
+$\Gamma-Y$ (dashed triangles);
+%
+\protect\subref{fig:asbimhff}
+the effective hole masses $m_h/m_0$ 
+along $\Gamma-X$ (solid squares) and 
+$\Gamma-Y$ (dashed triangles).}
+\label{fig:as_bi_elec_properties}
+\end{figure}
+
+{
+Moreover, we predict a Dirac state 
+at the $\Gamma$-point 
+at $\varepsilon_{xx}=-4\%$ compression 
+(Fig.~\ref{fig:as_bi_highres}), 
+for which the maximum charge velocity 
+is $v=2.62(2)\times10^6$~$\textrm{ms}^{-1}$ 
+along $\Gamma-Y$.
+%
+The bands are also flat 
+along $\Gamma-X$, 
+similar to the monolayer,
+and have a relatively negligible charge velocity.
+%
+The high anisotropy in charge velocities, 
+again suggests effective one-dimensional conductivity, 
+dominated by the ballistic conduction along $\Gamma-Y$,
+and is further supported by 
+the large disparity in effective 
+masses at $\varepsilon_{xx}=5\%$, 
+shown in Figs.~\ref{fig:asbimeff}~\&~\ref{fig:asbimhff}.}
+%
+Here again, the SOC has no appreciable 
+effect on the bands.
+%
+The electron and hole effective masses 
+(Figs.~\ref{fig:asbimeff}~\&~\ref{fig:asbimhff})
+respond approximately linearly 
+to the applied strain, 
+where conduction band broadening 
+leads to increased 
+effective electron masses, 
+and valence band flattening at $\Gamma$
+leads to increasing hole effective masses. 
+
+\begin{figure}[th!]
+\centering
+\begin{tabular}{ccc}
+%
+\smallskip
+\begin{subfloat}[Bi As band structure $\varepsilon_{xx}=5\%$]{
+\centering
+\includegraphics[height=0.247\textwidth]{images/as_bi_xx_diracbs.pdf}
+\label{fig:asbixxdiracbs}}
+\end{subfloat}
+&
+\begin{subfloat}[]{
+\centering
+\includegraphics[height=0.247\textwidth]{images/as_bi_xx_3ddirac_cut.pdf}
+\label{fig:asbixx3ddiracbs}}
+\end{subfloat}
+&
+\begin{subfloat}[$\Gamma$-point Dirac state]{
+\centering
+\includegraphics[height=0.247\textwidth]{images/as_bi_xx_dirac_cut.pdf}
+\label{fig:asbixxcutdiracbs}}
+\end{subfloat} 
+\\
+%
+\end{tabular}
+\caption[Predicted Dirac states of strained bilayer arsenic]{
+\protect\subref{fig:asbixxdiracbs} 
+Band structure of  bilayer As at $\varepsilon_{xx}=+5\%$ 
+with SOC (thick lines), 
+and without SOC (thin lines)
+%
+\protect\subref{fig:asbixx3ddiracbs} 
+ three-dimensional bands  with SOC about 
+the predicted Dirac point at $\Gamma$ 
+%
+\protect\subref{fig:asbixxcutdiracbs} 
+slices through the Dirac point 
+at $0^\circ$, $30^\circ$, $60^\circ$ and $90^\circ$ 
+relative to the $\Gamma-X$ line, also with SOC.
+}
+\label{fig:as_bi_highres}
+\end{figure}
+
+
+
+%BULK ARSENIC
+\subsubsection{Bulk Arsenic}
+Finally, no band gap is determined 
+in the relaxed bulk phase (Fig.~\ref{fig:asbulkbg}), 
+again contrary to experiments~\cite{doi:10.1080/00018737900101355}, 
+where a small direct band gap of 
+approximately 0.3~eV is observed.
+%
+The electron and 
+hole effective masses 
+along $\Gamma-Y$ 
+(Figs.~\ref{fig:asbulkmeff}~\&~\ref{fig:asbulkmhff}) 
+are found to increase rapidly 
+for compressive strains, 
+as the band peaks rapidly flatten at 
+the $\Gamma$-point.
+
+\begin{figure}[th!]
+\begin{subfloat}[Bulk As band gap (eV)]{
+\includegraphics[height=0.315\textwidth]{images/as_bulk_bandgap.pdf}
+  \label{fig:asbulkbg}}
+\end{subfloat}
+%
+\begin{subfloat}[Bulk As $m_e/m_0$]{
+\includegraphics[height=0.315\textwidth]{images/as_bulk_meff.pdf}
+  \label{fig:asbulkmeff}}
+\end{subfloat}
+%
+\begin{subfloat}[Bulk As $m_h/m_0$]{
+\includegraphics[height=0.315\textwidth]{images/as_bulk_mhff.pdf}
+  \label{fig:asbulkmhff}}
+\end{subfloat}
+\caption[Electronic properties of bulk arsenic for in-plane strains]
+{The relationships for bulk As between 
+the applied in-plane strains $\varepsilon_{xx}$ (blue),
+$\varepsilon_{yy}$ (red) and $\varepsilon_{xy}$ (green) against 
+%
+\protect\subref{fig:asbulkbg} 
+the direct (solid  squares) and indirect 
+(dashed triangles) band gaps (eV);
+%
+\protect\subref{fig:asbulkmeff}  
+the effective electron masses $m_e/m_0$ 
+along $\Gamma-X$ (solid squares) and 
+$\Gamma-Y$ (dashed triangles);
+%
+\protect\subref{fig:asbulkmhff} 
+the effective hole masses $m_h/m_0$ 
+along $\Gamma-X$ (solid squares) and 
+$\Gamma-Y$ (dashed triangles)}
+\label{fig:as_bulk_elec_properties}
+\end{figure}
+
+%
+At $\varepsilon_{xx}=+1\%$ strain, 
+a potential Weyl {state} is briefly observed 
+on an off-symmetry point $X^\prime$
+(Fig.~\ref{fig:as_bulk_highres})
+before a direct gap opens 
+that subsequently transitions 
+to an indirect one 
+at $\varepsilon_{xx}=+3\%$, 
+after which it reduces again.
+%
+Another potential Weyl {state} 
+around the same off-symmetry point $X^\prime$
+is also predicted to occur between 
+$+1\%\leq\varepsilon_{yy}\leq+2\%$, 
+after which a direct band gap also appears.
+%
+The recalculated band structure 
+with the SOC for $\varepsilon_{yy}=+1\%$
+(Fig.~\ref{fig:as_bulk_highres}) 
+confirms the linear-dispersion, 
+where the maximum charge velocity in both cases  
+occurs along a line parallel to $\Gamma-Y$ 
+and is $v=1.38(1)\times10^6$~$\textrm{ms}^{-1}$.
+
+\begin{figure}[th!]
+\centering
+\begin{tabular}{ccc}
+%
+\smallskip
+\begin{subfloat}[Bulk As band structure $\varepsilon_{xx}=1\%$]{
+\centering
+\includegraphics[height=0.247\textwidth]{images/as_bulk_xx_diracbs.pdf}
+\label{fig:asbulkxxdiracbs}}
+\end{subfloat}
+&
+\begin{subfloat}[]{
+\centering
+\includegraphics[height=0.247\textwidth]{images/as_bulk_xx_3ddirac_cut.pdf}
+\label{fig:asbulkxx3ddiracbs}}
+\end{subfloat}
+&
+\begin{subfloat}[$X^\prime$-point Weyl state]{
+\centering
+\includegraphics[height=0.247\textwidth]{images/as_bulk_xx_dirac_cut.pdf}
+\label{fig:asbulkxxcutdiracbs}}
+\end{subfloat} 
+%
+\\
+\smallskip
+\begin{subfloat}[Bulk As band structure $\varepsilon_{xx}=1\%$]{
+\centering
+\includegraphics[height=0.247\textwidth]{images/as_bulk_yy_diracbs.pdf}
+\label{fig:asbulkyydiracbs}}
+\end{subfloat}
+&
+\begin{subfloat}[]{
+\centering
+\includegraphics[height=0.247\textwidth]{images/as_bulk_yy_3ddirac_cut.pdf}
+\label{fig:asbulkyy3ddiracbs}}
+\end{subfloat}
+&
+\begin{subfloat}[$X^\prime$-point Weyl state]{
+\centering
+\includegraphics[height=0.247\textwidth]{images/as_bulk_yy_dirac_cut.pdf}
+\label{fig:asbulkyycutdiracbs}}
+\end{subfloat} 
+%
+\end{tabular}
+\caption[Predicted Weyl states of strained bulk arsenic]{ 
+\protect\subref{fig:asbulkxxdiracbs}
+Band structure of bulk As at $\varepsilon_{xx}=+1\%$ 
+with SOC (thick lines), 
+and without SOC (thin lines) 
+where the off-symmetry point $X^\prime$, 
+located along $\Gamma-X$, 
+is indicated by the dashed vertical line 
+%
+\protect\subref{fig:asbulkxx3ddiracbs}
+three-dimensional bands with SOC about 
+the potential Weyl points  
+%
+\protect\subref{fig:asbulkxxcutdiracbs}
+slices through one Weyl point 
+at $0^\circ$, $30^\circ$, $60^\circ$ and $90^\circ$ 
+relative to the $\Gamma-X$ line, also with SOC.
+%
+[\protect\subref{fig:asbulkyydiracbs}~-~\protect\subref{fig:asbulkyycutdiracbs}]~The same is illustrated for $\varepsilon_{yy}=+1\%$.}
+\label{fig:as_bulk_highres}
+\end{figure}
+
+
+In summary, 
+we predict  
+$\Gamma$-point Dirac {states} 
+in the monolayer and  bilayer of As, 
+{which support one-dimensional ballistic conduction}, 
+as well as possible 
+Weyl {states} 
+on off-symmetry points in the bulk 
+at moderate levels of in-plane stress.
+%
+These states were found to be 
+unaffected by SOC.
+%
+We also observe several 
+band gap transitions, 
+in particular in the monolayer phase, 
+which also include 
+semi-conducting-metallic transitions.
+%
+Finally, the effective masses 
+respond approximately linearly 
+with respect to uniaxial strain, 
+except in the bulk,
+which exhibits quadratic behaviour.
+
+
+
+%MONOLAYER ANTIMONY
+\subsubsection{Monolayer Antimony}
+
+The relaxed Sb monolayer  
+is found to possess 
+an indirect band gap of $0.21$~eV 
+along $\Gamma-Y$ (Fig.~\ref{fig:sbmonobg}), 
+which is reasonably comparable to other 
+PBE values 
+0.28~\cite{doi:10.1021/acsami.5b02441} 
+and 0.37~\cite{PhysRevB.91.235446}~eV, 
+where these values 
+were obtained including SOC.
+%
+For tensile strain along $\varepsilon_{yy}$
+the band gap opens, 
+suggesting an indirect-direct 
+transition for strains above $6-7\%$,  
+and it diminishes for compressive strains 
+before finally closing at $\varepsilon_{yy}=-2\%$, 
+where the material becomes a semi-metal.
+%
+Similarly, the indirect gap closes along $\Gamma-X$ 
+at a compressive strain of 
+$\varepsilon_{xx}=-2\%$ 
+ at which monolayer Sb 
+ again becomes semi-metallic.
+
+\begin{figure}[th!]
+\begin{subfloat}[Mono Sb band gap (eV)]{
+\includegraphics[height=0.315\textwidth]{images/sb_mono_bandgap.pdf}
+  \label{fig:sbmonobg}}
+\end{subfloat}
+%
+\begin{subfloat}[Monolayer Sb $m_e/m_0$]{
+\includegraphics[height=0.315\textwidth]{images/sb_mono_meff.pdf}
+  \label{fig:sbmonomeff}}
+\end{subfloat}
+%
+\begin{subfloat}[Monolayer Sb $m_h/m_0$]{
+\includegraphics[height=0.315\textwidth]{images/sb_mono_mhff.pdf}
+  \label{fig:sbmonomhff}}
+\end{subfloat}
+%
+\caption[Electronic properties of monolayer antimony for in-plane strains]
+{The relationships for monolayer Sb between 
+the applied in-plane strains $\varepsilon_{xx}$ (blue),
+$\varepsilon_{yy}$ (red) and $\varepsilon_{xy}$ (green) against 
+%
+\protect\subref{fig:sbmonobg} 
+the direct (solid  squares) and indirect 
+(dashed triangles) band gaps (eV);
+%
+\protect\subref{fig:sbmonomeff}  
+the effective electron masses $m_e/m_0$ 
+along $\Gamma-X$ (solid squares) and 
+$\Gamma-Y$ (dashed triangles);
+%
+\protect\subref{fig:sbmonomhff} 
+the effective hole masses $m_h/m_0$ 
+along $\Gamma-X$ (solid squares) and 
+$\Gamma-Y$ (dashed triangles).}
+\label{fig:sb_mono_elec_properties}
+\end{figure}
+
+
+The indirect gap transitions to a direct gap
+at $\varepsilon_{xx}=+1\%$ tensile strain 
+and remains so until finally 
+closing at $\varepsilon_{xx}=+4\%$, 
+at which point we predict a {potential}
+Dirac {state} along $\Gamma-Y$ 
+at an off-symmetry point~\cite{PhysRevLett.102.166803}  
+$Y^\prime$
+(Fig.~\ref{fig:sbmonoxxdiracbs})
+that has also been predicted 
+in Ref.~\cite{Lu2016}.
+%
+Fig.~\ref{fig:sbmonoxxdiracbs} depicts the 
+calculated band structure, 
+in which it is shown that SOC 
+preserves the Dirac {state}  
+but not does not open the band gap.
+%
+{
+The three-dimensional band structure 
+about the Dirac point 
+is shown in Fig.~\ref{fig:sbmonoxx3ddiracbs} 
+in which the maximum charge velocity 
+is  $v=4.31(1)\times10^6$~$\textrm{ms}^{-1}$ 
+and occurs along a line parallel to the $\Gamma-Y$ direction 
+(Fig.~\ref{fig:sbmonoxxcutdiracbs}).}
+%
+Moreover, 
+the valence band at the $X$-point 
+undergoes a Rashba 
+splitting~\cite{1367-2630-17-5-050202} 
+due to SOC, 
+which is also predicted to occur in 
+the monolayers of $\alpha$-P~\cite{PhysRevB.92.035135}, 
+and $\beta$-Sb~\cite{Zhao2015,C6RA13101H}.
+%
+Finally, the electron effective masses  
+experience a weak linear-response to strain 
+(Figs.~\ref{fig:sbmonomeff}~\&~\ref{fig:sbmonomhff}), 
+while the hole effective masses along $\Gamma-X$ 
+respond much more strongly 
+to a rapid broadening or flattening 
+of the valence band.
+
+
+%Dirac States
+\begin{figure}[th!]
+\centering
+\begin{tabular}{ccc}
+%
+\begin{subfloat}[Mono Sb band structure $\varepsilon_{xx}=3\%$]{
+  \centering
+\includegraphics[height=0.247\textwidth]{images/sb_mono_xx_diracbs.pdf}
+  \label{fig:sbmonoxxdiracbs}}
+\end{subfloat}
+&
+%
+\begin{subfloat}[]{
+  \centering
+\includegraphics[height=0.247\textwidth]{images/sb_mono_xx_3ddirac_cut.pdf}
+  \label{fig:sbmonoxx3ddiracbs}}
+\end{subfloat}
+&
+%
+\begin{subfloat}[$Y^\prime$-point Dirac state]{
+  \centering
+\includegraphics[height=0.247\textwidth]{images/sb_mono_xx_dirac_cut.pdf}
+  \label{fig:sbmonoxxcutdiracbs}}
+\end{subfloat}
+\end{tabular}
+\caption[Predicted Dirac states of monolayer antimony]{
+\protect\subref{fig:sbmonoxxdiracbs} 
+Band structure of monolayer Sb 
+at $\varepsilon_{xx}=-5\%$ 
+with SOC (thick lines), 
+and without SOC (thin lines) 
+%
+\protect\subref{fig:sbmonoxx3ddiracbs} 
+three-dimensional bands about 
+the predicted Dirac point at $\Gamma$
+%
+\protect\subref{fig:sbmonoxxcutdiracbs} 
+slices through the Dirac point 
+at $0^\circ$, $30^\circ$, $60^\circ$ and $90^\circ$ 
+relative to the $\Gamma-X$ line 
+that indicate highly anisotropic conduction. 
+}
+\label{fig:sb_dirac_states}
+\end{figure}
+
+%BILAYER ANTIMONY
+\subsubsection{Bilayer Antimony}
+The relaxed bilayer phase 
+is found to be semi-metallic, 
+where an indirect band gap 
+opens at $\varepsilon_{yy}=+3\%$
+tensile strain, 
+and band-inversion at the $\Gamma$-point 
+leads to to a 
+fully-metallic state for 
+uniaxial strains $<-1\%$.
+%
+The effective masses  
+(Figs.~\ref{fig:sbbimeff} \& \ref{fig:sbbimhff})
+experience soft linear-response to strains 
+prior to the transition to full metallicity, 
+at which point a rapid flattening of the bands at the 
+$\Gamma$-point suggesting strong electron localisation.
+
+%Just Antimony
+\begin{figure}[th!]
+\begin{subfloat}[Bi Sb band gap (eV)]{
+\includegraphics[height=0.315\textwidth]{images/sb_bi_bandgap.pdf}
+  \label{fig:sbbibg}}
+\end{subfloat}
+%
+\begin{subfloat}[Bilayer Sb $m_e/m_0$]{
+\includegraphics[height=0.315\textwidth]{images/sb_bi_meff.pdf}
+  \label{fig:sbbimeff}}
+\end{subfloat}
+%
+\begin{subfloat}[Bilayer Sb $m_h/m_0$]{
+\includegraphics[height=0.315\textwidth]{images/sb_bi_mhff.pdf}
+  \label{fig:sbbimhff}}
+\end{subfloat}
+%
+\caption[Electronic properties of antimony for in-plane strains]
+{The relationships for bilayer Sb between 
+the applied in-plane strains $\varepsilon_{xx}$ (blue),
+$\varepsilon_{yy}$ (red) and $\varepsilon_{xy}$ (green) against 
+%
+\protect\subref{fig:sbbibg}
+the direct (solid  squares) and indirect 
+(dashed triangles) band gaps (eV);
+%
+\protect\subref{fig:sbbimeff}
+the effective electron masses $m_e/m_0$ 
+along $\Gamma-X$ (solid squares) and 
+$\Gamma-Y$ (dashed triangles);
+%
+\protect\subref{fig:sbbimhff}
+the effective hole masses $m_h/m_0$ 
+along $\Gamma-X$ (solid squares) and 
+$\Gamma-Y$ (dashed triangles).}
+\label{fig:sb_elec_properties}
+\end{figure}
+%
+
+
+In addition, a possible Dirac {state} emerges 
+at a non-symmetry-point 
+$Y^\prime$ along $\Gamma-Y$ 
+for $\varepsilon_{xx}=+2\%$ 
+tensile strain 
+(Fig.~\ref{fig:sb_bi_highres})
+and remains in place 
+up to at least $+5\%$ strain.
+%
+The maximum charge velocity 
+$v=4.47(3)\times10^6$~$\textrm{ms}^{-1}$ 
+is also along $\Gamma-Y$ 
+and is approximately 
+the same as that of the monolayer.
+
+\begin{figure}[th!]
+\begin{tabular}{ccc}
+\smallskip
+\begin{subfloat}[Bi Sb band structure]{
+\includegraphics[height=0.247\textwidth]{images/sb_bi_xx_diracbs.pdf}
+\label{fig:sbbixxdiracbs}}
+\end{subfloat}
+&
+\begin{subfloat}[]{
+\includegraphics[height=0.247\textwidth]{images/sb_bi_xx_3ddirac_cut.pdf}
+\label{fig:sbbixx3ddiracbs}}
+\end{subfloat}
+&
+\begin{subfloat}[$Y^\prime$-point Dirac state]{
+\includegraphics[height=0.247\textwidth]{images/sb_bi_xx_dirac_cut.pdf}
+\label{fig:sbbixxcutdiracbs}}
+\end{subfloat} 
+%
+\end{tabular}
+\caption[Predicted Dirac states of bilayer antimony]{ 
+\protect\subref{fig:sbbixxdiracbs}
+Band structure of bilayer Sb at $\varepsilon_{xx}=+3\%$ 
+with SOC (thick lines), 
+and without SOC (thin lines) 
+where the off-symmetry point $Y^\prime$, 
+located along $\Gamma-Y$, 
+is indicated by the dashed vertical line 
+%
+\protect\subref{fig:sbbixx3ddiracbs}
+three-dimensional bands with SOC about 
+the predicted Dirac point 
+%
+\protect\subref{fig:sbbixxcutdiracbs}
+slices through the Dirac point 
+at $0^\circ$, $30^\circ$, $60^\circ$ and $90^\circ$ 
+relative to the $\Gamma-X$ line, also with SOC.}
+\label{fig:sb_bi_highres}
+\end{figure}
+
+%
+Finally, beyond a compressive 
+strain of  $\varepsilon_{yy}=-3\%$,
+at a stress of approximately 0.3~GPa, 
+we observed a structural phase-transition 
+in the bilayer, 
+which buckled in the puckered ($\vec{y}$) direction.
+%
+This buckled structure 
+has a total-energy 1.7~meV/atom 
+lower than that of the relaxed state 
+of the unperturbed $\alpha$-bilayer 
+and 3.0~meV/atom lower when 
+allowed to fully-relax,  
+as shown in Fig.~\ref{fig:buckled}.
+%
+This suggests the possible existence of a 
+new phase of Sb that is attainable via strain.
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/buckled1.jpg}
+\caption[Strain-induced buckled phase in bilayer antimony]
+{Side-view of the strain-induced buckled phase of Sb
+at $\varepsilon_{yy}=-4\%$ compression.}
+\label{fig:buckled}
+\end{figure}
+
+
+
+%BULK ANTIMONY
+\subsubsection{Bulk Antimony}
+Finally, bulk Sb is 
+found to be completely metallic 
+for all levels of strain explored in this work.
+%
+However, shear strains in this case 
+do appear to have a significant
+effect on the bands despite not opening a gap.
+
+
+In summary, 
+we predict possible non-symmetry-point 
+Dirac {states} in the strained monolayer {and bilayer} of Sb, 
+which are qualitatively unaffected by SOC, 
+as well as Rashba splitting at the $X$-point 
+{in the monolayer}.
+%
+We also predict 
+indirect-direct and indirect-semi-metallic 
+transitions in the monolayer phase 
+and a band gap opening in the bilayer phase.
+%
+Finally, we observe a 
+buckled phase induced in bilayer Sb 
+at $-4\%$ compressive strain.
+%
+Bulk Sb was found to be metallic 
+at all levels of strain explored.
+
+We provide a brief summary  
+of the band gaps and qualitative phase-transitions 
+in Table~\ref{table:transitions}, 
+and in Table~\ref{table:bandgaps} 
+we outline the calculated 
+band gaps and effective 
+charge carrier masses 
+for the relaxed phases of each structure.
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CONCLUSIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+\label{sec:2d_conclusion2}
+
+Continuing the discussion in the previous Chapter, 
+we have provided the accompanying electronic properties 
+from the extensive calculations 
+of few-layer and bulk P, As and Sb, 
+where we have compared and contrasted 
+these results with experimental studies.
+%
+Our findings predict several band gap transitions, 
+numerous Dirac and Weyl states, 
+one-dimensional conductivity 
+driven by ballistic conduction 
+on the order of $10^6$~$\textrm{ms}^{-1}$, 
+and a notable strain-induced 
+buckled phase in bilayer Sb.
+%
+We also note that the critical stresses 
+at which these transitions occur 
+are expected to be experimentally 
+accessible and highly switchable, 
+paving the way for possible 
+verification.
+%
+With the ongoing enthusiastic research 
+in group-V layered materials, 
+they are poised to become central to 
+the development of next generation materials 
+comprising a vast portfolio of applications.
+
+
+We would like to conclude this 
+work on 2D materials with a brief note on 
+the conclusions of these calculations
+ within a wider context, 
+in particular with regards to the general 
+predictive power of Kohn-Sham DFT.
+%
+For this work, we used the 
+PBE exchange-correlation functional 
+supplemented by vdW corrections 
+and, where warranted, spin-orbit coupling, 
+which form a highly robust  
+computational framework.
+%
+Nonetheless, 
+throughout this Chapter, 
+we made note of several instances 
+where computed properties differed, 
+or even outright contradicted, 
+experimental observations, 
+for example in the band gaps of 
+bulk phosphorus~\cite{Morita1986,doi:10.1063/1.1729699,NARITA1983422,MARUYAMA198199} 
+and bulk arsenic~\cite{doi:10.1080/00018737900101355}.
+%
+Ostensibly, the best agreement one can 
+reasonably expect to obtain 
+from conventional DFT calculations 
+are in band alignments~\cite{PhysRevB.90.155405}, 
+lattice constants, 
+and general trends in 
+mechanical and electronic 
+properties~\cite{PhysRevB.70.125426,PhysRevB.90.085402}.
+%
+%The reason for this is that these quantities 
+%are determined by the behaviour in kinetic energy, 
+%which does not suffer from errors to 
+%the same degree as the Hartree potential. 
+%
+However, the accurate computation 
+of specific electronic properties 
+is, patently, not guaranteed.
+
+{
+This lack of agreement 
+with basic experimental measurements 
+for relatively simple structures 
+is concerning, 
+and draws attention to a pressing issue 
+pervading approximate DFT - 
+that of the self-interaction error (SIE).
+%
+Despite decades of 
+theoretical, algorithmic and computational advances, 
+the SIE, to this day, 
+leads to qualitative inaccuracies
+ in some of the most basic DFT 
+ calculations.
+% \footnote{{However, 
+% approximate XC functionals are not directly responsible 
+%for the inaccurate KS band gap, which has more do with the 
+%behaviour of the total-energy around integer particle number.}}.
+%
+This SIE originates from 
+the approximation of  
+exchange-correlation functionals, 
+{and requires that calculation results 
+be interpreted with caution} 
+to avoid coming to erroneous conclusions.
+%
+Rather than depend on 
+one's own intuition or experience to decide 
+if SIE might be present in a system 
+(and in absence of relevant experimental data), 
+there exist strategies with which one can quantify 
+and treat it, 
+at least approximately.
+%
+%Indeed, 
+%there are several examples of systems 
+%that are known to suffer significant SIE, 
+%
+In the next Chapter, 
+we shall explore the SIE in detail, 
+and discuss some techniques 
+developed over the years toward its correction.}
+
+
+
+
+
+
+
+
+
+

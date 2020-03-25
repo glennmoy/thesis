@@ -1,0 +1,2414 @@
+%%%%%%%%%%%%%%%%%%%%%%
+% INTRODUCTION
+%%%%%%%%%%%%%%%%%%%%%%
+
+\lett{R}{ecent technological} advances, 
+{
+in conjunction with an \break 
+increasing community of active contributors, 
+have succeeded in establishing Kohn-Sham   
+density-functional theory (DFT) as one of 
+the most widespread and utilised tools 
+in modern science.
+%
+{
+DFT has evolved significantly 
+since its inception over 50 years ago~\cite{doi:10.1063/1.4869598};
+following the {award of the Nobel prize in 1998
+to Walter Kohn}~\cite{RevModPhys.71.1253,RevModPhys.71.1267} 
+it has continued to flourish to this day under 
+the auspicious stewardship of countless contributors.
+%
+Presently, it sees routine application 
+in academic and industrial research 
+and has imparted immeasurable 
+scientific~\cite{doi:10.1021/cr200107z, RevModPhys.87.897, doi:10.1063/1.4704546, doi:10.1146/annurev-physchem-032511-143803}
+and economic~\cite{goldbeck2012economic} value.}
+%
+In this Chapter,
+we review the pioneering developments 
+in condensed matter theory that have culminated 
+in contemporary DFT, which is now routinely applied 
+to electronic structure calculations.}
+
+We begin our discussion with the Schr\"odinger equation, 
+central to all quantum mechanical calculations, 
+and the seminal theorems of 
+Hohenberg and Kohn~\cite{PhysRev.136.B864} 
+who pioneered the field.
+%
+{
+We then discuss how Kohn and Sham 
+subsequently laid the foundations 
+for the solution of the ground-state exactly 
+via self-consistent field equations, 
+incorporating an exchange-correlation (XC) functional~\cite{PhysRev.140.A1133}.
+%
+The inaccessibility of the exact XC functional, 
+however, prompted the development of 
+approximate local functionals  
+that enable 
+the computational solution to the equations.
+%
+These were originally based on the local-density 
+of a uniform electron gas~\cite{PhysRev.140.A1133,PhysRevLett.45.566}, 
+which was later extended to incorporate 
+spin~\cite{0022-3719-5-13-012,PhysRevB.7.1912,PhysRevB.45.13244} 
+and self-interaction corrections~\cite{PhysRevB.23.5048}, 
+with further development involving a 
+generalised gradient~\cite{PhysRevB.54.16533,PhysRevLett.77.3865} 
+approximation.
+%
+These incremental improvements in theory  
+were bolstered by simultaneous advances in hardware 
+that {preceded} the proliferation of DFT applications 
+across various fields~\cite{doi:10.1063/1.4704546,RevModPhys.61.689}.}
+
+{
+In spite of the theoretical and algorithmic breakthroughs 
+that contributed to the popularity of DFT 
+{toward the end of} the last century, 
+calculations of very large systems 
+remained decidedly out of reach~\cite{guerra1998towards}.
+%
+The restrictive computational bottle-neck 
+involved in diagonalising the dense Hamiltonian 
+{incurred} a compute-time 
+that scaled cubically with system size~\cite{PhysRevLett.66.1438}.
+% 
+The quest for a linear-scaling formalism 
+was marked by the proposal of Kohn himself 
+to exploit the {\it near-sightedness} of quantum mechanical 
+interactions~\cite{PhysRevLett.76.3168} 
+in the DFT procedure - 
+thereby enabling the calculation 
+of large-scale systems.
+%
+In the final section, 
+we outline the procedure for 
+{constructing a} linear-scaling DFT, 
+which has risen to prominence over the last 25 years~\cite{0953-8984-22-7-074207,RevModPhys.71.1085}.
+%
+{A suite of packages now boast linear-scaling functionality},
+which includes  
+{\sc ONETEP}~\cite{skylaris2005introducing,hine2009linear,hine2010linear}, 
+{\sc CONQUEST}~\cite{Gillan200714,0953-8984-14-11-303},
+{\sc SIESTA}~\cite{0953-8984-14-11-302,0953-8984-20-6-064208}, 
+{\sc BigDFT}~\cite{Genovese2011149}, 
+{\sc OpenMX}~\cite{PhysRevB.67.155108,PhysRevB.72.045121}, 
+and {\sc CP2K}~\cite{doi:10.1063/1.2841077}.}
+%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+% SCHRODINGER EQUATION
+%%%%%%%%%%%%%%%%%%%%%%
+\section{The Schr{\" o}dinger equation}
+\label{sec:schrodinger_equation}
+
+The basis of many quantum mechanical {systems}   
+lies in the solution of the many-body, time-independent, 
+Sch{\"o}dinger equation~\cite{PhysRev.28.1049}
+%
+\begin{equation}
+\hat H \Psi \left(\br,t\right)
+%=i\frac{\partial}{\partial t}\Psi \left(\br,t\right)
+=E\Psi \left(\br,t\right),
+\end{equation}
+%
+where the complex-valued $N$-body wave function 
+$\Psi \left(\br,t\right)$ 
+encodes all information about the quantum state 
+that is {propagated in time} by the Hamiltonian $\hat H$. 
+%
+In an organised configuration of $N$  atoms 
+in a crystal lattice or molecule, 
+with nuclear positions $\bf R_\alpha$ 
+and $n$ electrons at positions ${\br}_i$, 
+the governing non-relativistic, 
+time-independent Hamiltonian  
+is given by 
+%
+\begin{align}
+\hat H &= -\frac{1}{2}\left[\sum_{i=1}^n\nabla^2_i+\sum_{\alpha=1}^N\frac{1}{m_\alpha}\nabla^2_\alpha\right] 
+- \sum_{i=1}^n\sum_{\alpha=1}^N\frac{Z_\alpha}{|{\br}_i-R_\alpha|}\nonumber\\[0.5em]
+&+\frac{1}{2}\sum_{i=1}^n\sum_{j\neq i}^n\frac{1}{|{\br}_i-r_j|} 
++ \frac{1}{2}\sum_{\alpha=1}^N\sum_{\beta\neq\alpha}^N\frac{Z_\alpha Z_\beta}{|\bf R_\alpha-R_\beta|},
+\label{eq:full_hamiltonian}
+\end{align}
+%
+with nuclear masses and charges 
+denoted by $m_\alpha$ and $Z_\alpha$, {respectively}.
+%
+Hartree units are invoked throughout this dissertation 
+such that $\hbar=c=m_e=1$.
+
+For an atomic system 
+{that does not exchange energy with its environment}, 
+the wave function $\Psi$ is the steady-state 
+solution of a time-independent Hamiltonian, 
+{the Ansatz for which 
+is constructed from a separation of variables}
+%
+\begin{equation}
+\Psi \left(\{\br_i\},\{{\bf R_\alpha}\},t\right) 
+= \Phi \left(\{\br_i\},\{{\bf R_\alpha}\}\right)\Theta\left(t\right) 
+%= \Phi \left(\{\br_i\},\{{\bf R_\alpha}\}\right)e^{-iEt} 
+\end{equation}
+%
+into a component that is time-dependent 
+$\Theta\left(t\right)$ 
+and one that is not
+$\Phi \left(\{\br_i\},\{{\bf R_\alpha}\}\right)$.
+%
+Thus the constituents are independently solvable 
+by the Hamiltonian and coupled 
+by the common energy eigenvalue $\varepsilon$
+ %
+ \begin{equation}
+ \hat H \Phi \left(\{\br_i\},\{{\bf R}_\alpha\}\right) 
+ = E \Phi \left(\{\br_i\},\{{\bf R}_\alpha\}\right); 
+ \quad 
+i\frac{\partial}{\partial t}\Theta\left(t\right) = \varepsilon \Theta\left(t\right).
+ \end{equation}
+
+For low-temperature atomic systems, 
+governed by a Hamiltonian such as Eq.~\eqref{eq:full_hamiltonian}, 
+the time-scale of nuclear motion, 
+tied to the available thermal energy, 
+is generally orders of magnitude {longer} 
+than that of the electrons 
+due to the much heavier nuclear masses.
+%
+Since the electrons relax into equilibrium 
+{on a time-scale much {shorter} than that} of the nuclei, 
+their behaviour is modelled  
+%{the rigour of a full quantum mechanical treatment} 
+by an electronically-relevant Hamiltonian $\hat{H}_\textrm{el}$
+%
+\begin{align}
+\hat {H}_\textrm{el}
+\approx \left(-\frac{1}{2}\sum_{i=1}^n\nabla^2_i\right.
+&- \sum_{i=1}^n\sum_{\alpha=1}^N\frac{Z_\alpha}{|{{\br}_i}-{\bf R_\alpha}|} \left.+ \frac{1}{2}\sum_{i=1}^n\sum_{j\neq i}^n\frac{1}{|{\br}_i-{\br}_j|}\right)
+\label{eq:electron_hamiltonian}
+\end{align}
+%
+in which the nuclei are assumed to move so little 
+that they can be effectively described 
+as classical point charges. 
+%
+This renowned Born-Oppenheimer, 
+or adiabatic, approximation~\cite{ANDP:ANDP19273892002}, 
+is invoked to make 
+quantum mechanical calculations  
+under Eq.~\eqref{eq:full_hamiltonian} 
+more feasible.
+%
+{However, 
+advances in computational modelling, 
+combined with the improved experimental apparatus~\cite{PhysRevX.7.031035}, 
+have permitted the application of Ehrenfest molecular dynamics 
+for some time~\cite{0953-8984-16-7-L03,0953-8984-16-46-012}.}
+
+%
+Eigenvalue solutions to Eq.~\eqref{eq:full_hamiltonian} 
+span a multi-dimensional adiabatic potential energy surface 
+parameterised by the nuclear coordinates $\{{\bf R_\alpha}\}$, 
+which may be optimised classically 
+using molecular dynamics methods~\cite{PhysRevLett.69.1077,PhysRevLett.55.2471}. 
+%
+The neglect of explicitly nuclear-dependent terms 
+{leads to the failure} to predict more complex phenomena 
+such as superconductivity, 
+photochemistry and vibrational spectroscopy, 
+however, for most systems, 
+the Born-Oppenheimer approximation 
+is a very reasonable simplification. 
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+% HOHENBERG KOHN THEOREMS
+%%%%%%%%%%%%%%%%%%%%%%
+\section{The Hohenberg-Kohn theorems}
+\label{sec:hk_theorems}
+
+Despite the benefits of the adiabatic approximation, 
+computationally solving the 
+many-body Schr\"{o}dinger equation 
+for all but the simplest systems is 
+practically impossible.
+%
+Consider a real-valued, $N$-electron wave function 
+discretised on a grid of $M$ points 
+(ignoring spin).
+% 
+A full description of this wave function 
+will require $M^{3N}$ scalars~\cite{CAPELLE2006} 
+and is unquestionably beyond the 
+scope of modern processing power 
+for any realistic system of interest.
+%
+Even if the exact wave function were known, 
+the memory required to store it would 
+present an impasse.
+
+
+{For an $N$-electron system,
+Hohenberg and Kohn~\cite{PhysRev.136.B864} (HK)  
+showed in their seminal work 
+that the many-electron 
+ground-state density distribution 
+of a system $n_0(\br)$ 
+(subscript to denote ground-state)
+is sufficient for providing a full description 
+of the ground-state properties, 
+in principle.}
+%
+{Thus, for a} many-body quantum state vector $\ket{\Phi}$, 
+the electron density is defined as 
+%
+\begin{equation}
+n(\br)=\bra{\Phi}\hat n\ket{\Phi}=\int\prod_{i=2}^N\ d{{\br}_i} \left|\Phi({\bf r_1,\cdots,r_N})\right|^2,
+\end{equation}
+%
+where $\ket{\Phi}$ is assumed to be 
+normalised $\braket{\Phi}{\Phi}=N$ 
+and antisymmetric under particle exchange 
+so as to obey the Pauli exclusion principle~\cite{PhysRev.58.716}.
+%
+Furthermore, they proved   
+that the ground-state was identified 
+by variational minimisation 
+of the total-energy with respect to the density~\cite{PhysRev.136.B864}. 
+%
+Promoting the density to the central quantity 
+of the theory drastically simplifies the problem 
+of computationally solving Eq.~\eqref{eq:electron_hamiltonian}, 
+as the discretised wave function 
+is now parameterised by only $M^3$ scalars.
+%
+
+{
+Faithful to the motivation behind the HK formalism,
+the Hamiltonian in Eq.~\eqref{eq:electron_hamiltonian} 
+may be re-expressed in terms of contributions stemming from 
+potentials that are intrinsic and extrinsic to the system 
+$\hat{H}_\textrm{el}=\hat{F}+\hat{V}$.}
+%
+Here $\hat{F}$ is sum of the kinetic energy operator 
+and electron-electron Coulomb potential 
+\begin{equation}
+\hat {F}= -\frac{1}{2}\sum_{i=1}^n\nabla^2_i
++ \frac{1}{2}\sum_{i=1}^n\sum_{j\neq i}^n\frac{1}{|{\br}_i-r_j|},
+\end{equation} 
+and is a universal function 
+of the number of electrons $n$.
+%
+The term $\hat{V}$ describes the static 
+potential arising from the lattice of nuclei 
+and defines the external potential specific to the system 
+%
+\begin{equation}
+\hat{V} =  \sum_{i=1}^n V_\textrm{ext} \left({{\br}_i}\right) 
+= - \sum_{i=1}^n\sum_{\alpha=1}^N\frac{Z_\alpha}{|{{\br}_i}-{\bf R_\alpha}|} 
+\end{equation}
+%
+{but may also include other fields, 
+such as the electromagnetic}.
+%
+The single-particle eigenstates $\{\ket{\phi_i}\}$ are found 
+by solving Eq.~\eqref{eq:electron_hamiltonian}, 
+for which the eigenenergies $\{\varepsilon_i\}$ 
+are the corresponding expectation values with the Hamiltonian 
+%
+\begin{equation}
+\varepsilon_i=\bra{\phi_i}{\hat{H}_\textrm{el}}\ket{\phi_i}
+=\bra{\phi_i}{\hat{F}}\ket{\phi_i} 
++ \int d\br\ V_\textrm{ext}(\br)n(\br).
+\label{eq:expectation_value}
+\end{equation}
+
+Thus, for a given number of electrons, 
+the Hamiltonian is fully defined 
+by the external potential $V_\textrm{ext}(\br)$, 
+on which the resultant ground-state density depends. 
+%
+The first theorem sets out to prove that 
+the converse of this statement is also true, 
+that is, that the ground-state density 
+uniquely determines the potential 
+up to an additive constant.
+
+\begin{HK1}
+There is a one-to-one correspondence 
+between the ground-state charge density 
+of an $N$ electron system 
+and the external potential acting upon it.
+\end{HK1}
+\noindent
+We shall prove this statement by contradiction.
+%
+Consider two potentials 
+that differ by more than an arbitrary constant
+$\hat{V} - \hat{V}' \neq C$
+with corresponding Hamiltonians 
+$\hat{H}_\textrm{el}$ 
+and $\hat{H}_\textrm{el}'$ 
+that give rise to the  
+eigenenergies $E_0$ and $E'_0$, 
+and eigenstates $\ket{\phi_0}$ and $\ket{\phi_0'}$, 
+respectively.
+%
+Suppose we assume 
+$\ket{\phi_0}=\ket{\phi_0'}$.
+%
+By considering the difference in 
+the Hamiltonians
+\begin{equation}
+(\hat{H}_\textrm{el}-\hat{H}_\textrm{el}')\ket{\phi_0}=(\hat{V}-\hat{V}')\ket{\phi_0}=(E_0-E_0')\ket{\phi_0}
+\end{equation}
+we demonstrate that 
+$\hat{V}-\hat{V}'=E_0-E_0'$ 
+and thus contradict our earlier assumption 
+that the potentials differ by more than an 
+additive constant.
+%
+Thus we have shown that the mapping 
+from the space of potentials to the space 
+of ground-state densities is injective.
+%
+It remains to be shown that the mapping 
+from the space of densities to the space 
+of eigenstates is also injective.
+%
+Consider then that two ground-states 
+$\ket{\phi_0}$ and $\ket{\phi_0'}$
+both give rise to the same 
+ground-state density $n_0(\br)$.
+%
+We may then write, 
+using Eq.~\eqref{eq:expectation_value}, 
+that 
+%
+\begin{align}
+E_0<\bra{\phi'_0}H\ket{\phi'_0}
+=&\bra{\phi'_0}H'\ket{\phi'_0}+\bra{\Psi'_0}H-H'\ket{\phi'_0}\nonumber\\[0.3em]
+=&E'_0 + \int d\br\ [V(\br)-V'(\br)] n(\br).
+\label{eq:HK1}
+\end{align}
+%
+Similarly, by computing the converse, we find {that}   
+%
+\begin{equation}
+E'_0< E_0+\int\  n(\br) [V'(\br)-V(\br)]\ dr.
+\label{eq:HK2}
+\end{equation}
+%
+Summing \eqref{eq:HK1} and \eqref{eq:HK2} 
+leads to the second contradiction
+%
+\begin{equation}
+E'_0+ E_0<E'_0+ E_0,
+\end{equation}
+%
+from which we conclude that the mapping 
+from the space of eigenstates 
+to the space of densities 
+is also injective, 
+thus proving the first 
+HK theorem.
+%
+We now proceed to the second theorem.
+
+%
+\begin{HK1}
+For all $V$-representable 
+ground-state densities $n(\br)$, 
+$E_0 \leq E_V[n]$, 
+where $E_0=E_V[n_0]$ 
+is the ground-state energy for $N$ electrons 
+in the external potential $V(\br)$ 
+with corresponding ground-state density $n_0(\br)$.
+\end{HK1}
+%
+\noindent
+By the first HK theorem, 
+the ground-state density of a system $n(\br)$ 
+uniquely determines the potential $V_\textrm{ext}(\br)$
+and thus its wave function $\ket{\phi[n(\br)]}$, 
+where the class of $V$-representable densities 
+are those generated by solving the 
+Schr\"{o}dinger equation with some external potential.
+%
+A uniqueness criterion must also apply 
+to the internal-energy operator $\hat{F}$, 
+which we define as the minimum possible expectation value 
+under a given density $n(\br)$
+by searching over the entire set of N-body anti-symmetric 
+wave functions that give rise to that density.
+%
+{This is expressed mathematically as}
+%
+\begin{equation}
+F[n]=\min_{n[\phi]\to n} {\bra{\phi}\hat{F}\ket{\phi}} = \bra{\phi_n}\hat{F}\ket{\phi_n}.
+\label{eq:f_formula}
+\end{equation}
+%
+Thus,  we may uniquely define the lowest total-energy 
+of a given density $n(\br)$ 
+subject to an external potential $V(\br)$, 
+namely 
+%
+\begin{equation}
+E_V[n]=F_V[n]+\int d\br\ V(\br)n(\br) = \bra{\phi_n}\hat{F}+\hat{V}\ket{\phi_n}.
+\end{equation}
+%
+For an external potential, 
+there exists a ground-state wave function $\ket{\phi_0}$ 
+that produces the ground-state energy $E^0_V$ 
+and density $n_0(\br)$, 
+such that, by the variational principle, 
+for any other N-representable densities, 
+$E^0_V\leq E_V[n]$. 
+%
+Furthermore, for the ground-state density $n_0(\br)$ 
+we find that, by definition, $F[n]$ 
+can only be at most as large 
+as the kinetic energy term 
+of the ground-state total-energy 
+that is determined by the 
+ground-state wave function $\ket{\phi_0}$, 
+such that 
+%
+\begin{equation}
+F_V[n]=\min_{n[\phi]\to n_0} {\bra{\phi}\hat{F}\ket{\phi}} \leq \bra{\phi_0}\hat{F}\ket{\phi_0},
+\end{equation}
+%
+which trivially implies the same for the total-energy 
+%
+\begin{align}
+\bra{\phi_{n_0}}\hat{F}+\hat{V}\ket{\phi_{n_0}} 
+&\leq \bra{\phi_0}\hat{F}+\hat{V}\ket{\phi_0} \nonumber \\[0.5em]
+\Rightarrow E_V[n_0]&\leq E^0_V.
+\end{align}
+%
+Since $E^0_V$ is the ground-state energy by definition, 
+we have proven the second HK theorem, 
+namely that is the ground-state density, 
+subject to an external potential, 
+is that which uniquely determines the 
+minimum of the total-energy functional.
+
+The Hohenberg-Kohn theorems illustrate 
+that a full description of the ground-state 
+of an interacting $N$ electron system  
+can be distilled to the knowledge 
+of the ground-state density alone.
+%
+Moreover, this ground-state density 
+can be located via  minimisation 
+of the total-energy functional $E[n]$ 
+with respect to the density, 
+thus drastically reducing 
+the complexity of the problem. 
+%
+In practice, however, 
+no such formalism exists to carry out 
+this variational procedure 
+as the exact form of 
+the universal internal energy functional 
+described in Eq.~\eqref{eq:f_formula} 
+does not exist~\cite{CAPELLE2006} 
+and approximations 
+must be used in its place.
+%
+The formalism of Kohn and Sham, 
+which we shall now describe, 
+utilises intelligent approximations for 
+the many-body effects contained in $\hat{F}$ 
+in order to map the fully interacting $N$-particle system  
+onto a fictitious system of $N$ non-interacting 
+particles immersed in an effective potential.
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+% THE KOHN-SHAM EQUATIONS
+%%%%%%%%%%%%%%%%%%%%%%
+\section{The Kohn-Sham equations}
+\label{sec:kohn_sham_equations}
+
+{Strategies for simplifying 
+and then solving the many-body 
+Schr\"{o}dinger equation},  
+which strive to simultaneously capture  
+the qualitative features of the system of interest 
+and avoid treating many-body interactions explicitly, 
+precede the HK theorems by almost four decades.
+%
+Indeed, 
+soon after the formulation 
+of the Schr{\"o}dinger equation, 
+Hartree established an approximate, 
+self-consistent field procedure 
+for iteratively solving it 
+for the atomic wave functions  
+in what was the first endeavour toward 
+an \emph{ab initio} approach~\cite{hartree_1928}.
+%
+Fock later contributed to the 
+procedure~\cite{Fock1930,PhysRev.35.210.2} 
+by imposing the antisymmetry 
+of the wave function explicitly 
+in order to satisfy the Pauli exclusion principle~\cite{PhysRev.58.716}, 
+to form what is now known 
+as the `Hartree-Fock' (HF) approach.
+%
+The exchange energy 
+given in the HF theory, 
+for particle exchange  
+between pairs of orbitals, 
+is then 
+%
+\begin{equation}
+E_x[n]=-\frac{1}{2}\sum_{ij}\int d\br d{\bf r'}\ \frac{\psi_i^*(\br)\psi_j^*({\bf r'})\psi_i({\bf r'})\psi_j(\br)}{|{\bf r-r'}|}.
+\label{eq:exact_exchange}
+\end{equation}
+%
+Despite neglecting electron correlation effects, 
+{which account for many of the 
+discrepancies of the HF approach with experimental results, 
+the scheme} remains to this day 
+a valuable tool in quantum chemistry.
+ 
+A far more viable approach was developed 
+by Kohn and Sham (KS)~\cite{PhysRev.140.A1133}, 
+who proposed mapping the interacting system onto a 
+reference system comprising the same number of non-interacting particles 
+whose ground-state density is identical to the interacting density  
+by virtue of an effective potential $V_\textrm{KS}(\br)$.
+%
+The many-body problem is thereby circumvented 
+by solving $N$ one-particle Schr\"{o}dinger equations 
+instead of one $N$-particle equation.
+
+Let us first consider the variational minimisation of 
+the HK total-energy functional, 
+subject to conservation of the particle number via
+%
+\begin{equation}
+\delta\left[E[n]+\mu\left(N-\int d\br\ n(\br)\right)\right]=0.
+\label{eq:hk_total_energy_functional}
+\end{equation}
+%
+This gives rise to the Euler-Lagrange equation 
+in terms of the functional derivative of the  
+internal energy functional $F[n]$ 
+with respect to the density $n(\br)$, 
+the external potential $V_\textrm{ext}(\br)$, 
+and the chemical potential $\mu$, namely 
+%
+\begin{equation}
+\frac{\delta F[n]}{\delta n(\br)}+V_\textrm{ext}(\br)=\mu.
+\label{eq:euler-lagrange}
+\end{equation}
+%
+
+In the Kohn-Sham approach, 
+the internal energy is expanded 
+into its constituent single-particle terms  
+%
+\begin{equation}
+F[n]\equiv T_s[n]+E_H[n]+E_\textrm{xc}[n]
+\label{eq:ks_internal_energy}
+\end{equation}
+%
+comprising the {non-interacting} 
+kinetic energy %$T_s[n]$,
+%
+\begin{equation}
+T_s[n]=-\frac{1}{2}\sum^{N}_{i=1}\int d\br\ \psi^*_i(\br)\nabla^2 \psi_i(\br),
+\end{equation}
+%
+the classical Hartree energy %$E_H[n]$, 
+%
+\begin{equation}
+E_H[n]=\frac{1}{2}\int\int d\br\ d{\bf r'}\ \frac{n(\br)n({\bf r'})}{|{ \bf r-r'}|},
+\label{eq:classical_hartree_energy}
+\end{equation}
+%
+and finally the exchange-correlation (XC) energy $E_\textrm{xc}[n]$, 
+which encompasses all the quantum many-body effects 
+ignored in the single-particle mapping, 
+specifically the non-classical electron-electron interaction energy 
+and the kinetic energy difference between the 
+interacting and non-interacting systems\footnote{
+see section~\ref{sec:xc_functionals} for further discussion}.
+%
+Substituting Eq.~\eqref{eq:ks_internal_energy} 
+into Eq.~\eqref{eq:euler-lagrange} 
+generates the following 
+non-interacting Euler-Lagrange equation 
+%
+\begin{equation}
+\frac{\delta T_s[n]}{\delta n(\br)}+V_\textrm{KS}(\br)=\mu, 
+\label{eq:euler-lagrange2}
+\end{equation} 
+%
+which, by virtue of the first HK theorem, 
+is guaranteed to reproduce 
+the exact ground-state density 
+of the interacting system 
+subject to the effective 
+\emph{Kohn-Sham potential} 
+%
+\begin{equation}
+V_\textrm{KS}(\br)=
+\int d\br'\ \frac{n(\br')}{|\br-\br'|}
++\frac{\delta E_\textrm{xc}[n]}{\delta n(\br)}
++V_\textrm{ext}(\br)
+\label{eq:ks_schroding_equation}
+\end{equation}
+%
+with the exchange-correlation potential given by
+%
+\begin{equation}
+V_\textrm{xc}(\br)[n]=\frac{\delta E_\textrm{xc}[n]}{\delta n(\br)}.
+\end{equation}
+%
+{
+The solution to 
+the non-interacting Euler-Lagrange equation in 
+Eq.~\eqref{eq:euler-lagrange2} is achieved  
+by resolving $N$ independent Schr\"{o}dinger equations}
+%
+\begin{equation}
+\hat H_{KS} \psi_i=\left[-\frac{1}{2}\nabla^2+\hat{V}_{KS}(\br)\right]\psi_i= \epsilon_i\psi_i,
+\label{eq:ks_hamiltonian}
+\end{equation}
+%
+{acting on a set of 
+non-interacting eigenfunctions $\{\psi_i(\br)\}$  
+termed the \emph{Kohn-Sham orbitals}.}
+%
+{The KS orbitals then reconstruct}  
+the interacting ground-state density via 
+%
+\begin{equation}
+n(\br)=\sum_{i=1}^N \int d\br \left| \psi_i(\br)\right|^2.
+\end{equation}
+%
+%{with the total non-interacting kinetic energy 
+%given by the summation over all contributions 
+%from the orbitals} 
+%%
+%\begin{equation}
+%T_s[n]=-\frac{1}{2}\sum^{N}_{i=1}\int d\br\ \psi^*_i(\br)\nabla^2 \psi_i(\br).
+%\end{equation}
+
+
+Since the KS potential produces the KS orbitals, 
+which construct the density, 
+which in turn determines the potential, 
+the solutions to \eqref{eq:ks_hamiltonian} 
+{may be found by iteratively solving for the potential and orbitals 
+until self-consistency is reached~\cite{martin2004electronic}, 
+or by direct-minimisation of the total-energy~\cite{skylaris2005introducing}, 
+which we will describe in greater detail in section~\ref{sec:linear_scaling_dft}.} 
+%
+Furthermore, while the KS orbitals and eigenvalues 
+may often provide an approximate representation of 
+the physical electronic orbitals and related spectra, 
+great care must be exercised in interpreting them as such,  
+since they represent a fictitious system 
+of non-interacting particles. 
+% 
+{We shall address this issue further 
+in section~\ref{sec:koopmans_condition}.}
+
+%%%%%%%%%%%%%%%%%%%%%%
+% EXCHANGE-CORRELATION FUNCTIONALS
+%%%%%%%%%%%%%%%%%%%%%%
+\section{Exchange-correlation functionals}
+\label{sec:xc_functionals}
+
+Were the closed-form 
+of $E_\textrm{xc}[n]$ known, 
+then the KS approach described heretofore 
+would be exact 
+and resolve the ground-state density 
+to arbitrary precision, 
+thereby elevating approximate-DFT 
+to the status of an exact theory. 
+%
+As the case may be, 
+$E_\textrm{xc}(\br)$ is unknown 
+except for the simplest of systems~\cite{PhysRevA.93.042511,PhysRevA.83.062512,Matito2016,PhysRevLett.109.036402}, 
+and the ability of the KS approach 
+to reliably incorporate many-body effects 
+and reproduce realistic ground-state properties 
+lies in its {appropriate approximation}~\cite{PhysRev.140.A1133}.
+
+As the name suggests, 
+$E_\textrm{xc}[n]$ 
+may be {partitioned} into effects 
+pertaining to exchange $E_\textrm{x}[n]$ 
+and correlation $E_\textrm{c}[n]$~\cite{CAPELLE2006}.
+%
+The exchange term is required to satisfy 
+the Pauli exclusion principle~\cite{PhysRev.58.716} 
+and lowers the Coulomb repulsion 
+between like-spin electrons 
+by keeping them spatially separated.
+%
+{The correlation energy, meanwhile, 
+has many interpretations~\cite{CAPELLE2006,doi:10.1021/jacs.5b12434}, 
+the most tangible of which is that given 
+by Perdew and Zunger in Ref.~\cite{PhysRevB.23.5048}.
+%
+Given the functional for exact exchange in 
+Eq.~\eqref{eq:exact_exchange}, 
+the correlation energy is uniquely defined 
+as the remainder when all other energy terms 
+have been removed from the total-energy, 
+such that 
+%
+\begin{equation}
+E_c=E[n]-T_s[n]-E_H[n]-\int d\br\ V_\textrm{ext}n(\br)-E_x[n].
+\end{equation}
+}\vspace{-1em}
+%is the difference in total-energy 
+%derived from the exact many-body wave function 
+%and that obtained from the wave function 
+%{constructed from} of a KS single-particle Slater determinant.
+%%
+%It may also be considered as the energy reduction 
+%incurred by the mutual avoidance of interacting 
+%electrons ignored in the non-interacting formalism.}
+
+Initially, Kohn and Sham sought to use a 
+\emph{local-density approximation} (LDA)~\cite{PhysRev.140.A1133,PhysRevLett.45.566}
+where the XC potential  
+is approximated to that produced by
+a homogeneous electron gas (HEG), 
+whose density is the same as the non-interacting system  
+in each infinitesimal volume element $d\br$ 
+%
+\begin{align}
+E_\textrm{xc}^{\mbox{\tiny LDA}}[n] 
+&\equiv \int d\br\ \epsilon_{xc}^{\mbox{\tiny LDA}}(n(\br))n(\br)\nonumber \\[1em]
+\Rightarrow V_\textrm{xc}^{\mbox{\tiny LDA}}(\br)
+=\frac{\delta E_\textrm{xc}^{\mbox{\tiny LDA}}}{\delta n(\br)}
+&=\epsilon_\textrm{xc}^{\mbox{\tiny LDA}}\left[n(\br)\right]
++ n(\br)\left.\frac{d\epsilon_\textrm{xc}^{\mbox{\tiny LDA}}\left[n(\br)\right]}{dn}\right|_{n=n(\br)},
+\end{align}
+%
+where, $\epsilon_\textrm{xc}^{\mbox{\tiny LDA}}(n(\br))$ 
+is the XC energy per-electron 
+of the HEG with density $n(\br)$.
+%
+%It is possible to write $E_{xc}[n]$ in the form of a classical interaction between a charge-depletion (or hole) density $\bar n_{xc}({\bf r,r'})$ and the density of the inhomgeneous electron density that created it $n(\br)$ such that
+%\begin{equation}
+%\epsilon_{xc}[n]=\frac{1}{2}\int d{\bf r'}\ \frac{\bar n_{xc}({\bf r,r'})}{|{\bf r-r'}|}.
+%\end{equation}
+%$\bar n_{xc}({\bf r,r'})$ is calculated via coupling constant integration by varying the electronic coupling from $0\to e$ while keeping the density fixed, and, when integrated over ${\bf r'}$, obeys the sum rule
+%\begin{equation}
+%\int d{\bf r'}\ \bar n_{xc}({\bf r,r'})=-1.
+%\label{sum_rule}
+%\end{equation}
+It was later extended to incorporate 
+the local-spin density approximation 
+(LSDA)~\cite{0022-3719-5-13-012,PhysRevB.7.1912,PhysRevB.45.13244}, 
+for which a commonly used functional 
+is that developed 
+by Perdew and Zunger~\cite{0022-3719-5-13-012,PhysRevB.23.5048}.
+
+However, the LDA  and LSDA  
+suffer from systematic inaccuracies 
+in insulating band gaps~\cite{PhysRevB.93.195208,PhysRevLett.111.073003}, 
+charge-transfer energies~\cite{PhysRevLett.95.146402,:/content/aip/journal/jcp/126/20/10.1063/1.2743004},
+activation barriers~\cite{doi:10.1021/jp049908s},
+ binding and formation energies,  
+as well as in spin-densities and their moments.
+%
+The {\it generalised gradient approximation} 
+(GGA)~\cite{PhysRevLett.77.3865} 
+is a semi-local extension to the LDA  
+that takes into account spatial variations 
+in the density 
+%
+\begin{equation}
+E_\textrm{xc}^{\mbox{\tiny GGA}}[n]=\int d\br\ \zeta(n(\br),|\nabla n(\br)|,\nabla^2n(\br),\cdots) 
+\label{eq:gga}
+\end{equation}
+%
+and offers modest improvement 
+of the LDA in many systems.
+%
+Indeed, the Perdew-Burke-Ernzerhof (PBE)~\cite{PhysRevLett.77.3865} 
+functional is one that is widely used in calculations 
+as it produces reliable results for a broad range of applications 
+and is the XC functional 
+primarily used in this dissertation.
+
+%There are loads more approximations
+%Jacobs ladder
+Over the years there have been numerous other 
+incremental improvements to the LDA functional, 
+of which GGA was only the first, 
+that offer increasingly accurate, 
+albeit more computationally expensive, 
+results.
+%
+The next development   
+were meta-GGA functionals~\cite{PhysRevLett.91.146401}, 
+which depend on the density, its gradient 
+and the kinetic energy density.
+%
+These were followed by 
+hybrid-functionals~\cite{doi:10.1063/1.464304},  
+which contain a linear combination of 
+traditional XC functionals with exact exchange from HF 
+and are orbital dependent, 
+a popular choice of which is B3LYP.
+%
+{The next instalment} 
+admits functionals including non-local correlation effects~\cite{B608478H}, 
+and finally,  
+functionals currently in development include all 
+occupied and unoccupied 
+orbitals~\cite{JCC:JCC23391}.
+
+%%
+%This hierarchy of functionals, 
+%dubbed {\it Jacob's ladder},  
+%culminates in the so-called 
+%`Heaven of Chemical Accuracy', 
+%where it is envisioned a 
+%functional with universal utility 
+%may be designed~\cite{Car2016}.
+%
+As of yet however, 
+no such functional has been developed 
+that can be universally employed 
+that delivers reliable results 
+for minimal computational cost. 
+%
+A reasonable balance 
+between the two must be struck 
+depending on the calculation to be performed.
+%
+Notwithstanding the current 
+selection %suite 
+of XC functionals available, 
+{the GGA remains widely popular 
+due to its reasonable accuracy 
+and minimal expense.
+% 
+While meta-GGAs and hybrid functionals 
+provide superior accuracy, 
+they do so at considerably more expense}.
+%for treating molecules~\cite{doi:10.1063/1.4948636}.
+%
+The popular LDA and GGA functionals 
+are also limited in their capacity to describe 
+systems with exotic electronic behaviour, 
+and are known to suffer from systematic  
+self-interaction and static-correlation errors, 
+which will be discussed in Chapter~\ref{ch:self_interaction_error}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+% ION-CORE PSEUDOPOTENTIALS
+%%%%%%%%%%%%%%%%%%%%%%
+\section{Treatment of the ionic potential}
+\label{sec:ion_cores}
+
+In the process of chemical bonding, 
+the role played by the valence electrons 
+greatly outweighs that of the core electrons,  
+whose contribution to the interaction is so little 
+they may regarded as effectively inert 
+to the chemical environment~\cite{RASSOLOV2001573}.
+%
+{
+Since the changes in energy are 
+largely attributed to the valence electrons, 
+the removal of the core states 
+will allow these changes to 
+be more accurately calculated, 
+as they will constitute a 
+larger proportion of the total-energy.} 
+%
+{
+Furthermore, 
+the condition of orthonormality  
+between all non-interacting KS eigenstates 
+requires rapidly oscillating 
+valence wave functions 
+in the region of the spatially-localised core states.}
+% 
+Satisfying this condition requires 
+a large number of basis functions, 
+and thus computational expense, 
+to accurately describe them.
+
+%
+Motivated by the above observations, 
+we now proceed to describe the two methods 
+used in this dissertation 
+for efficiently treating the ion core states, 
+namely the {\it pseudopotential} 
+approximation~\cite{HEINE19701,PhysRev.112.685,PhysRev.116.287}
+and {\it projector-augmented wave} method~\cite{PhysRevB.50.17953,PhysRevB.59.1758}.
+%
+These techniques 
+{allow for greater accuracy 
+in determining total-energy differences}, 
+and reduce 
+the computational expense in 
+treating the localised core states, 
+while retaining the explicit 
+treatment of the more 
+chemically relevant valence states.
+
+%NC PSEUDOS
+\subsection{Norm-conserving pseudopotentials}
+%
+The pseudopotential approximation 
+is a method 
+in which explicit treatment of the core states 
+can be effectively avoided in the 
+electronic structure problem.
+% 
+{Instead, 
+they may be} considered part of 
+the external nuclear potential.
+%
+Consequently, the Coulomb potential 
+is mitigated by a repulsive 
+term that mimics the presence of 
+the core electrons, 
+{and this effect produces} a much weaker 
+pseudopotential.
+%
+The rapidly oscillating wave functions 
+are thus replaced by smoothly varying 
+\emph{pseudo-wave functions} 
+%that matches the exact wave function 
+%beyond some pre-determined cutoff radius 
+that can be resolved at a significantly reduced 
+computational expense.
+%
+
+Following Ref.~\cite{PhysRev.57.1169}, 
+let us suppose that a valence state $\ket{\psi_\textrm{val}}$, 
+which is an eigenstate of the KS Hamiltonian 
+$\hat{H}$ with eigenvalue $E$, 
+may be transformed into a smoothly varying pseudo-state 
+$\ket{\psi_\textrm{ps}}$ 
+by subtracting a linear combination of core states 
+%
+\begin{equation}
+\ket{\psi_\textrm{val}}=\ket{\psi_\textrm{ps}} + \sum_n^\textrm{core} a_n \ket{\chi_n}.
+\end{equation}
+%
+The set of coefficients $\{a_n\}$ 
+is then determined by the condition of orthogonality 
+between the valence state and all core states
+%
+\begin{align}
+\braket{\chi_n}{\psi_\textrm{val}}&=0=\braket{\chi_n}{\psi_\textrm{ps}}+a_n\\[0.5em]
+\Rightarrow a_n&=-\braket{\chi_n}{\psi_\textrm{ps}}
+\end{align}
+thus, we arrive at 
+\begin{equation}
+\ket{\psi_\textrm{val}}=\ket{\psi_\textrm{ps}} - \sum_n^\textrm{core}\ket{\chi_n} \braket{\chi_n}{\psi_\textrm{ps}}.
+\end{equation}
+%
+Solving the eigenvalue equation 
+$\hat{H}\ket{\psi_\textrm{val}}=E\ket{\psi_\textrm{val}}$ 
+we find that 
+%
+\begin{equation}
+\hat{H}\ket{\psi_\textrm{ps}} - \sum_n^\textrm{core}E_n \ket{\chi_n} \braket{\chi_n}{\psi_\textrm{ps}} 
+=E\ket{\psi_\textrm{ps}} 
+- E\sum_n^\textrm{core} \ket{\chi_n} \braket{\chi_n}{\psi_\textrm{ps}}, 
+\end{equation}
+%
+which may be conveniently re-written 
+into an eigenvalue equation for the pseudo-state
+%
+\begin{equation}
+\left[\hat{H}+ \sum_n^\textrm{core}(E-E_n) \ket{\chi_n} \bra{\chi_n}\right]{\psi_\textrm{ps}} 
+=E\ket{\psi_\textrm{ps}}. 
+\end{equation}
+%
+Hence, the pseudo-state returns 
+the same eigenvalue as the valence state 
+when the Hamiltonian differs by a non-local potential, 
+given by
+%
+\begin{equation}
+\hat{V}_\textrm{nl}= \sum_n^\textrm{core}(E-E_n) \ket{\chi_n} \bra{\chi_n}.
+\end{equation}
+%
+{This potential is repulsive in the region of the core 
+and acts to partially cancel the Coulomb attraction.
+%
+It thereby provides a net, smoothly-varying potential 
+for the pseudo-valence states.}
+
+The energy argument $E$ of the pseudopotential, 
+the core states $\{\ket{\chi_n}\}$, and eigenenergies $E_n$ 
+are initially calculated for an isolated atom and 
+generally assumed to be fixed.
+%
+The validity of this assumption 
+largely determines 
+the {\it transferability} of a pseudopotential, 
+that is, the accuracy with which it performs in various 
+chemical environments.
+%
+This greatly depends on the condition 
+that any shift in the valence energy $\Delta E$, 
+when transferring from the atomic to chemical environment, 
+satisfies $E-E_n\gg \Delta E$.
+
+A widely used variety of pseudopotentials 
+are those that preserve the scattering properties 
+of the full atomic potential, 
+up to leading order in the energy, 
+by use of 
+{\it norm-conservation}.
+%
+We refer the reader to Refs.~\cite{PhysRevLett.43.1494,0022-3719-13-9-004,PhysRevB.40.2980,PhysRevB.41.1227} 
+for more details.
+%
+These pseudopotentials 
+must be independently computed for each of 
+the angular momentum states $l$ but, 
+for spherically symmetric potentials, 
+are independent of 
+the azimuthal quantum number $m$. 
+%
+Suppose we then construct a pseudopotential 
+where the contribution due to core electrons 
+vanishes beyond a cutoff radius $r_c$ 
+{such that $v_\textrm{nl}(r)=v(r) $ 
+for $r<r_c$ and $v_\textrm{nl}(r)=0$ 
+otherwise.}
+%
+%\begin{equation}
+%v_\textrm{nl}(r)
+%=\left\{\begin{array}{c}
+%v(r)  \quad\mbox{for}\quad  r<r_c \\ 
+%0   \quad\mbox{for}\quad  r>r_c.
+%\end{array}\right.
+%\end{equation}
+%
+The valence wave functions may also be 
+decomposed into radial $R_l$ and 
+spherical harmonic $Y_{lm}$ terms, 
+given by
+%
+\begin{equation}
+\psi_{lm}(\br, E)= R_l(r, E)Y_{lm}(\theta, \phi) 
+\end{equation} 
+that are solutions of 
+the atomic Schr{\"o}dinger equation
+%
+\begin{equation}
+\left[-\frac{1}{2}\nabla^2+v(\br)\right]\psi_{lm}(\br, E)=E\psi_{lm}(\br, E).
+\label{eq:schro_equation_reduced}
+\end{equation}
+%
+For $r>r_c$, 
+the radial solution may be expressed 
+in terms of  Bessel $j_l(x)$ 
+and von Neumann $n_l(x)$ 
+functions
+%
+\begin{equation}
+R_l^{>}(r,E)=A_l j_l(kr)+B_l n_l(kr) = A_l[j_l(kr)-\tan(\delta_l)n_l(kr)], 
+\end{equation}
+%
+where $k=\sqrt{2E}$ 
+and the scattering phase shift $\delta_l$ 
+is defined by  
+$B_l/A_l=-\tan(\delta_l)$.
+%
+Further stipulating that $R_l^{>}$   
+and its radial derivative 
+match the solution of 
+Eq.~\eqref{eq:schro_equation_reduced} 
+at the boundary $r=r_c$,
+one can then show that
+%
+\begin{equation}
+\left.\frac{d}{dr}\log\left[R_l(\br, E) \right]\right|_{r=r_c} 
+= k\frac{j_l(kr_c)-\tan(\delta_l)n_l(kr_c)}{j_l(kr_c)-\tan(\delta_l)n_l(kr_c)}
+\label{eq:norm_condition_1}
+\end{equation}
+%
+and, moreover, that the energy derivative is proportional 
+to the norm of the wave function in the core region, i.e., {that} 
+%
+\begin{equation}
+\frac{d}{dE}\left[\frac{d}{dr}\log\left[R_l(\br, E) \right]\right] \sim 
+\int_0^{r_c}dr\ r^2 R_l^2(r).
+\label{eq:norm_condition_2}
+\end{equation}
+%
+Simultaneously satisfying 
+Eqs.~\eqref{eq:norm_condition_1}~\&~\eqref{eq:norm_condition_2},  
+such that 
+%
+\begin{equation}
+R_{l,\,\textrm{ps}}(l)=R_{l,\,\textrm{val}}(l) 
+\quad\mbox{for}\quad
+r>r_c,
+\end{equation}
+%
+we can construct a pseudopotential 
+that preserves the scattering 
+properties of the full potential 
+up to leading order in $E$.
+
+{
+In the construction of pseudopotentials, 
+it is necessary to remove the contributions from the 
+valence electron Hartree and XC potentials, 
+{as these will be accounted for in the DFT calculation 
+according to the specific chemical environment.}
+%
+Thus, we leave behind only the XC of the core states  
+%
+\begin{equation}
+\hat{V}_\textrm{xc}^\textrm{pseudo}=\hat{V}_\textrm{xc}[n_v(\br)+n_c(\br),\zeta] -\hat{V}_\textrm{xc}[n_v(\br),\zeta_v] 
+\label{eq:xc_pseudo}
+\end{equation}
+%
+where $n_v(\br)$ and $n_c(\br)$ 
+are the valence and core electron densities, respectively, 
+which define the all-electron and valence magnetisations as 
+%
+\begin{equation}
+\zeta(\br)=\frac{n^\uparrow_v(\br)-n^\downarrow_v(\br)}{n_v(\br)+n_c(\br)}
+\quad\mbox{and}\quad
+\zeta_v(\br)=\frac{n^\uparrow_v(\br)-n^\downarrow_v(\br)}{n_v(\br)}.
+\end{equation}
+%
+%{Upon performing a DFT calculation, 
+%the XC potential for the valence states 
+%is computed explicitly 
+%and remitted to the ion-core contribution 
+%to compute the total XC potential}  
+%%
+%\begin{equation}
+%\hat{V}_\textrm{xc}[n_v(\br)+n_c(\br),\zeta] = \hat{V}_\textrm{xc}^\textrm{pseudo}+\hat{V}_\textrm{xc}[n_v(\br),\zeta_v].
+%\end{equation}
+%%
+Thus, 
+in the pseudopotential approximation, 
+it is important to consider 
+the degree of spatial overlap 
+between the valence and core electron densities, 
+especially for spin-polarised systems,
+{such as} the first-row transition-metals.
+
+Since the $V_\textrm{xc}$ functional is non-linear in 
+the charge density and magnetisation,   
+linear approximations, (such as those in Eq.~\eqref{eq:xc_pseudo}) 
+although sufficient for many cases,  
+will fail when $\zeta$ and $\zeta_v$ significantly differ.
+%
+The non-linear core correction (NLCC), 
+developed by Louie {\it et al.}~\cite{PhysRevB.26.1738}, 
+circumvents this problem in a DFT calculation 
+by explicitly computing the XC of both the 
+valence states and so-called {\it partial core} $\tilde{n}_c(\br)$, 
+which is identical to the core density 
+outside some cutoff radius $r_\textrm{NLCC}$ 
+and a smoothly varying function within.
+%
+{
+Thus, the XC contribution from the pseudopotential 
+and valence electrons can be effectively partitioned 
+in an approximately linear fashion once again}
+% 
+\begin{equation}
+\hat{V}_\textrm{xc}^\textrm{pseudo}=\hat{V}_\textrm{xc}[n_v(\br)+n_c(\br),\zeta] -V_\textrm{xc}[n_v(\br)+\tilde{n}_c(\br),\zeta_v].
+\label{eq:xc_pseudo2}
+\end{equation}
+}
+
+
+%PAW
+\subsection{Projector-augmented wave method}
+The projector-augmented wave (PAW) method, 
+devised by Bl{\"o}chl~\cite{PhysRevB.50.17953}, 
+is a generalisation of the 
+pseudopotential~\cite{HEINE19701,PhysRev.112.685,PhysRev.116.287}
+and linear-augmented plane wave (LAPW) 
+methods~\cite{0305-4608-5-11-016,PhysRevB.12.3060}, 
+which combines the simple formalism of the former 
+with the versatility of the latter.
+%
+In this approach, 
+instead of using a linear combination of core states, 
+the all-electron KS 
+wave function\footnote{not to be confused with the many-electron wave function.} 
+$\ket{\Psi}$ 
+is derived from the pseudo  
+wave function 
+$\ket{\Psi_\textrm{ps}}$ by a linear transformation $\mathcal{T}$ 
+%
+\begin{equation}
+\ket{\Psi}=\mathcal{T}\ket{\Psi_\textrm{ps}}.
+\label{eq:paw_1}
+\end{equation}
+%
+Expectation values of 
+operators $\hat{A}$ 
+can be obtained from either the all-electron states 
+$\langle \hat{A}\rangle=\bra{\Psi}\hat{A}\ket{\Psi}$ 
+or, equivalently, from the pseudo-states 
+$\langle \hat{A}\rangle=\bra{\Psi_\textrm{ps}}\hat{A}'\ket{\Psi_\textrm{ps}}$ 
+with 
+$\hat{A}'=\mathcal{T}^\dagger \hat{A} \mathcal{T}$, 
+when $\mathcal{T}$ is known.
+%
+
+In order to restrict the transformation 
+to the regions of the ion core, 
+we may expand $\mathcal{T}$ in 
+terms of a sum of local contributions $\mathcal{T}_R$ 
+%
+\begin{equation}
+\mathcal{T}=1+\sum_R \mathcal{T}_R, 
+\end{equation}
+%
+which only act within an {\it augmentation region} 
+$\mathcal{V}_R$ enclosing the atom, 
+analogous to the cutoff radius 
+in the pseudopotential method.
+%
+It is useful to re-cast the pseudo wave functions 
+as a linear combination of 
+partial-waves $\{\ket{\phi_{i,\textrm{ps}}}\}$ 
+in $\mathcal{V}_R$ %the augmentation region
+%
+\begin{equation}
+\ket{\Psi_\textrm{ps}}=\sum_i c_i\ket{\phi_{i,\textrm{ps}}}, 
+\label{eq:paw_2}
+\end{equation}
+%
+which, themselves, may be a linear combination of 
+polynomials or Bessel functions.
+%
+These, in turn, are related to the 
+all-electron partial-waves by %$\mathcal{T}$ 
+the same linear transformation 
+%
+\begin{equation}
+\ket{\phi_i}=\mathcal{T}\ket{\phi_{i,\textrm{ps}}}, 
+\label{eq:paw_3}
+\end{equation}
+%
+and are typically the solutions 
+to the atomic Kohn-Sham Schr{\" o}dinger equation.
+%
+Thus, $i$ is an index over the 
+atomic labels $R$, 
+angular momentum quantum numbers $\{l,m\}$, 
+and partial-wave index $n$.
+%
+Combining Eqs.~\eqref{eq:paw_1}, \eqref{eq:paw_2} and~\eqref{eq:paw_3}, 
+the all-electron wave function can then 
+be resolved from the pseudo wave function
+%
+\begin{equation}
+%\ket{\Psi}=\mathcal{T}\ket{\Psi_\textrm{ps}}
+%=\mathcal{T}\sum_i \ket{\phi_{i,\textrm{ps}}}c_i
+%=\sum_i \ket{\phi_i}c_i \nonumber \\
+%\Rightarrow 
+\ket{\Psi}=\ket{\Psi_\textrm{ps}} - \sum_i \ket{\phi_{i,\textrm{ps}}}c_i + \sum_i \ket{\phi_i}c_i, 
+\label{eq:paw_4}
+\end{equation}
+%
+and the expansion coefficients $\{c_i\}$, 
+yet to be determined.
+%
+Since the transformation $\mathcal{T}$ must be linear, 
+the coefficients $\{c_i\}$ 
+must be derived from a scalar product 
+of $\ket{\Psi_\textrm{ps}}$ 
+with some projector functions $\{\ket{p_i}\}$
+%
+\begin{equation}
+c_i=\braket{p_i}{\Psi_\textrm{ps}} 
+\quad\mbox{with}\quad
+\braket{p_i}{\phi_{j,\textrm{ps}}}=\delta_{ij}
+\label{eq:paw_5}
+\end{equation}
+%
+that each have a corresponding pseudo partial-wave 
+and satisfies the completeness condition 
+$\sum_i\ket{\phi_{i,\textrm{ps}}}\bra{p_i}=1$.
+%
+Thus, inserting the first term in Eq.~\eqref{eq:paw_5} 
+into Eq.~\eqref{eq:paw_4} 
+we arrive at the full expression for the all-electron wave function 
+\begin{equation}
+\ket{\Psi}=\ket{\Psi_\textrm{ps}} + \sum_i\left(\ket{\phi_i}-\ket{\phi_{i,\textrm{ps}}}\right)\braket{p_i}{\Psi_\textrm{ps}},  
+\end{equation}
+%
+where we can now define the transformation as 
+%
+\begin{equation}
+\mathcal{T}=1+\sum_i\left(\ket{\phi_i}-\ket{\phi_{i,\textrm{ps}}}\right)\bra{p_i}.
+\label{eq:paw_6}
+\end{equation}
+
+The quantities that govern the 
+transformation are 
+%
+\begin{enumerate}
+\item
+The set of all-electron partial-wave functions $\{\ket{\phi_i}\}$, 
+which are solutions to the atomic Schr{\" o}dinger equation, 
+%
+\item
+the set of pseudo partial-wave functions $\{\ket{\phi_{i,\textrm{ps}}}\}$, 
+%
+\item
+the set of projector functions $\{\ket{p_i}\}$ 
+localised in the augmentation region, 
+which satisfy $\braket{p_i}{\phi_{j,\textrm{ps}}}=\delta_{ij}$.
+\end{enumerate}
+%
+There exists a variety of strategies to 
+solve for each of these terms, 
+which are discussed in Refs.~\cite{PhysRevB.50.17953,PhysRevB.71.035109}
+
+On a final note, we will briefly outline  
+how the pseudopotential method 
+may be derived from the PAW method.
+%
+For a comprehensive derivation 
+see Ref.~\cite{PhysRevB.59.1758}.
+%
+By construction, 
+the PAW method fulfils the 
+same essential criteria as the 
+pseudopotential approach, 
+except for the condition of norm-conservation, 
+although this can also be enforced.
+%
+Using our definition of $\mathcal{T}$ in Eq.~\eqref{eq:paw_6}, 
+it can be shown that 
+a pseudo operator $\hat{A}_\textrm{ps}$ 
+is given by
+%
+\begin{align}
+\hat{A}_\textrm{ps}=\hat{A} 
++ \sum_{i,j} \ket{p_i}\left(\bra{\phi_i}\hat{A}\ket{\phi_j} 
+- \bra{\phi_{i,\textrm{ps}}}\hat{A}\ket{\phi_{j,\textrm{ps}}}\right)\bra{p_j}.
+\end{align}
+%
+However, there is the option to include 
+an additional term of the form 
+%
+\begin{equation}
+\hat{B}-\sum_{i,j} \ket{p_i}\bra{\phi_{i,\textrm{ps}}}\hat{B}\ket{\phi_{j,\textrm{ps}}}\bra{p_j},
+\end{equation}
+%
+where $\hat{B}$ is an operator 
+localised to the augmentation region,  
+such that the expectation value 
+of this new term with 
+$\ket{\Psi_\textrm{ps}}$ is zero.
+%
+This additional degree of freedom 
+is useful for constructing 
+potentials that are difficult to 
+express using a plane wave expansion, 
+such as the nuclear Coulomb potential, 
+due to the singularity inside 
+the augmentation region.
+%
+This new potential will inherently match  
+the exact potential outside the core region 
+and will be smoothly-varying inside, 
+thus providing the framework 
+for the pseudopotential approach in PAW.
+%
+As a result of reducing the PAW method 
+to the pseudopotential approach, 
+a contribution from an additional 
+non-local potential $\hat{V}_\textrm{nl}$ 
+emerges during the process.
+%
+
+
+In summary, the PAW method 
+offers numerous advantages over the 
+pseudopotential approach, 
+while requiring only a modest increase 
+in computational resources, 
+albeit larger memory requirements.
+%
+It allows for increased computational 
+accuracy and efficiency, 
+larger core regions, 
+and a reduced basis set 
+if the norm-conserving condition is relaxed. 
+%
+{
+Most importantly, 
+by using both valence and core 
+states in the self-consistency cycle 
+and the construction of potentials, 
+the PAW method bears a physical basis  
+approaching that of more expensive `all-electron' models, 
+but at the price of a pseudopotential calculation.}
+%
+{
+Moreover, 
+for norm-conserving pseudopotentials without NLCC, 
+the {\bk}-point grid-spacing for the density
+needs to be at least twice as fine 
+as the grid-spacing for the wave function 
+in order to guarantee adequate sampling 
+and ensure that the two converge at 
+a similar same rate.
+%
+When NLCC or PAW are used, 
+this equivalence is no longer guaranteed to hold 
+because of the additional complexities 
+introduced by the core electron density 
+or augmentation regions.}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+% LINEAR SCALING DFT
+%%%%%%%%%%%%%%%%%%%%%%
+\section{An overview of linear-scaling DFT}
+\label{sec:linear_scaling_dft}
+
+{
+Despite the practicality of approximate DFT 
+that has lead to its widespread adoption,  
+there exists, within the electronic structure community, 
+a growing repertoire of large-scale systems under study 
+($N_\textrm{atoms}\gtrsim10^3$ )
+that are computationally inaccessible 
+by conventional codes 
+and oblige a linear-scaling,
+so-called $\mathcal{O}(N)$, treatment.
+%
+These include 
+large biological molecules~\cite{skylaris2005introducing,doi:10.1021/jz3004188,Weber22042014,doi:10.1021/jz5018703,PROT:PROT24686},
+defect states~\cite{PhysRevB.79.024112,hine2010linear,PhysRevB.84.035209}, 
+optical absorption~\cite{PhysRevB.84.165131,C3CP52043A}, 
+molecular dynamics~\cite{doi:10.1063/1.4978684,PhysRevB.83.195102}, 
+molecules in solution~\cite{doi:10.1021/acs.jctc.5b00391,0295-5075-95-4-43001},  
+among many other examples~\cite{PhysRevLett.108.256402,HINE20091041,doi:10.1063/1.4817001,0953-8984-28-7-074003}.}
+
+{
+In this section, 
+we will proceed from 
+the over-arching theory 
+and techniques used in approximate DFT 
+and discuss the motivation 
+and technical details   
+related to solving 
+Eq.~\eqref{eq:ks_schroding_equation}
+within a linear-scaling regime.
+% 
+For this dissertation, 
+we primarily used the 
+Order-$N$ Electronic Total-Energy Package 
+(\textsc{ONETEP})~\cite{skylaris2005introducing,0953-8984-17-37-012,PSSB:PSSB200541457,0953-8984-20-29-294207,0953-8984-20-6-064209,HINE20091041,hine2009linear,PhysRevB.85.085107}, 
+which employs direct-minimisation 
+of the total-energy, 
+rather than plane wave self-consistency, 
+as a means to locate 
+the ground-state energy.
+%
+We will describe the optimisation procedure that 
+occurs within \textsc{ONETEP} 
+affording it $\mathcal{O}(N)$ functionality  
+(with an accuracy comparable to 
+that of plane wave 
+codes~\cite{skylaris2005introducing,PhysRevB.51.10157,PhysRevLett.69.3547,hine2009linear}),
+and define the central quantities 
+of the calculations.
+%
+For a comprehensive account  
+of the \textsc{ONETEP} procedure, 
+we refer the reader to 
+Refs.~\cite{skylaris2005introducing,0953-8984-17-37-012,PSSB:PSSB200541457,0953-8984-20-29-294207,0953-8984-20-6-064209,HINE20091041,hine2009linear,PhysRevB.85.085107}.}
+
+{
+In this section,
+we shall invoke the Einstein summation convention 
+over repeated indices~\cite{Einstein1916}, 
+where {we have denoted} 
+Greek suffixes {to correspond} 
+to non-orthogonal quantities, 
+and Latin suffixes to orthogonal ones.}
+
+
+%DENSITY MATRIX FORMULATION
+\subsection{Density matrix formalism in DFT}
+\label{sec:density_matrix}
+{
+The real-space single-particle density matrix 
+is given in terms of the KS orbitals $\psi_i(\br)$ 
+with occupancies $\{f_i\}$ by 
+%
+\begin{equation}
+\rho(\br,\br')=\bra{\br}\hat{\rho}\ket{\br'}
+=\sum_i f_i\; \psi_i(\br)\psi_i^*(\br')
+\quad\mbox{where}\quad
+f_i=\{0,1\}, 
+\label{eq:1_particle_dens_matrix1}
+\end{equation}
+%
+with the single-particle density 
+$n(\br)=\rho(\br, \br)$.
+%
+A physically meaningful 
+density-matrix must 
+abide by certain properties, 
+namely, it must be 
+%
+\begin{enumerate}
+\item
+Hermitian $\rho(\br,\br')=\rho^\dagger(\br,\br')$, 
+to ensure real expectation values, 
+\item
+conserve (spin-)particle number 
+$\int d\br\ \hat\rho^\sigma(\br,\br)=N^\sigma$,
+\item
+idempotent 
+$\rho(\br,\br')=\rho(\br,\br')^2$,  
+to  ensure that 
+$ f_i =\{0,1\}$.
+\end{enumerate}}
+
+{
+In large DFT calculations comprising $N\gtrsim10^2$ particles, 
+enforcing orthogonality between the KS orbitals 
+incurs an $\mathcal{O}(N^3)$ compute-time.
+%
+Amid a growing appetite in the 1990s 
+for solutions to surmounting 
+this performance limitation~\cite{PhysRevLett.66.1438,
+doi:10.1063/1.470549,
+PhysRevLett.69.3547,
+KOHN1993167,
+PhysRevB.51.1456,
+PhysRevB.47.9973,
+PhysRevB.47.10891}, 
+Kohn postulated a {\it near-sightedness} principle, 
+based on the dependence of 
+the one-particle density matrix on local-potentials, 
+which forecast the development of 
+linear-scaling methods~\cite{PhysRevLett.76.3168}.
+%
+A corollary of this principle was that 
+expectation values 
+of local operators depend negligibly  
+on spatially-distant density elements, 
+which could be truncated accordingly 
+beyond some cutoff distance $r_\textrm{cut}$ 
+(to be determined by total-energy convergence), 
+such that 
+%
+\begin{align}
+%&\rho(\br,\br')\sim \exp(-|\br-\br'|) \nonumber\\
+%\Rightarrow\ 
+\rho(\br,\br')=0
+\quad\mbox{for}\quad 
+|\br-\br'|> r_\textrm{cut}.
+\end{align}}
+%
+{The conditions presented above 
+pose numerous challenges 
+to direct-minimisation techniques 
+invoking the density-matrix. 
+%
+We shall not discuss in detail the strategies employed  
+by {\sc ONETEP} to ensure a well-behaved  
+density-matrix, but we refer the reader 
+to Refs.~\cite{RevModPhys.32.335,0953-8984-20-29-294207,PhysRevB.47.10891,PhysRevB.50.17611,PhysRevB.47.10895,PhysRevB.18.7165} 
+for more information.}
+%%%%%%%%%%%%%
+
+
+%PSINC BASIS SETS
+\subsection{Psinc basis sets}
+{
+The tractable computation 
+of the KS wave functions 
+relies on the appropriate 
+selection of a finite set of basis functions 
+spanning the Hilbert space.
+%
+This selection should be minimal, 
+yet afford the efficient evaluation of 
+ground-state densities, 
+as well as the application  
+of potentials and differential operators.
+%
+Popular choices of 
+basis set 
+include Gaussian functions~\cite{WCMS:WCMS1123,doi:10.1063/1.2770708,HAYNES2006345} 
+in molecular systems, 
+and  plane waves~\cite{0022-3719-12-21-009,0022-3719-18-21-010,KRESSE199615,PhysRevB.54.11169} 
+in periodic systems, 
+which are efficiently transformed 
+between representations via the 
+Fast-Fourier Transform (FFT)~\cite{doi:10.1137/1.9781611970999.bm}.}
+
+%The Fourier expansion of the plane waves 
+%are given in terms of the reciprocal-space vectors ${\bf G}$ 
+%%
+%\begin{equation}
+%\psi_{n\bk}(\br)=e^{i\bk\cdot\br}u_{n\bk}
+%=e^{i\bk\cdot\br}\left[\sum_{\bf G}c_{n\bk,{\bf G}}e^{i{\bf G}\cdot\br}\right] 
+%=\sum_{\bf G}c_{n,\bk+{\bf G}}e^{i(\bk+{\bf G})\cdot\br}
+%\end{equation}
+%%
+%which may be truncated to wave-vectors satisfying 
+%$\frac{1}{2}\|\bk+{\bf G}\|^2<E_\textrm{cut}$.
+%%
+%Thus, higher-energy terms are 
+%gradually included, 
+%according to the kinetic-energy 
+%cutoff parameter $E_\textrm{cut}$, 
+%until a tolerable convergence 
+%in total-energy is achieved~\cite{PhysRevB.45.1538}.
+{
+{\sc ONETEP}, on the other hand, 
+adopts a variational basis set of {\it psinc} 
+functions~\cite{doi:10.1063/1.1613633,0305-4470-19-11-013}, 
+centred at positions ${\br}_{\{m\}}$, 
+defined by 
+%
+\begin{equation}
+D_{\{m\}}(\br)=\prod_{k=1}^{3}\frac{1}{N_k}\sum_{p_l=-J_k}^{J_k} 
+e^{ip_l{\bf b_k}\cdot(\br-\br_{\{m\}})},
+\end{equation}
+where the number of grid-points 
+in each lattice direction then 
+determines the grid-resolution as follows 
+%
+\begin{align}
+N_k=2J_k+1&;\quad  J_k\in \mathds{N} \nonumber\\[0.5em]
+\quad\mbox{with}\quad
+{\br}_{\{m\}}=\sum_{i=1}^3 \frac{m_i}{N_i}{\bf a}_i&;\quad
+m_i\in\{0,1,\ldots,N_k-1\}.
+\end{align}
+%
+Here, $\{\bf b_k\}$ are the reciprocal lattice 
+basis vectors\footnote{The reciprocal lattice is discussed further in section~\ref{sec:bz_sampling}}.
+%
+The resolution of the grid then truncates the basis set 
+and thus determines 
+the maximum kinetic energy permissible.
+
+The {\it psinc} functions are also periodic 
+$D_{\{m\}}(\br)=D_{\{m\}}(\br+{\bf R})$, 
+localised to a single grid-point each 
+and real-valued everywhere\footnote{{As we will later demonstrate that 
+${\bf b_k}\cdot{\br_j}=2\pi n\delta_{kj}$ for $n\in\mathds{Z}$}
+}~\cite{doi:10.1063/1.1613633}
+%
+\begin{equation}
+D_{\{m_1,m_2,m_3\}}(\br_{\{\mu_1,\mu_2,\mu_3\}})
+=\delta_{m_1\mu_1}\delta_{m_2\mu_2},\delta_{m_3\mu_3}.
+\end{equation}
+%
+As a result, they are an ideal basis for 
+the construction of spatially-localised 
+{\it representation support functions}~\cite{PhysRevB.51.10157} 
+$\{\phi_\alpha(\br)\}$, 
+the choice of which we will now motivate.}
+%
+
+%NGWFS
+\subsection{Non-orthogonal generalised Wannier functions}
+\label{sec:ngwfs}
+
+{
+In periodic systems,  
+the real-space projection of 
+the single-particle density-matrix 
+may be generated from the integration 
+of extensive periodic Bloch wave functions 
+$\{\psi_{n,\bk}^\sigma(\br)\}$, 
+labelled by band-index $n$ 
+and momentum-vector $\bk$, 
+%
+\begin{equation}
+\rho(\br,\br')
+=\frac{1}{\Omega_{BZ}}\sum_n f_n \int_{\textrm{BZ}} d\bk\ \psi_{n,\bk}(\br) \psi_{n,\bk}^*(\br'), 
+\label{eq:1_particle_dens_matrix2}
+\end{equation}
+%
+where the $\bk$-vectors are 
+restricted to the reciprocal-space 
+primitive unit cell called  
+the {\it first Brillouin zone} (BZ)
+with volume $\Omega_\textrm{BZ}$\footnote{See section~\ref{sec:bz_sampling}.}.
+%
+The principle of near-sightedness, 
+advocated earlier by Kohn 
+to facilitate linear-scaling functionality~\cite{PhysRevLett.76.3168}, 
+prescribes that our set of 
+support functions for the density-matrix 
+be highly spatially-localised,  
+a popular choice for which 
+are Wannier functions~\cite{PhysRev.52.191,
+PhysRev.135.A685,
+PhysRevLett.86.5341,
+PhysRevLett.98.046402}.
+%
+The Wannier functions 
+may be expressed as the 
+Fourier transformations of the 
+periodic Bloch wave functions 
+restricted to a cell at the lattice-vector ${\bf R}$ 
+%
+\begin{equation}
+w_{n,{\bf R}}^\sigma(\br)
+=\left(\frac{\Omega_\textrm{cell}}{2\pi}\right)^\frac{1}{2}
+\int_\textrm{BZ} d\bk\
+\psi_{n,\bk}^\sigma(\br)\,
+e^{-i\bk\cdot{\bf R}}, 
+\label{eq:wannier_function}
+\end{equation}
+%
+where $\Omega_\textrm{cell}$ 
+is the real-space supercell volume.
+%
+The Bloch functions 
+may then be reconstructed 
+from the discretised inverse-Fourier transform
+%
+\begin{equation}
+\psi_{n,\bk}^\sigma(\br)
+=\left(\frac{\Omega_\textrm{cell}}{2\pi}\right)^\frac{1}{2}
+\sum_{\bf R} 
+w_{n,{\bf R}}^\sigma(\br)\,
+e^{i\bk\cdot{\bf R}}, 
+\label{eq:psi_from_wannier_function}
+\end{equation}
+%
+%The unitarity of the Fourier transformation 
+%confers the orthonormality condition 
+%of the Bloch states to the Wannier functions
+%%
+%\begin{equation}
+%\int d\br\ w^{\sigma*}_{n,{\bf R}}(\br)\, w^\sigma_{m,{\bf R'}}(\br) = 
+%\delta_{nm}\delta_{{\bf R}{\bf R}'}.
+%\end{equation}
+which, when substituted 
+into Eq.~\eqref{eq:1_particle_dens_matrix2}, 
+returns the one-particle density-matrix 
+in terms of the Wannier functions 
+%
+\begin{equation}
+\rho(\br,\br')
+=\sum_n\sum_{\bf R} w^{\sigma}_{n,{\bf R}}(\br)\, f_n^\sigma\, w^{\sigma*}_{n,{\bf R}}(\br').
+\end{equation}}
+
+{
+Incidentally, it is often the case that 
+the non-orthogonal representation of
+the Wannier functions is more local  
+that its orthogonal equivalent as 
+shown in Ref.~\cite{doi:10.1080/00268976.2016.1173733}
+%
+\edit{This is because 
+a set of orthogonal Wannier functions 
+generated from orthogonal KS orbitals 
+may require large oscillations in the former 
+to ensure this condition is met, 
+which increases their spatial spread 
+characterised by the central second moment.
+%
+Thus, if we relax the orthogonality condition, 
+but conserve the particle number, 
+we can then facilitate a more localised representation 
+that avoids large oscillations.}
+%
+{\sc ONETEP} implements a complete set 
+of spatially-truncated non-orthogonal 
+generalised Wannier functions (NGWFs) 
+$\{\phi_\alpha(\br)\}$,
+which are constructed from the 
+KS orbitals by a unitary 
+transformation ${\bf M}$
+%
+\begin{equation}
+\psi_{i}(\br)=\phi_{\alpha}(\br)M_i^\alpha
+\quad\mbox{where}\quad
+M_i^\alpha=\braket{\phi^\alpha}{\psi_i}.
+\label{eq:NGWF1}
+\end{equation}}
+%
+
+{
+The grid-point representation 
+of the NGWFs $\{\phi_\alpha^D(\br)\}$, 
+expanded in terms of the 
+{\it psinc} basis functions 
+over the simulation cell with dimension 
+$N_\textrm{cell}=N_1\times N_2\times N_3$, 
+is given by 
+%
+\begin{align}
+\phi_\alpha^D(\br)&=\sum_{\{m\}}C_{\{m\},\alpha}D_{\{m\}}(\br);
+\nonumber\\[0.5em]
+\quad\mbox{with}\quad
+C_{\{m\},\alpha}&=\int d\br\ D_{\{m\}}(\br)\phi_\alpha(\br)
+=\frac{\Omega_\textrm{cell}}{N_\textrm{cell}}\phi^D_\alpha(\br_{\{m\}}).
+\label{eq:support_functions}
+\end{align}
+%
+The coefficients $C_{\{m\},\alpha}$
+are determined by the integral 
+overlap of the NGWFs with the {\it psinc} functions, 
+which, in turn, are proportional to the 
+approximate NGWFs $\{\phi^D_\alpha(\br_{\{m\}})\}$
+evaluated at the corresponding grid-points.
+%
+Therefore, since all spatial functions 
+are evaluated at discrete grid-points, 
+we henceforth suppress the superscript $D$
+for brevity and retain the original notation.}
+
+{
+The NGWF overlap matrix ${\bf S}$  
+then defines the metric 
+of the non-orthogonal basis 
+spanned by the NGWFs
+%
+\begin{align}
+S_{\alpha\beta}=\braket{\phi_\alpha}{\phi_\beta}
+= \int d\br\ \phi^*_\alpha(\br)\phi_\beta(\br) = \left(\frac{\Omega_\textrm{cell}}{N_\textrm{cell}}\right) \sum_{\{m\}}C^*_{\{m\},\alpha}C_{\{m\},\beta}, 
+\end{align}
+%
+and arises in imposing orthogonality between Kohn-Sham orbitals 
+%
+\begin{align}
+\delta_{ij}&=\int d\br\ \psi^*_{i\bk}(\br)\psi_{j\bk}(\br) =  \int d\br\ (M^\dagger)^\alpha_i\, \phi^*_\alpha(\br)\phi_\beta(\br)\, M^\beta_j =(M^\dagger)^\alpha_i S_{\alpha\beta}M^\beta_j.
+\end{align}
+
+In the non-orthogonal regime, 
+the dual functions $\{\phi^\alpha(\br)\}$ 
+are orthogonal to the NGWFs 
+$\braket{\phi_\alpha}{\phi^\beta}=\delta_\alpha^\beta$, 
+and span the 
+dual-space\footnote{{The term `duals' is perhaps a 
+mathematical misnomer, but it is now part of the 
+vocabulary since they were first proposed in Ref.~\cite{PhysRevA.43.5770}}.
+%
+Duals are discerned from the NGWFs by 
+a superscript rather than a subscript.}, 
+whereby we find, by the completeness relation, that
+%
+\begin{equation}
+\phi^\alpha(\br)=\braket{\br}{\phi_\beta}\braket{\phi^\beta}{\phi^\alpha}=\phi_\beta(\br)S^{\beta\alpha}
+\quad\Rightarrow\quad
+S^{\beta\alpha}=(S_{\beta\alpha})^{-1}.
+\label{eq:completeness_relation}
+\end{equation}
+%
+Finally, with Eqs.~\eqref{eq:wannier_function}~-~\eqref{eq:completeness_relation}, 
+it can be shown that the NGWFs 
+depend on the aforementioned elements as follows
+%
+\begin{equation}
+\ket{\phi_{\alpha{\bf R}}}=\left(\frac{\Omega_\textrm{cell}}{(2\pi)^3}\right)^{\frac{1}{2}}
+\int_\textrm{BZ} d\bk\ e^{-i\bk\cdot{\bf R}} 
+\sum_{i=1}^N \ket{\psi_{i\bk}}\left[M_i^{\dagger\beta}S_{\beta\alpha}\right],
+\end{equation}
+%
+in which the the expansion coefficients 
+$C_{\{m\},\alpha}$ 
+of the {\it psinc} basis set 
+are one of the variational parameters 
+optimised {\it in situ} 
+in order to minimise the total-energy.}
+
+
+%In an independent-particle quantum system, 
+%the electron density-matrix operator 
+%is given by the weighted sum of the 
+%single-particle Kohn-Sham eigenstates  
+%with occupancies $\{f_i\}$
+%%
+%\begin{equation}
+%\hat{\rho}=\sum_i f_i\; \ket{\psi_i}\bra{\psi_i}
+%\quad\mbox{with}\quad
+%0 \leq f_i \leq 1, 
+%\end{equation}
+%%
+%in which expectation values of 
+%operators are easily determined 
+%by the trace of their 
+%product with the density matrix 
+%$\langle A\rangle = \textrm{Tr}[\hat{\rho}\hat{A}]$.
+%%
+%%\begin{equation}
+%%\langle A\rangle = \textrm{Tr}[\hat{\rho}\hat{A}]
+%%\end{equation}
+%%
+
+%
+%Consequently, 
+%the decay properties of the Wannier functions 
+%are transferred to the real-space density matrix 
+%whose elements may be truncated 
+%beyond an appropriate cutoff 
+%radius $r_\textrm{cut}$ 
+%%
+
+
+{
+The other variational component 
+in \textsc{ONETEP} procedure 
+is the density-kernel ${\bf K}$~\cite{RevModPhys.32.335}, 
+which is found by 
+substituting the transformation in 
+Eq.~\eqref{eq:NGWF1}
+into the expression for the density-matrix 
+in Eq.~\eqref{eq:1_particle_dens_matrix1} 
+%
+\begin{equation}
+\rho(\br,\br')=\phi_\alpha(\br)K^{\alpha\beta}\phi_\beta(\br'). 
+\label{eq:dens_mat_ONETEP}
+\end{equation}
+%
+The density-kernel is, therefore, 
+a projection of the density-matrix  
+onto the space of localised NGWF duals
+%
+\begin{equation}
+K^{\alpha\beta}=\bra{\phi^\alpha}\hat{\rho}\ket{\phi^\beta}
+= \sum_i \braket{\phi^\alpha}{\psi_i} f_i \braket{\psi_i}{\phi^\beta}
+= \sum_i M_i^\alpha f_i M_i^{\dagger\beta}.
+\end{equation}
+%
+Invoking a cutoff radius $r_\textrm{cut}$ 
+on the spatial extent of the NGWFs, 
+such that spatial overlap between them 
+vanishes beyond a certain threshold, 
+thus translates to truncating the density-matrix 
+thereby making $\bf K$ a sparse matrix.
+%
+The information contained in $\bf K$ 
+then scales linearly with system size and 
+enables the inexpensive computation 
+of the density, 
+the {non-interacting band} energy, 
+as well as other quantities, 
+by means of simple matrix operations
+%
+\begin{equation}
+N=2S_{\alpha\beta}K^{\beta\alpha}
+\quad\mbox{and}\quad
+E=2K^{\beta\alpha}\bra{\phi_\alpha}\hat{H}_\textrm{KS}\ket{\phi_\beta}.
+\label{eq:ONETEP_quantities}
+\end{equation}
+%
+Hence, total-energy minimisation 
+according to the density-matrix   
+is instead performed with respect to the auxiliary variables, 
+%that quantify these terms according to Eq.~\eqref{eq:ONETEP_quantities}
+namely the NGWFs, 
+parameterised by the expansion coefficients $C_{\{m\},\alpha}$, 
+and the density-kernel ${\bf K}$.}
+%
+
+{
+The \textsc{ONETEP} procedure 
+thus comprises two nested optimisation loops, 
+controlled by the conjugate-gradient algorithm~\cite{hestenes1952methods}, 
+in which the ground-state total-energy 
+is located via minimisation with respect to 
+the NGWFs and density-kernel, 
+such that the density-matrix 
+remains idempotent, conserved 
+and commutes with the Hamiltonian.
+%\cite{PhysRevLett.79.1337}
+%
+The outer loop keeps 
+the density-kernel fixed, 
+while the real-space profile  
+of the NGWFs is optimised 
+by variational optimisiation 
+of the expansion coefficients 
+$C_{\{m\},\alpha}$~\cite{skylaris2005introducing,
+PSSB:PSSB200541457,HINE20091041,0953-8984-20-6-064209}.
+%
+The inner loop, meanwhile, 
+retains the form of the NGWFs 
+while the energy is minimised 
+with respect to the 
+density-kernel matrix-elements 
+using a variant of the LNV method~\cite{0953-8984-20-29-294207}.
+%
+The mathematical formalism 
+underlying the optimisation procedure 
+may be summarised by the following 
+construction, adopted from Ref.~\cite{o2011optimised}, 
+%
+\begin{align}
+E_0&=\min_n E[n] = \min_\rho E[\rho] \nonumber\\[0.25em]
+&=\min_\rho E\left[\rho(K^{\alpha\beta},\{\phi_\alpha\})\right] \nonumber \\[0.25em]
+&=\min_{K^{\alpha\beta},\{C_{\{m\},\alpha}\}}
+		E\left[K^{\alpha\beta},\left\{C_{\{m\},\alpha}\right\}\right] \nonumber \\[0.25em]
+&=\min_{\{C_{\{m\},\alpha}\}}
+		\varepsilon \left[\left\{C_{\{m\},\alpha}\right\}\right]; \nonumber \\[0.25em]
+\mbox{where}\quad  
+\varepsilon \left[\left\{C_{\{m\},\alpha}\right\}\right]
+&=\min_{K^{\alpha\beta}}
+		E\left[K^{\alpha\beta}; \left\{C_{\{m\},\alpha}\right\}\right].
+\end{align}}
+\vspace{-1em}
+
+
+%BZ SAMPLING
+\subsection{Brillouin zone sampling in {\sc ONETEP}}
+\label{sec:bz_sampling}
+
+{
+In the final section of this Chapter, 
+we will outline the  
+Brillouin zone sampling procedure 
+in {\sc ONETEP}.
+%
+{A rapidly growing number 
+of electronic structure simulations~\cite{doi:10.1063/1.4704546} 
+now} involve bulk or molecular crystals 
+that are defined by 
+an infinite, periodic, lattice.
+%
+The primitive lattice vectors $\{{\bf a}_i\}$, 
+which describe the primitive unit cell, 
+are then repeated 
+according to discrete translations 
+generated by 
+%
+\begin{equation}
+{\bf R} = \sum_{i=1}^3 n_i {\bf a}_i;
+\quad\mbox{with}\quad
+n_i \in \mathds{Z}, 
+\end{equation}
+to form the underlying Bravais lattice. 
+%
+By construction, 
+the Kohn-Sham potential 
+also has the same periodicity~\cite{ashcroft2005solid}, 
+where 
+%
+\begin{equation}
+V_\textrm{KS}(\br + {\bf R})=V_\textrm{KS}(\br).
+\end{equation}
+%
+This inherent translational symmetry 
+can be exploited 
+to reduce the number of unique 
+wave function solutions 
+of Eq.~\eqref{eq:ks_schroding_equation}.
+%
+Indeed, it can be shown that, 
+by virtue of the periodicity of the potential, 
+the KS wave functions 
+$\{\psi_n\}$ are simultaneous eigenstates 
+of the Hamiltonian and 
+translation operator $\hat{T}_{\bf R}$, 
+with eigenvalue $c(\br)=e^{i{\bk}\cdot{\br}}$, 
+such that 
+%
+\begin{equation}
+\hat{T}_{\bf R}\psi(\br) = \psi_n(\br + {\bf R}) 
+= e^{i{\bk}\cdot{\bf R}}\psi_n(\br).
+\end{equation}
+%
+Thus, we may label the 
+eigenstates $\psi_n(\br)$ 
+by an additional 
+set of quantum numbers ${\bk}$, 
+specifying the wave-vector.
+%
+This forms 
+the basis of Bloch's theorem~\cite{Bloch1929},
+which states that, 
+in a periodic crystal, 
+the electron wave function 
+can be written as 
+the product of a plane wave, 
+with momentum $\bk$, 
+and a periodic function $u_n(\br)$ 
+with the same periodicity as the lattice 
+%
+\begin{equation}
+\psi_{n,\bk}(\br)=e^{i{\bk}\cdot \br}u_n(\br)
+\quad\mbox{with}\quad
+u_n(\br+{\bf R})=u_n(\br).
+\end{equation}
+%
+The ${\bk}$-vector is constructed from 
+a set of reciprocal lattice vectors 
+$\{{\bf b}_i\}$ 
+generated from the Fourier transform of 
+the real-space Bravais lattice 
+%
+\begin{equation}
+{\bk}=\sum_{i=1}^3 c_i {\bf b}_i;
+\quad 
+c_i \in \mathds{R}
+\quad\mbox{with}\quad
+{\bf a}_i\cdot{\bf b}_j=2\pi\delta_{ij}.
+\end{equation}
+%
+It follows that wave functions that 
+differ by integer multiples of 
+reciprocal lattice vectors, 
+which describe the first Brillouin zone (BZ), 
+%
+\begin{equation}
+{\bf G}=\sum_{i=1}^3 m_i {\bf b}_i;
+\quad
+m_i \in \mathds{Z}, 
+\end{equation}
+%
+are equal modulo ${\bf G}$, 
+and therefore redundant beyond  
+the first BZ, as shown by
+%
+\begin{align}
+\psi_{n, {\bk+\bf G}}(\br)&=e^{i({\bk+{\bf G}})\cdot \br}u_n(\br)
+=e^{i{\bf G}\cdot \br}e^{i{\bk}\cdot \br}u_n(\br)\nonumber \\[0.5em]
+&=e^{i\sum_j{\bf a}_j\cdot {\bf b}_j}e^{i{\bk}\cdot \br}u_n(\br)  
+%=e^{i6\pi}e^{i{\bk}\cdot \br}u_n(\br) 
+=e^{i{\bk}\cdot \br}u_n(\br)
+=\psi_{n,\bk}(\br).
+\end{align}
+%
+Thus, an infinite number 
+of occupied wave functions 
+in an infinite, periodic crystal 
+may be represented by 
+a finite number of occupied 
+wave functions parameterised 
+by the wave-vectors $\bk$, 
+confined to the first Brillouin zone.}
+
+{
+The number of unique $\bk$-vectors,
+parameterising the solutions of the periodic system, 
+scales with the number of unit cells, 
+which become impossible to resolve 
+in the bulk limit.
+%
+However, 
+since the eigenvalues and wave functions 
+behave smoothly over the Brillouin zone~\cite{PhysRev.50.58}, 
+a weighted sampling of $\bk$-vectors 
+is sufficient to approximate the 
+continuous integration~\cite{PhysRevB.8.5747,PhysRevB.13.5188}. 
+%
+The magnitude of the 
+error introduced by 
+the discrete sampling 
+can be reduced, 
+but not necessarily {monotonically},  
+by increasing the $\bk$-point resolution.}
+
+{
+For aperiodic systems, 
+such as molecules or {defective} crystals,
+in which translational symmetry is broken, 
+Bloch's theorem becomes inapplicable.
+%
+To incorporate Bloch states 
+in finite systems, 
+it is {a common} practice to generate a 
+periodic supercell, 
+in which the molecule or defect 
+is sufficiently separated  
+(either by vacuum space or pristine crystal) 
+from its periodic images~\cite{PhysRevB.51.4014}.
+%
+The degree of electronic and orbital isolation
+is determined by an 
+appropriate convergence 
+of the total-energy 
+with respect to the 
+volume of the supercell $\Omega_\textrm{cell}$.}
+
+{
+Moreover, 
+for sufficiently large supercells, 
+such as those employed by {\sc ONETEP}, 
+the first Brillouin zone volume, 
+given by 
+%
+\begin{equation}
+\Omega_\textrm{1\textsuperscript{st} BZ} = \frac{(2\pi)^3}{\Omega_\textrm{cell}}
+\end{equation}
+%
+is sufficiently shrunk  
+such that the bands between 
+BZ boundaries flatten 
+and $\Gamma$-point 
+sampling alone is adequate, 
+{
+i.e., $\bk=0$, 
+whereby it is possible 
+to use real-valued wave functions~\cite{0953-8984-20-29-294207}}.
+%
+In this approach, 
+repeating the unit cell by a factor of $N_k$ 
+along each Bravais lattice direction 
+is analogous to sampling the original Brillouin zone
+on a regular grid of $N_k$ vectors 
+along each direction in reciprocal-space, 
+as is the approach prescribed 
+by most plane wave codes.}
+
+
+\section{Conclusion}
+{
+In this Chapter, 
+we introduced the fundamental principles 
+and incremental approximations 
+underpinning the widely successful 
+and highly versatile 
+approximate density-functional theory.
+%
+We discussed the principle developments, 
+namely, 
+the founding Hohenberg-Kohn theorems;
+the subsequent Kohn-Sham equations, 
+after which the development of approximate 
+exchange-correlation functionals 
+permitted the tractable solution of the Schr{\"o}dinger equation; 
+as well as the pseudopotential and PAW methods, 
+which {permit a more convenient treatment} 
+of the core states.}
+
+{
+Furthermore, 
+we highlighted the motivation for 
+developing linear-scaling methods 
+to facilitate large-scale electronic structure calculations, 
+and outlined the theoretical framework 
+behind the {\sc ONETEP} code.
+%
+We introduced 
+the fundamental convergence parameters 
+that govern the simulation process, 
+namely the supercell dimension   
+$N_1\times N_2\times N_3$, 
+which effectively emulates $\bk$-point sampling; 
+the grid-point resolution ${\br}_{\{m\}}$, 
+related to the kinetic energy cutoff;  
+and the NGWF cutoff radius $r_\textrm{cut}$.}
+
+{
+Finally, we briefly introduced 
+some important concepts 
+that will be addressed in greater detail 
+in later Chapters, 
+such as the self-interaction error 
+and the DFT+$U$ method, 
+which plays an important role 
+in increasing the accuracy and viability 
+of commercial DFT.}
+
+
+%We have so far outlined the 
+%underlying concepts central to  
+%linear-scaling {\it ab intio} simulation, 
+%i.e.,
+%the avoidance of $\mathcal{O}(N^3)$ 
+%operations incurred by a truncated density-matrix;
+%the $\Gamma$-point sampling 
+%afforded by a supercell simulation.
+%
+%It is difficult to understate 
+%the benefits the linear-scaling functionality 
+%of \textsc{ONETEP} has afforded 
+%to electronic structure calculations 
+%in the past decade.
+%
+{
+Over the years, 
+DFT has risen in prominence 
+and become one of the most 
+ubiquitous computational tools.
+%
+Its widespread applicability 
+is made possible due to the 
+prevalence of efficient codes and powerful hardware, 
+bolstered by timely, inexpensive and versatile methodologies, 
+which strike a reasonable balance between 
+accuracy and convenience 
+to suit a wide variety of requirements.}
+
+{
+DFT has {benefitted from} 
+%cut the teeth of  
+some of the best minds in science 
+and continues to 
+produce exciting developments 
+in emergent technologies, 
+such as 
+high-energy storage materials~\cite{Saal2013,0965-0393-21-7-074005}, 
+superconductors~\cite{PhysRevB.72.024545,PhysRevLett.94.037004}, 
+topological insulators~\cite{PhysRevLett.105.096404,PhysRevLett.106.016402,PhysRevB.82.235121}, 
+and 
+photovoltaic devices~\cite{PhysRevB.79.115126,doi:10.1021/nl0732777}, 
+to name a few.
+%
+It also features as a centre-piece 
+to ambitious scientific projects 
+such as the United States 
+Materials Genome Initiative~\cite{holdren2011materials}, 
+and the Open Quantum 
+Materials Database~\cite{Kirklin2015}.}
+
+{
+However, one of the fundamental difficulties
+that still limits the predictive capabilities of DFT, 
+is the many-body self-interaction error~\cite{PhysRevB.57.1505,cohen2008insights,PhysRevB.23.5048}, 
+introduced in section~\ref{sec:xc_functionals}, 
+which is 
+produced by the approximate nature of 
+the XC functionals,  
+and predominantly manifest 
+in systems exhibiting 
+strong electron correlation. 
+%
+We will explore this issue in detail 
+in Chapter~\ref{ch:self_interaction_error} 
+and discuss {some viable} solutions.
+%
+For a comprehensive discussion 
+on the history, development 
+and future prospects of DFT, 
+we refer the reader to 
+Refs.~\cite{CAPELLE2006,doi:10.1063/1.4704546,RevModPhys.87.897,cohen2008insights}.}
+

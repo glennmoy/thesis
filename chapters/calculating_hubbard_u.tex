@@ -1,0 +1,2688 @@
+
+\lett{T}{he effectiveness of methods} intended to 
+correct inherent inaccuracies in approximate DFT, 
+either by DFT+$U$, 
+constrained-DFT~\cite{PhysRevLett.53.2512,Sit2007107,doi10.1021/cr200148b} 
+or hybrid functionals~\cite{doi:10.1063/1.464304,PhysRevB.94.035140} etc., 
+depends largely on the accurate calculation 
+of parameters controlling the strength 
+of the corrective potentials.
+%
+%Automated methods, 
+%such as those employed by cDFT, 
+%{optimally-tuned range-separated hybrids, 
+%or Koopmans compliant functionals, 
+%can readily determine these parameters 
+%by optimisation algorithms}.
+%%
+%However, 
+%the inability to extend this formalism 
+%to the DFT+$U$ functionals targeting SIE, 
+%{as we demonstrated to be the case in} the previous Chapter, 
+%means that users must determine 
+%these parameters for themselves  
+%in advance of performing the primary calculation.
+%
+In this Chapter, 
+we will describe 
+the process of computing the Hubbard $U$ and $J$ 
+parameters from first principles in {\sc ONETEP}, 
+using an adaptation of 
+the acclaimed linear-response (LR) approach 
+of Cococcioni and de Gironcoli~\cite{PhysRevB.71.035105,PhysRevB.84.115108}.
+
+To date, there exists in the literature 
+a variety of methods for determining 
+the Hubbard $U$ parameter 
+in strongly-correlated systems.
+%
+Originally, 
+the Hubbard $U$ was determined via 
+semi-empirical fitting to experimental data, 
+which was
+typically spectral~\cite{HERZBERG1972425,PhysRevB.70.125426,:/content/aip/journal/jcp/127/24/10.1063/1.2800015,Morgan20075034}, 
+structural~\cite{PhysRevB.70.125426,PhysRevB.75.035115,:/content/aip/journal/jcp/127/24/10.1063/1.2800015}, 
+or energetic~\cite{PhysRevB.73.195107,C1EE01782A}, 
+and is a practice that continues in many studies to this day.
+
+This method, 
+while reasonably motivated, 
+is rather unfavourable in practice 
+as it interprets the Hubbard $U$ parameter 
+as an adjustable variable 
+and not as an intrinsic property of the system.
+%
+{
+Moreover, 
+tuning the $U$ parameter to reproduce 
+the electronic or optical gaps exactly is precarious, 
+since the KS eigenvalues are not intended for this purpose 
+and there is no guarantee that the SIE 
+will have been adequately resolved.}
+%
+This approach becomes particularly unviable when 
+the experimental data is insufficient  
+or difficult to measure.
+%
+If instead the Hubbard $U$ was calculated as a 
+variational ground-state density-functional property, even implicitly, 
+then DFT+$U$ becomes elevated 
+to the status of a fully variational first-principles method. 
+%
+
+%cLDA
+Early attempts to compute an \emph{ab initio} $U$ 
+for use in the Anderson-type Hubbard functional 
+in Eq.~\eqref{eq:hubbard1}, 
+began with taking the difference in the energy eigenvalues of ionic states, 
+for example~\cite{PhysRevB.43.7570} 
+%
+\begin{equation}
+U\approx\varepsilon_{3d\uparrow}\left(\frac{N+1}{2};\frac{N}{2}\right)-\varepsilon_{3d\uparrow}\left(\frac{N+1}{2};\frac{N}{2}-1\right).
+\end{equation}
+%
+From this perspective, 
+the $U$ parameter is determined 
+via a constrained-LDA (cLDA) 
+calculation~\cite{PhysRevB.38.6650, PhysRevB.39.1708, PhysRevB.39.9028, PhysRevB.41.514, PhysRevB.43.7570, PhysRevB.44.943, PhysRevB.49.6736, PhysRevLett.53.2512, PhysRevB.71.045103}, 
+where the correlated subspace occupancy is constrained 
+while artificially decoupled from the surrounding atom.
+%
+This method remained popular 
+for estimating Coulomb parameters for many years
+but tended to drastically over-estimate the $U$ values 
+because it neglected the screening effects
+of the surrounding environment.
+
+%RPA
+The random-phase approximation 
+(RPA)~\cite{PhysRevB.57.4364,PhysRevB.70.195104,PhysRevB.71.045103,PhysRev.85.338, PhysRev.92.626,0953-8984-12-11-307,PhysRevB.93.035133}, 
+%formulated within the GW approximation~\cite{PhysRev.139.A796}, 
+was later used and 
+circumvented this by allowing for 
+responses in both on-site and off-site electrons 
+as well as permitting a frequency-dependent $U(\omega)$ 
+to be calculated.
+%
+%cRPA
+This later evolved into the 
+{more accurate} constrained-RPA (cRPA) 
+approach~\cite{PhysRevB.74.125106, PhysRevB.77.085122, PhysRevB.80.155134, PhysRevB.83.121101}, 
+which excluded on-site transitions from 
+contributing to the $U$.
+%
+
+Other methods for calculating $U$ include
+the local density supercell impurity 
+approach~\cite{PhysRevB.33.8896}
+and the calculation of on-site Coulomb matrix elements 
+from maximally-localised Wannier 
+functions~\cite{PhysRevB.56.12847,PhysRevB.65.075103}.
+%however these, and the preceding strategies, 
+%will not be discussed in detail any further. 
+
+	
+%THE LINEAR-RESPONSE APPROACH
+\section{Overview of the linear-response method}
+\label{sec:linear_response_approach}
+
+The linear-response (LR) approach to calculating $U$ 
+was initially conceived by Pickett {\it et al}~\cite{PhysRevB.58.1201}, 
+and later developed by Coccocioni and de Gironcoli~\cite{PhysRevB.71.035105} 
+(who also extended the method the exchange parameter $J$~\cite{PhysRevB.84.115108}), 
+as an inexpensive method to be 
+implemented within the rotationally invariant 
+DFT+$U$ functional given in 
+Eqs.~\eqref{eq:dft+u_functional}~\&~\eqref{eq:dft+u+j_functional}.
+%
+In this formulation, 
+a uniform external potential shift 
+$\hat{V}_\textrm{ext} = \alpha \hat{P}$
+is applied to the electrons in the localised subspaces 
+and the $U$ parameter is determined 
+from the corresponding response functions, 
+including the effects of screening.
+
+
+As noted by the authors in Ref.~\cite{PhysRevB.71.035105}, 
+the SIE in strongly-correlated systems, 
+representative of an open quantum system
+ that does not interact with its bath for particle exchange, 
+is illustrated by the spurious curvature 
+in the total-energy  
+with respect to subspace occupancy, 
+which we discussed at length in Chapter~\ref{ch:self_interaction_error}.
+%
+Consequently, 
+their interpretation of the Hubbard $U$ parameter 
+is that of the measure of unphysical curvature exhibited in a system, 
+which is in keeping with its implementation 
+in Eq.~\eqref{eq:dft+u_functional}, 
+given by (suppressing site and spin index)
+%
+\begin{equation}
+\frac{d^2E_U}{dn^2}=-U.
+\end{equation}
+%
+The authors in Ref.~\cite{PhysRevB.71.035105} 
+make an important distinction 
+between the {\it interacting} and {\it non-interacting} curvatures 
+present in a system.
+%
+{
+The latter is a superfluous feature 
+that has nothing to do with the interacting curvature, 
+and so must be removed  
+to enable the reliable calculation of  $U$ values 
+for both solids and molecules.}
+%The latter is due to the hybridisation 
+%of {\it non-interacting} KS orbitals in extented solids, 
+%which produce physically meaningful fractional occupancies 
+%in the subspace, 
+%and should therefore not contribute 
+%the calculation of $U$.
+%
+{
+This observation was alluded to, 
+but initially absent, 
+in the original formulation~\cite{PhysRevB.58.1201}.}
+
+Inspired by the cLDA approach, 
+Cococcioni and de Gironcoli 
+postulated that the spurious curvature 
+can be accessed by cDFT calculations 
+on the local subspace responsible for SIE, 
+in accordance with target occupancies $\{q_I\}$ 
+and Lagrange multipliers $\{\alpha_I\}$
+%
+\begin{equation}
+E[\{q_I\}]=\min_{n({\br},\alpha_I)}\left\{E[n({\br})]+\sum_I\alpha_I(n_I-q_I)\right\}
+\label{eq:coc_linear_response1}.
+\end{equation}
+%
+In practice, however, 
+it is more feasible to re-parameterise 
+Eq.~\eqref{eq:coc_linear_response1} 
+in terms of the Lagrange multipliers $\{\alpha_I\}$, 
+and avoid performing cDFT calculations altogether 
+% 
+\begin{equation}
+E[\{\alpha_I\}]=\min_{n({\br})}\left\{E[n({\br})]+\sum_I\alpha_I(n_I-q_I)\right\}.
+\label{eq:coc_linear_response2}
+\end{equation}
+%
+The second derivative of Eq.~\eqref{eq:coc_linear_response2} 
+thus corresponds to a value of $U$ that is consistent with 
+its definition as the curvature 
+of the of total-energy with respect to occupation 
+%
+\begin{equation}
+\frac{d^2E[\{\alpha_I\}]}{d q_Jd q_I}
+=-\frac{d\alpha_I}{d q_J} = -\chi_{IJ}^{-1},
+\label{eq:coc_linear_response3}
+\end{equation}
+%
+where we have introduced the 
+{\it interacting} response function $\chi$.
+%
+However, the expression in Eq.~\eqref{eq:coc_linear_response3} 
+is inclusive of the curvature associated with 
+the re-hybridisation of the KS orbitals 
+in response to the applied potential.
+%
+We must therefore subtract this curvature, 
+given in terms of the 
+{\it non-interacting} response $\chi_0$
+corresponding to the KS system $E_0$,
+to ensure a $U$ value that 
+accurately reflects the magnitude  
+of on-site Coulomb {and XC} interaction.
+%
+Hence,  $U$ is evaluated 
+according to the following Dyson equation 
+%
+\begin{equation}
+U=+\frac{d^2E_0[\{q_I\}]}{d q_I^2}-\frac{d^2E[\{q_I\}]}{d q_I^2}
+=(\chi_0^{-1}-\chi^{-1})_{II}.
+\label{eq:dyson_equation1}
+\end{equation}
+%
+
+The non-interacting response 
+present in Eq.~\eqref{eq:dyson_equation1} 
+is a, {hitherto}, ambiguous, yet crucial, quantity 
+in determining the calculation of $U$.
+% 
+In Ref.~\cite{PhysRevB.71.035105}, 
+it is interpreted as the reorganisation of charge 
+subject to the potential shift on the subspace 
+without allowing the self-consistent screening to take effect.
+%
+In practice then, 
+it is then acquired after the first iteration in 
+the self-consistent calculation; 
+subsequent to the initial response of the density, 
+but prior to the Hamiltonian being updated.
+
+
+The LR method just described 
+has become a widely popular approach~\cite{QUA:QUA24521,:/content/aip/journal/jcp/133/11/10.1063/1.3489110,0953-8984-22-5-055602,PhysRevB.75.035115,Lee2012,PhysRevLett.106.118501}
+to calculating Coulomb interaction parameters 
+as it allows the parameters to be 
+evaluated from a small set of inexpensive DFT calculations.
+%
+The mathematical elegance 
+and practical simplicity of the LR approach 
+therefore presents an ideal foundation 
+on which to construct the 
+evaluation of $U$ parameters in 
+a direct-minimisation code such as {\sc ONETEP}.
+%
+However, 
+as we will discuss in the following section, 
+this type of formalism can not be directly accommodated 
+in codes that utilise direct-minimisation 
+as a means to locate the KS ground-state, 
+and an appropriate adaptation 
+to the LR method must be made 
+to generalise its application.
+
+
+%linear-response IN ONETEP
+\section{Construction of a variational linear-response approach}
+\label{sec:variational_linear_response}
+
+The most problematic aspect of extending the LR approach 
+to\break direct-minimisation codes lies in the calculation of 
+the non-interacting response function $\chi_0$.
+%
+Given that codes like these do not update 
+the density and Hamiltonian iteratively\footnote{
+That is, within nested loops in which  
+the density is optimised while the Hamiltonian is kept fixed, 
+followed by the optimisation of the Hamiltonian where the density is fixed.}, 
+but do so simultaneously throughout the calculation, 
+it is inefficient and extraneous 
+to calculate $\chi_0$ 
+in the fashion described above.
+%
+We are therefore motivated to seek 
+a linear-response formalism for the 
+Hubbard $U$ that is readily compatible with 
+direct-minimisation DFT solvers, 
+particularly for linear-scaling DFT+$U$~\cite{PhysRevB.85.085107}.
+%
+The principal challenge lies in the 
+evaluation of the non-interacting response, 
+the derivation of 
+which we shall now outline.
+
+%THE NON-INTERACTING RESPONSE
+\subsection{The non-interacting response}
+
+If we perturb the subspace 
+of a given system by an external potential 
+$\delta V_\textrm{ext}({\br})$, 
+the resulting variation in the density is given, 
+to first order, in terms of the response function 
+$\chi(\br,\br')$, such that 
+%
+\begin{align}
+&\delta n({\br})=\int \chi({\br}, {\br'}) \delta V_\textrm{ext}({\br'})\, d{\br'} \quad\mbox{where}\quad
+\chi({\br}, {\br'})=\frac{\delta n(\br)}{\delta V_\textrm{ext}(\br')}.
+\end{align}
+%
+For the same perturbation, 
+we can define a second response function 
+$\chi_\textrm{KS}({\br}, {\br'})$
+in terms of the change in the 
+KS potential $V_\textrm{KS}(\br)$
+%
+\begin{align}
+&\delta n({\br})=\int \chi_\textrm{KS}({\br}, {\br'}) \delta V_\textrm{KS}({\br'})\, d{\br'}\quad\mbox{where}\quad
+\chi_\textrm{KS}({\br}, {\br'})=\frac{\delta n(\br)}{\delta V_\textrm{KS}(\br')}.
+\label{eq:non_interacting_response1}
+\end{align}
+
+
+Following the discussion in Chapter~\ref{ch:qm_simulation}, 
+the change in KS potential may be 
+conveniently expressed, to first order, as the sum 
+of changes in its interacting constituents, namely the 
+Hartree,  XC, and the external potential  
+$\delta V_\textrm{KS} = \delta V_\textrm{Hxc} + \delta V_\textrm{ext}$.
+%
+Moreover, any perturbation to the potential 
+may be expressed in terms of the interaction kernel, 
+given by 
+%
+\begin{align}
+&F_\textrm{Hxc}({\br'},{\br''})=\frac{\delta V_\textrm{Hxc}({\br'})}{\delta n({\br''})}, 
+\nonumber \\[0.5em]
+\mbox{such that}\quad &
+\delta V_\textrm{Hxc}(\br')=\int F_\textrm{Hxc}({\br'},{\br''})\delta n({\br''})\, d{\br''}.
+\label{eq:non_interacting_response2}
+\end{align}
+
+Combing Eqs.~\eqref{eq:non_interacting_response2}~\&~\eqref{eq:non_interacting_response1} 
+then yields the variation in the density 
+in terms of KS quantities 
+%
+\begin{align}
+\delta n({\br})
+&=\int \chi_\textrm{KS}({\br}, {\br'}) \left[\delta V_\textrm{Hxc}({\br'})+\delta V_\textrm{ext}({\br'})\right]\, d{\br'} \\[0.5em]
+&=\iint \chi_\textrm{KS}({\br}, {\br'''}) F_\textrm{Hxc}({\br'''},{\br''})\delta n({\br''})\, d{\br''} 
+\, d{\br'''}\
++\int \chi_\textrm{KS}({\br}, {\br'}) \delta V_\textrm{ext}({\br'})\, d{\br'}, \nonumber
+\end{align}
+%
+where in the double integral 
+we have relabeled the dummy variables 
+$\br'\to \br'''$ 
+for later convenience.
+%
+We can now equate this expression to 
+Eq.~\eqref{eq:non_interacting_response1}, 
+where the variation in the density is given 
+in terms of the interacting quantities, 
+and substitute the same relation for $\delta n({\br''})$  
+in the double integral.
+%
+We then remove the integral over $d\br'$ 
+and divide across by $\delta V_\textrm{ext}(\br')$ 
+for brevity, thereby giving 
+%
+\begin{equation}
+\chi({\br}, {\br'})= \chi_\textrm{KS}({\br}, {\br'}) +\iint \chi_\textrm{KS}({\br}, {\br'''}) F_\textrm{Hxc}({\br'''},{\br''})\chi({\br''}, {\br'})\,d{\br''} \, d{\br'''} 
+\end{equation}
+%
+which relates 
+$\chi$, $\chi_\textrm{KS}$ and $F_\textrm{Hxc}$ 
+by a Dyson-like equation where 
+we identify the non-interacting response
+function as none other than the KS response
+%
+\begin{equation}
+\chi_0(\br,\br)\equiv\frac{\delta n(\br)}{\delta V_\textrm{KS}(\br)}.
+\end{equation}
+%
+
+This interpretation of $\chi_0$, 
+in terms of the KS response to the perturbation, 
+can now be readily computed 
+in a variational procedure 
+as easily as the interacting response $\chi$. 
+%
+Let us now proceed to constructing a definition of $U$ 
+in accordance with the desired properties, 
+which will require an appropriately projected interaction kernel. 
+%
+
+
+
+%KERNEL SELECTION
+\subsection{Choice of projection for the interacting kernel}
+
+In this work, 
+our definition of $U$ for a given subspace 
+is derived from  its original interpretation, given in 
+Eq.~\eqref{eq:interaction_parameters}, 
+i.e., that of the {net on-site Coulomb and XC} interactions 
+acting within it.
+%
+More specifically, 
+we seek terms coupling to the 
+subspace density matrices in Eq.~\eqref{eq:dft+u_functional} 
+up to order $( n_i^{I} )^2$, 
+and therefore only consider 
+an interacting kernel like
+$\hat{f}_\textrm{int} = \delta^2 E_\textrm{int} / \delta \hat{\rho}^2$, 
+and not terms related to 
+$\hat{g}_\textrm{int} = \delta^3 E_\textrm{int} / \delta \hat{\rho}^3$, 
+or higher.
+%
+Here, 
+$E_\textrm{int}$ comprises comprises 
+the Hartree, XC, and any other electronic interaction terms.
+
+Crucially, 
+we require only the interactions  
+that arise due to density variations within a subspace 
+to contribute to  
+$\hat{f}_\textrm{int}$, 
+and so an appropriate projection must be chosen.
+%
+Finally, our formulation of $U$ must comply with  
+the convention of correcting the many-body SIE  
+by subtracting the individual one-electron SIE  
+of each eigenstate of the subspace density-matrix. 
+%
+It should therefore not scale extensively with 
+the subspace eigenvalue count $\mathrm{Tr} [ \hat{P} ]$ 
+and must be appropriately averaged.
+%
+In order to illustrate the above requirements, 
+let us consider some candidate formulae for Hubbard 
+$U$ parameters which do not meet them.
+
+
+%TOTAL DERIVATIVES
+\subsubsection{Simple curvature from total derivatives of the energy}
+
+Immediately, we may rule out 
+the formulation 
+proposed by Pickett and co-workers~\cite{PhysRevB.58.1201}, 
+in which the $U$ parameter is calculated 
+from the curvature of the total-energy 
+with respect to total occupancy\footnote{$\mathcal{U}$ 
+is used to distinguish incorrect formulae 
+from the correct one, which are denoted $U$.} 
+%
+\begin{align}
+\mathcal{U}=\frac{d^2E}{dN^2}=-\frac{d\alpha}{dN}=-\chi 
+\quad\mbox{where}\quad
+N=\textrm{Tr}\left[\hat{n}\right].
+\end{align}
+% 
+As discussed  in Ref.~\cite{PhysRevB.71.035105}, 
+this term fails to account for the non-interacting 
+contribution arising from hybridisation of charge 
+and is thus an inappropriate starting point.
+
+Consider instead the curvature of 
+just the interaction energy   
+%
+\begin{equation}
+\mathcal{U}=\frac{d^2 E_\textrm{int}}{ d  N^{2}}
+\quad\mbox{where}\quad
+E_\textrm{int}=E_\textrm{Hxc}\equiv E_H+E_\textrm{xc}.
+\end{equation}
+%
+However, the reasons for its 
+non-suitability are quite subtle, 
+which relate to the fact that the Hellman-Feynman theorem 
+cannot be applied to $E_\textrm{int}$ alone.
+%
+Therefore, the first total derivative of $E_\textrm{int}$ 
+with respect to $N$ is given by 
+%
+\begin{equation}
+\frac{dE_\textrm{int}}{dN} = \frac{\partial E_\textrm{int}}{\partial N} 
++ \textrm{Tr}\left[ \frac{\delta E_\textrm{int}}{\delta \hat{\rho}} \frac{d \hat{\rho}}{ d N} \right]
+= \textrm{Tr}\left[ \hat{V}_\textrm{int}\frac{d \hat{\rho}}{ d N} \right],
+\end{equation}
+%
+yielding a vanishing partial derivative 
+(due to no explicit $N$-dependence in $E_\textrm{int}$), 
+but also a term proportional to 
+the interaction potential 
+$\hat{V}_\textrm{int}$.
+%
+This term is screened with respect to the bath, 
+since 
+$d \hat{\rho} / d N$ 
+is coupled to the external potential
+$\hat{V}_\textrm{ext} = \alpha \hat{P}$.
+%
+The second total derivative
+%
+\begin{equation}
+\frac{d^2 E_\textrm{int}}{dN^2}=\textrm{Tr}\left[\frac{d\hat{V}_\textrm{int}}{dN}\frac{d \hat{\rho}}{d N}+\hat{V}_\textrm{int}\frac{d^2 \hat{\rho}}{d N^2}\right]
+\end{equation}
+%
+incorporates screening again, 
+and the resulting twice-screened objects 
+have no physical interpretation 
+and so this formulation is also omitted.
+
+%FUNCTIONAL DERIVATIVES
+\subsubsection{Curvature from functional derivatives of the energy} 
+
+One may then suggest taking the curvature of the 
+interaction kernel projected onto the subspace instead, 
+which is denoted by 
+%
+\begin{equation}
+\mathcal{U} = \hat{P}\frac{\delta^2 E_\textrm{int}}{\delta \hat{n}^{ 2}} \hat{P}  = \hat{P} \hat{f}_\textrm{int} \hat{P}.
+\end{equation}
+%
+However, 
+this interaction is now bare of potentially 
+substantial screening of density-matrix variations 
+outside the subspace, 
+and also makes an unsuitable 
+starting point for measuring of many-body SIE.
+%
+
+
+This problem is the opposite, in a sense, to that of
+$ d^2E_\textrm{int}/dN^2$, 
+from which one may surmise the 
+correct definition is an intermediate case, 
+where screening effects due to the complement 
+of the subspace at hand should be incorporated, but only once.
+%
+In other words, we require that $U$ 
+should be screened with respect to the bath, 
+yet remain bare within the subspace.
+%
+This motivates us to work not from the interacting energy,  
+but  from the interacting potential, i.e., 
+to start from the unscreened functional derivative
+of the interacting energy, 
+and to then differentiate that object by $N$.
+
+
+% TOTAL DERIVATIVE OF UNSCREEND POTENTIAL
+\subsubsection{Total derivative of the unscreened potential}
+
+Since the functional derivative 
+is defined as a generalised partial derivative, 
+the interaction term in the KS potential 
+%
+\begin{equation}
+\hat{V}_\textrm{int} = \frac{\delta E_\textrm{int}}{ \delta \hat{\rho}}
+\end{equation}
+%
+ is bare of screening, 
+ as is its subspace projection 
+%
+\begin{equation}
+\hat{P} \hat{V}_\textrm{int} \hat{P} 
+= \hat{P}\left( \frac{ \delta E_\textrm{int}}{ \delta \hat{n} }\right) \hat{P}.
+\end{equation}
+%
+The object is then described by 
+the average total derivative of 
+the interacting potential, 
+given by
+%
+\begin{equation}
+\mathcal{U}=\textrm{Tr} \left[ \hat{P} \frac{d \hat{V}_\textrm{int}}{ d \hat{n}} \hat{P}\right] /
+\textrm{Tr} \left[  \hat{P} \right]^{2}, 
+\end{equation}
+%
+seems to fulfil many of the requirements 
+of a valid Hubbard parameter, 
+in that it is once-screened, 
+non-extensive and subspace-averaged.
+
+In practice, however, the screened kernel 
+$ d \hat{V}_\textrm{int} / d \hat{n} $ 
+is arduous to calculate,
+even in orbital-free density-functional theory.
+%
+More importantly, 
+it includes screening effects due to 
+density-matrix fluctuations within the subspace, 
+which makes it unsuitable for quantifying 
+the bare subspace interaction we 
+intend to correct with DFT+$U$.
+%
+
+This is easily remedied by instead 
+taking the derivative with respect 
+to the total occupancy $N$, 
+and finally defining 
+%
+\begin{align}
+U \equiv \frac{d V_\textrm{int} }{d  N},
+ \quad \mbox{where}\quad
+V_\textrm{int} \equiv \frac{ \textrm{Tr} [\hat{V}_\textrm{int} \hat{P}]}{ \textrm{Tr} [  \hat{P} ] }
+\label{eq:u_definition}
+\end{align} 
+%
+as the conveniently calculated, non-extensive,
+subspace-averaged interaction potential.
+%
+To illustrate this interpretation, 
+it is instructive to represent $U$ in terms of  
+{approximations to the scalar {\it subspace-screened}} 
+parallel and anti-parallel interactions, denoted 
+$F^{\sigma\sigma}$ and $F^{\sigma\bar{\sigma}}$, 
+respectively\footnote{{The distinction is made 
+to avoid confusion with the subspace-bare interaction kernels 
+denoted by $F^{\sigma\sigma'}(\br,\br')=\delta V^\sigma(\br)/\delta n^{\sigma'}(\br')$.}}.
+%
+Let us expand Eq.~\eqref{eq:u_definition} 
+in terms of the {total} derivatives 
+over the spin-dependent densities  
+%
+\begin{align}
+U\equiv\frac{dV_\textrm{int}}{dN}&
+%=\frac{dV_\textrm{int}}{dN}
+=\frac{1}{2}\left(\frac{dV_\textrm{int}^\uparrow}{dN}+\frac{dV_\textrm{int}^\downarrow}{dN}\right)\nonumber \\[0.75em]
+&=\frac{1}{2}\left(\frac{d V_\textrm{int}^\uparrow}{d n^\uparrow}\frac{dn^\uparrow}{dN}
++\frac{d V_\textrm{int}^\uparrow}{d n^\downarrow}\frac{dn^\downarrow}{dN}+
+\frac{d V_\textrm{int}^\downarrow}{d n^\downarrow}\frac{dn^\downarrow}{dN}+
+\frac{d V_\textrm{int}^\downarrow}{d n^\uparrow}\frac{dn^\uparrow}{dN}\right)\nonumber \\[0.75em]
+&=\frac{1}{2}\left(F_\textrm{int}^{\uparrow\uparrow}\frac{dn^\uparrow}{dN}
++F_\textrm{int}^{\uparrow\downarrow}\frac{dn^\downarrow}{dN}+
+F_\textrm{int}^{\downarrow\downarrow}\frac{dn^\downarrow}{dN}+
+F_\textrm{int}^{\downarrow\uparrow}\frac{dn^\uparrow}{dN}\right)\nonumber \\[0.75em]
+\Rightarrow F^{\hat{P}}_\textrm{Hxc}
+&=\frac{1}{4}\left(F_\textrm{int}^{\uparrow\uparrow}+F_\textrm{int}^{\uparrow\downarrow}
++F_\textrm{int}^{\downarrow\downarrow}+F_\textrm{int}^{\downarrow\uparrow}\right). 
+\label{eq:u_interaction}
+\end{align}
+%
+In the last line we have defined the 
+interaction kernel $F^{\hat{P}}_\textrm{Hxc}$ 
+as the approximation to the screened, 
+net, average electronic interaction 
+acting within the subspace 
+due to {\it all} spin interactions, 
+using the expressions
+%
+\begin{align}
+n^\uparrow=\frac{1}{2}(N+M)
+\quad&\mbox{and}\quad
+n^\downarrow=\frac{1}{2}(N-M)
+\quad \Rightarrow\quad
+\frac{dn^\uparrow}{dN}&=\frac{dn^\downarrow}{dN}=\frac{1}{2}.
+\end{align}
+%
+Thus, 
+$U$ may be similarly defined as the 
+net, average electronic interaction 
+acting within the subspace 
+due to {\it all} spin interactions.
+%
+Finally, 
+since the uniform potential $\alpha$ 
+used in the linear-response method 
+induces no density-variations 
+within the subspace to first-order
+except for the uniform shift, 
+the screening within the subspaces is effectively suppressed, 
+similar to the  cRPA 
+approach~\cite{PhysRevB.74.125106,PhysRevB.77.085122,PhysRevB.80.155134}.
+
+
+{In practice,
+the external potential is applied by 
+a uniform shift of magnitude $\alpha$ 
+to all electrons in the subspace, 
+such that 
+%by the idempotency of $\hat{P}$, 
+%
+\begin{equation}
+d V_\textrm{ext}=\frac{\textrm{Tr}[d \hat V_\textrm{ext} \hat P]}{\textrm{Tr}[\hat P]} 
+=\frac{\textrm{Tr}[ d \alpha \hat P \hat P]}{\textrm{Tr}[\hat P]} = d \alpha.
+\end{equation}}
+%
+Therefore, 
+for a single-site model 
+incorporating a scalar $U$, 
+Eq.~\eqref{eq:u_definition}
+ may be derived using the Dyson equation in 
+Eq.~\eqref{eq:dyson_equation1} 
+ as follows
+%
+\begin{align}
+U\equiv \chi_0^{-1}-\chi^{-1}
+=\left(\frac{dN}{dV_\textrm{KS}}\right)^{-1}-\left(\frac{dN}{d\alpha}\right)^{-1} 
+= \frac{dV_\textrm{Hxc}}{dN}
+=F_\textrm{Hxc}, 
+\label{eq:dyson_equation2}
+\end{align}
+%
+using the interacting and non-interacting response functions
+%
+\begin{align}
+&\chi=\frac{d\alpha}{dN}
+\quad\mbox{and}\quad
+\chi_0=\frac{dV_\textrm{KS}}{dN}
+\quad\mbox{where}\quad
+V_\textrm{KS} \equiv \frac{\textrm{Tr}  [\hat{V}_\textrm{KS} \hat{P}]}{ \textrm{Tr}[ \hat{P} ]}. 
+\end{align}
+%
+
+
+Hence, we have derived 
+the relevant expression for the Hubbard $U$ 
+to be determined from a variational procedure.
+%
+Moreover, 
+the Dyson equation above in 
+Eq.~\eqref{eq:dyson_equation2}, 
+may be readily extended to calculate 
+long-range, inter-subspace parameters $V$~\cite{0953-8984-22-5-055602}, 
+and their corresponding Hubbard $U$ values, 
+by constructing the matrix response functions~\cite{PhysRevB.58.1201}
+$\chi^{IJ}$ and $\chi_0^{IJ}$.
+
+
+
+%COMPARABILITY OF METHODS
+\subsection[{Comparing the SCF and variational linear-response methods}]{Comparing the SCF and variational\break linear-response methods}
+
+In this section, 
+we shall digress for a moment to discuss 
+the technical differences between the 
+SCF LR method introduced in Ref.~\cite{PhysRevB.71.035105}, 
+and the variational adaptation just described.
+
+Insofar as the LR method has been applied 
+in both scenarios, 
+the SCF~\cite{PhysRevB.71.035105} 
+and variational methods are identical 
+in terms of their applied external perturbation $\alpha$, 
+the use of the Dyson equation, 
+and issues surrounding DFT+$U$ 
+population analysis choice and convergence. 
+%
+They are also equally convenient for use 
+with SCF-type codes, 
+however, the variational approach 
+is much more convenient  for 
+use with direct-minimisation solvers.
+%
+They are also perfectly identical 
+in their calculation of  the interacting response $\chi $, 
+with the primary difference relating to the 
+calculation of the non-interacting response $\chi_0$ 
+(at least formally, but the mathematical 
+differences are as yet unexplored).
+
+In the SCF LR procedure, 
+$\chi_0$ is calculated following the first step 
+of the SCF cycle, 
+which relies, by construction, 
+upon a non-ground-state density 
+for each given external parameter $\alpha$.
+%
+An important consequence of this practice is that 
+the SCF non-interacting response $\chi_0=-dV_\textrm{ext}/dn_0$  
+is calculated from the total-derivative 
+of the external potential with respect to the non-converged density $n_0$, 
+which does not correspond to the ground-state of the system.
+{
+Consequently, 
+the SCF Hubbard $U$ is not 
+a property that can be derived 
+from the ground-state density 
+as a function of the external potential, 
+without reference to the eigensystem 
+of the KS Hamiltonian.}
+%a ground-state 
+%property of the unperturbed ground-state
+%density, but instead an excited-state property 
+%dependent on the eigensystem 
+%of the non-interacting KS Hamiltonian.
+%
+Thus, 
+since the SCF Hubbard $U$ 
+cannot be regarded as a purely ground-state density-functional property, 
+the total-energies computed from the 
+DFT+$U$ calculations are not necessarily so either.
+%
+This has important consequences 
+for the comparability of total-energies 
+between various crystallographic 
+or molecular structures with differing 
+Hubbard $U$ values,
+and the validity of thermodynamic calculations 
+based on DFT+$U$, 
+which remains a challenging 
+endeavour~\cite{doi:10.1021/cm702327g,CapdevilaCortada201558,PhysRevB.85.155208,PhysRevB.84.045115,PhysRevB.85.115104,PhysRevB.90.115105}.
+
+
+Conversely, in the variational procedure above, 
+{\it both} $\chi$ and $\chi_0$, 
+given in Eq.~\eqref{eq:dyson_equation2}, 
+are calculated at the end 
+of the minimisation procedure 
+from the same set of 
+constrained ground-state 
+densities defined by $\alpha$.
+%
+As a result, 
+$\chi$, $\chi_0$, and the corresponding $U$ value 
+are all derived from the ground-state density of the system.
+%
+This is a promising first step towards 
+implementing DFT+$U$ with the 
+calculation of thermodynamical properties 
+and  we will return to address this issue further 
+in the next Chapter.
+
+
+%GLOBAL VS LOCAL CURVATURE
+\subsection{The subspace contribution to SIE: global vs local curvatures}
+
+A further point to address is the important distinction between  
+the total many-body SIE of a system, 
+and that stemming from a localised subspace.
+%
+The former pertains to the 
+addition or removal of electrons in a system, 
+while the latter is measured as a result 
+of redistribution of charge in a system, 
+albeit with the caveat that the local subspace 
+weakly interacts with the surrounding environment.
+%
+In both cases, 
+it relates to the deviation in 
+piece-wise linear behaviour in total-energy, 
+either with respect to total particle number, 
+or subspace occupancy, respectively.
+
+With the application of the DFT+$U$ functional, 
+the aim is to correct the former as much as possible 
+by treatment of the latter on a per-electron basis, 
+and is assumed to be precise in the atomic limit, 
+based on the conservation of total particle number 
+and dominance of local interactions. 
+%
+It is therefore most effective when the 
+subspace, or {\it local}, SIE composes    
+a large portion of the {\it global} SIE, 
+adopting the terminology from 
+Ref.~\cite{:/content/aip/journal/jcp/145/5/10.1063/1.4959882}. 
+
+Consider for a moment the local SIE 
+arising from a strongly-correlated subspace, 
+which may be computed from  
+the integral of the interacting potential 
+over the subspace occupancy 
+up to its ground-state value $N_0$
+%
+\begin{equation}
+E^\textrm{SIE}_\textrm{local}=\int_0^{N_0} dN'\, V_\textrm{int}(N').
+\end{equation}
+%
+A change of variables allows us 
+to compute this instead as the 
+energy expended in 
+depleting the subspace of charge 
+from its ground-state
+%
+\begin{align}
+E^\textrm{SIE}_\textrm{local}
+&=-\int_0^\infty d\alpha\, V_\textrm{int}(N'(\alpha)) \frac{dN'}{d\alpha}\nonumber\\[0.5em]
+&=\int_0^\infty d\alpha\, V_\textrm{int}(N'(\alpha))\left(\left.\frac{d^2E_\textrm{total}}{dN'^2}\right|_{N'(\alpha)}\right)^{-1},
+\end{align}
+%
+where in the last line we have used the relation in 
+Eq.~\eqref{eq:coc_linear_response3}, 
+to connect the expression with the global 
+curvature of the constrained total-energy $E_\textrm{total}$.
+
+The curvature of $E^\textrm{SIE}_\textrm{local}$ 
+in a single-site model, 
+while not implemented in practice, 
+is the term measured by $U$
+%
+\begin{equation}
+\frac{d^2E^\textrm{SIE}_\textrm{local}}{dN^2}=U
+\end{equation}
+%
+and not, as we have discussed, 
+the curvature of the total-energy
+%
+\begin{equation}
+\frac{d^2E_\textrm{total}}{dN^2}=-\chi^{-1}.
+\end{equation}
+%
+It follows that the difference between these quantities 
+returns the positive-definite non-interacting 
+inverse response $\chi_0^{-1}$
+%
+\begin{align}
+\frac{d^2(E_\textrm{total}-E^\textrm{SIE}_\textrm{local})}{dN^2}
+&=-\chi^{-1}-U=-\chi_0^{-1} \geq 0\nonumber\\[0.5em]
+\Rightarrow\quad&
+\frac{d^2E_\textrm{total}}{dN^2}\geq \frac{d^2E^\textrm{SIE}_\textrm{local}}{dN^2}.
+\end{align}
+%
+Thus, the global energy curvature 
+with respect to subspace occupancy,
+is shown to be at least 
+as large as the local energy curvature, 
+subject to particle number conservation.
+%
+The above result is heuristically analogous 
+to the comprehensive study by Kulik {\it et al.} in 
+Ref.~\cite{:/content/aip/journal/jcp/145/5/10.1063/1.4959882}, 
+in which it was rigorously proven that 
+a $+U$ correction, 
+while intended to mitigate the local SIE, 
+cannot, at the very least, increase the global SIE.
+
+%ONE-ELECTRON TEST CASE: H2+
+\subsection{A one-electron test case: H$_2^+$}
+
+To illustrate the efficacy of the 
+variational LR approach described above, 
+let us consider its application 
+in treating the SIE present in the 
+binding energy of H$_2^+$.
+%
+Calculations to determine the $U$ values 
+were performed using the 
+calculation parameters outlined in 
+Chapters~\ref{ch:qm_simulation}~\&~\ref{ch:self_interaction_error}.
+% 
+The external potential $\alpha$ 
+was varied between $\pm 0.1$~eV 
+in intervals of $0.05$~eV 
+and applied to one atom only, 
+while the other acted as the electronic bath.
+%
+The $U$ values were then computed 
+according to Eq.~\eqref{eq:u_definition} 
+for all bond-lengths,  
+as shown in Fig.~\ref{fig:h2+_u_values}, 
+and compared to the values required to correct 
+the PBE total-energy $U_\textrm{int}$,  
+which were estimated from the linear interpolation 
+of the various PBE+$U$ binding energies  
+presented in Fig.~\ref{fig:h2+_dft+u_total_energy} 
+with the exact binding energy.
+%
+
+We see from Fig.~\ref{fig:h2+_u_values} 
+that the calculated $U$ parameters  
+span a large range of values between -5~eV and 8~eV 
+and broadly match the behaviour of $U_\textrm{int}$, 
+particularly in the dissociation limit.
+%
+For short bond-lengths, however,
+the comparison breaks down 
+due to large subspace overlap, 
+charge spillage and inappropriate population analysis.
+%
+Remarkably, 
+we also see that $U$ attains negative values for $r<2$~a$_0$, 
+which implies that the charge in this regime is over-localised 
+according to the response functions.
+
+Furthermore, 
+the calculations to determine $U$ 
+were found to remain highly linear 
+across all bond-lengths 
+for this particular system and methodology.
+%
+A typical example of such a calculation, 
+at a bond-length of 4~a$_0$,
+is presented in the inset of Fig.~\ref{fig:h2+_u_values}, 
+which shows a clear linear relationship 
+between $V_\textrm{int}$ and $N$ 
+with only 5 data points.
+%
+The slope of the resulting linear fit 
+$dV_\textrm{int}/dN$, 
+corresponding to the variational LR formula for $U$, 
+results in $U=4.840\pm 0.006$~eV, 
+which is accompanied by very small fitting errors.  
+%
+%
+%\begin{figure}[th!]
+%\centering
+%\includegraphics[height=0.494\textwidth]{images/h2+_alpha.pdf}
+%\caption[Example of variational linear-response calculation for $U$]
+%{The interacting response $V_\textrm{int}$ 
+%against total subspace occupancy $N$ 
+%of the perturbed atom $H$ 
+%at 4~a$_0$ bond-length. 
+%%
+%The variational linear-response $U=dV_\textrm{int}/dN$ 
+%results here in $U=4.840\pm0.006$~eV.}
+%\label{fig:h2+_alpha_calculation}
+%\end{figure}
+%
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/h2+_u_values.pdf}
+\caption[Variational linear-response $U$ values calculated for dissociating H$_2^+$]
+{Variational linear-response $U$ values 
+calculated for dissociating H$_2^+$
+compared to the $U_\textrm{int}$ values 
+required to correct the PBE binding energy 
+estimated from interpolating with the 
+exact binding energy.}
+\label{fig:h2+_u_values}
+\end{figure}
+ 
+%
+{We then applied the calculated $U$ values to both atoms and, 
+maintaining a symmetric charge density},
+we computed the PBE+$U$ binding curve shown in 
+Fig.~\ref{fig:h2+_pbe+u} below.
+%
+{
+Here,
+we see a marked improvement over the bare PBE curve, 
+for which the DFT+$U$ functional 
+resolves the total-energy to appreciable accuracy across all bond-lengths 
+and provides qualitative agreement with the exact curve, 
+thereby demonstrating that DFT+$U$ is an effective scheme 
+for the treatment of one-electron SIE.}
+
+{
+Crucially, the improvement continues into the dissociation limit, 
+at which point the two 1$s$ orbitals, 
+used to define the Hubbard subspaces, 
+overlap and spill charge minimally, 
+such that the population analysis becomes ideal.
+%
+Furthermore, 
+the weakening inter-atomic interaction becomes 
+increasingly ideal for the application of DFT+$U$ 
+in this limit.
+%
+This shows that our method for calculating $U$ values 
+corresponds sufficiently with the necessary correction.}
+
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/h2+_pbe+u.pdf}
+\caption[PBE+$U$ binding curve of H$_2^+$ with linear-response $U$]
+{The calculated PBE+$U$ binding curve of H$_2^+$ (blue dashed)
+with $U$ calculated from variational linear-response, 
+compares well to the exact total-energy (red), 
+and shows a remarkable improvement over the bare PBE curve (orange, dashed) 
+in the dissociation limit.}
+\label{fig:h2+_pbe+u}
+\end{figure}
+% 
+%We observe, however, 
+%that the equilibrium bond-length is reduced 
+%in these calculations.
+%
+
+
+Our results show, therefore, 
+that DFT+$U$, 
+when supplied with the $U$ values calculated from 
+variational linear-response, 
+is capable of adequately correcting 
+the total-energy SIE of a one-electron system 
+under ideal population-analysis conditions, 
+and is the first explicit confirmation  
+of such to our knowledge.
+%
+It is then clear that DFT+$U$ 
+provides an efficient and effective correction to the
+SIE in the total-energy, 
+as discussed in detail in 
+Refs.~\cite{PhysRevLett.97.103001,:/content/aip/journal/jcp/133/11/10.1063/1.3489110,:/content/aip/journal/jcp/145/5/10.1063/1.4959882}.
+%
+In the following section, 
+we shall apply our variational approach 
+to more challenging, multi-electronic systems.
+
+%APPLICATION TO MULTI-ELECTRONIC SYSTEMS
+\section{Application to multi-electronic systems}
+
+The treatment of SIE in dissociating H$_2^+$ 
+has so far served the important purpose
+of testing our variational method 
+to ensure the intended behaviour 
+and adequate treatment of one-electron SIE.
+%
+We now wish to extend this methodology  
+to consider multi-electronic systems 
+and certify that the variational LR method 
+is robust and applicable to ameliorating many-body SIE.
+%
+
+%H2
+\subsection{Dissociating H$_2$}
+
+We shall first return to the H$_2$ molecule, 
+which is the simplest multi-electronic structure to consider, 
+and demonstrate that DFT+$U$ is unsuitable 
+to correct the static-correlation error (SCE) 
+characteristic of the system.
+
+As we discussed in section~\ref{sec:static_correlation_error}, 
+it may be possible to formulate a viable correction 
+to the SCE exhibited in dissociating H$_2$ 
+if DFT+$U$ is provided with the appropriate (negative) $U$ values. 
+%
+To this end, 
+and as a demonstration of the inapplicability of 
+DFT+$U$ in correcting SCE, 
+we calculated the $U$ parameters along 
+the dissociating curve, as with H$_2^+$, 
+for $\alpha=\pm0.05$~eV, 
+and recalculated the total-energy 
+with the DFT+$U$ functional, 
+presented in Fig.~\ref{fig:H2_dft+u_energy2}.
+
+From this plot it is very clear that 
+the $U$ values act counter to the intended result, 
+and that DFT+$U$ increases the error in the total-energy.
+%
+The reason for this is because $U$ is a measure 
+of SIE manifest in spurious {\it positive} curvature 
+deviating from piece-wise linear behaviour, 
+whereas SCE is exhibited by a {\it negative} curvature, 
+deviating from piece-wise constancy 
+with respect to total spin magnetisation.
+%
+The calculated $U$ values are positive 
+and therefore inapplicable to 
+{systems dominated by} SCE in this regard, 
+thereby illustrating that DFT+$U$ cannot be 
+applied in an {\it ad hoc} manner.
+%
+{
+Let us now consider a molecule 
+for which the error {\it is} dominated by SIE}.
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/H2_dft+u_energy2}
+\caption[PBE+$U$ binding curve of H$_2$ with linear-response $U$]
+{Binding curve of H$_2$ 
+calculated with CI (red) and 
+PBE (orange) and PBE+$U$ (blue).
+%
+The $U$ values calculated with variational LR
+exacerbate the SCE for all bond-lengths, as expected, 
+and are therefore an inappropriate remedy for SCE.}
+\label{fig:H2_dft+u_energy2}
+\end{figure}
+
+
+%Ni(CO)4
+\subsection{Molecular Ni(CO)$_4$}
+
+{
+The following work was conducted in collaboration with 
+Okan Karaca Orhan, Fiona McCarthy, 
+Mark McGrath, and Thomas Wyse Jackson, 
+whom we  thank for their valuable contributions.}
+
+Let us now turn our attention to 
+a transition metal complex nickel tetracarbonyl (Ni(CO)$_4$), 
+which we selected based on its simple molecular structure 
+centred around a Ni atom with 
+almost full 3$d$ subshells~\cite{orhan2017tddft+}.
+%
+This ensures the dominant error on the Ni atom 
+is attributed to SIE rather than 
+SCE~\cite{PhysRevB.77.115123,cohen2008insights}.
+
+The relaxed geometry for Ni(CO)$_4$ 
+was acquired from Ref.~\cite{doi:10.1063/1.437911}, 
+and entails a tetragonal structure 
+with equal bond angles of 109.48$^\circ$
+between all Ni and C atoms, 
+as shown in Fig.~\ref{fig:nico4_structure}.
+%
+The Ni--C bond-length is 1.85~\AA\ , 
+while the C--O bond-length is slightly 
+shorter at 1.15~\AA\ .
+
+Calculations were performed 
+with a hard ($2.10$~a$_0$ cutoff) 
+norm-conserving pseudopotential~\cite{PhysRevB.41.1227}, 
+an LDA was used for the XC functional, 
+and open boundary conditions~\cite{:/content/aip/journal/jcp/110/6/10.1063/1.477923} 
+were employed.
+%
+The kinetic energy cutoff was 900~eV, 
+9 NGWFs were chosen for the Ni atom 
+and 4 each for the C and O atoms 
+with a cutoff radius of $16$~a$_0$.
+%
+The HOMO-LUMO gap in Ni(CO)$_4$, 
+as measured by experiment~\cite{doi:10.1021/ja00274a073}, 
+is $4.83$~eV, 
+while the gap determined from a PBE calculation with $U=0$
+is $3.87$~eV, 
+which is $\sim1$~eV below the experimental value. 
+
+To calculate $U$, 
+{in which the atomic positions are fixed},
+the potential shift $\alpha$ 
+is chosen to be on the order of approximately $1-2\%$ 
+of the unperturbed interacting potential $V_\textrm{int}$.
+%
+This ensures as broad a range of perturbations 
+as possible are applied, 
+while remaining in the linear-response regime.
+%
+Here, 
+$\alpha$ was varied between $\pm0.1$~eV 
+in intervals of $0.05$~eV, 
+from which 
+we calculated $U=10.8\pm0.1$~eV quite accurately, 
+as shown below in Fig.~\ref{fig:nico4_alpha}.
+%
+Taken in isolation, this value seems excessively large, 
+however, we argue that by perturbing the charge density 
+in such a spatially confined molecule, 
+it is unsurprising that the response is larger than usual. 
+%
+Indeed, the HOMO-LUMO 
+gap with the +$U$ correction applied in this case 
+yields a relatively modest increase to $4.56$~eV, 
+but it is much more agreeable with 
+the experimental figure and 
+is accurate to within 6\%.
+%
+{
+Furthermore, under this correction, 
+the occupancy of the Hubbard subspace 
+only increased from 9.09~e to 9.31~e.}
+%
+The correct treatment of SIE in this simple molecule, 
+using our variational method, 
+is therefore an encouraging preliminary result.
+
+\begin{figure}[th!]
+\centering
+\subfloat[]{
+\includegraphics[height=0.45\textwidth]{images/nico4.5.jpg}
+\label{fig:nico4_structure}}
+\quad
+%
+\subfloat[]{
+\includegraphics[height=0.45\textwidth]{images/nico4_alpha.pdf}
+\label{fig:nico4_alpha}}
+%
+\caption[Ni(CO)$_4$ molecular structure and linear-response calculation]
+{\subref{fig:nico4_structure} 
+The tetragonal Ni(CO)$_4$ molecular structure.
+\subref{fig:nico4_alpha} 
+The interacting response $V_\textrm{int}$ 
+against subspace occupancy $N$, 
+the slope of which gives $U=10.8\pm0.1$~eV.}
+\end{figure}
+
+
+%NiO
+\subsection{Bulk NiO}
+\label{sec:NiO_calculating_u}
+We shall investigate our first bulk structure, 
+nickel oxide (NiO), 
+which is a particularly challenging system for approximate DFT
+and one that has been the subject of repeated testing 
+for novel methods such as 
+periodic unrestricted Hartree-Fock theory~\cite{PhysRevB.50.5041}, 
+the self-interaction corrected local density
+approximation~\cite{PhysRevLett.65.1148},
+the GW approximation~\cite{PhysRevLett.74.3221},
+LDA + DMFT~\cite{PhysRevB.74.195114} 
+and first-principles methods for
+the original calculation of the Hubbard $U$ parameter 
+via linear-response~\cite{PhysRevB.71.035105,PhysRevB.58.1201}.
+%
+It has a rock-salt crystal structure, 
+as shown in Fig.~\ref{fig:NiO_structure}, 
+with a lattice constant of 4.16~\AA\ ~\cite{PhysRevB.57.1505} 
+and a N\'eel temperature of 523~K~\cite{PhysRevB.30.4734},
+below which it is an anti-ferromagnetic type-II insulator 
+with alternating magnetic moments, 
+ranging from 1.64~$\mu$B~\cite{alperin1962nio} 
+to 1.9~$\mu$B~\cite{PhysRevB.27.6964}, 
+between adjacent Ni atoms,
+as measured by neutron diffraction. 
+
+DFT+$U$ has also been successfully 
+employed with NiO~\cite{PhysRevB.48.16929,PhysRevB.57.1505,PhysRevB.71.035105,PhysRevB.58.1201,PhysRevB.62.16392} 
+when supplied with a sufficient $U$ parameter.
+
+
+\begin{figure}[th!]
+\centering
+\subfloat[]{
+\includegraphics[height=0.425\textwidth]{images/NiO.2.jpg}
+\label{fig:NiO_structure}}
+\quad
+%
+\subfloat[]{
+\includegraphics[height=0.425\textwidth]{images/NiO_alpha.pdf}
+\label{fig:NiO_alpha}}
+%
+\caption[NiO crystal structure and linear-response calculation]
+{\subref{fig:NiO_structure} 
+The NiO rock-salt crystal structure.
+\subref{fig:NiO_alpha} 
+The interacting response $V_\textrm{int}$ 
+against subspace occupancy $N$, 
+the slope of which gives $U=6.7\pm0.1$~eV.}
+\end{figure}
+
+The majority of studies to date 
+have observed a band gap 
+of $\sim$ 4~eV arising from 
+charge-transfer-type $p-d$ transitions~\cite{PhysRevB.43.14674,PhysRevLett.53.2339}, 
+however recent 
+BIS spectral data~\cite{0953-8984-11-7-002}, 
+supported by calculations invoking 
+GW quasiparticle~\cite{PhysRevB.71.193102,doi:10.1080/00018739400101495} 
+and screened-exchange LDA~\cite{0953-8984-25-16-165502}, 
+report a highly dispersive 
+$s$-like state as low as 3~eV
+that accounts for very weak optical 
+absorption~\cite{Hufner1992,PhysRevB.79.045118,PhysRevB.62.16392}.
+%
+
+
+Spin-polarised calculations of NiO were performed   
+using a norm-conserving PBE pseudopotential 
+with a PBE exchange-correlation functional, 
+a sample input file is available in 
+Appendix~\ref{ch:input_files}.
+%
+A plane-wave energy cutoff of 1170~eV 
+was chosen with a $4\times4\times4$ supercell 
+with $\Gamma$-point sampling, 
+and an NGWF cutoff radius of 11~$a_0$ 
+such that total-energy convergence was achieved to 
+within $2\times10^{-6}$ Ha per atom.
+%
+Values of $\alpha$ between $\pm0.2$~eV 
+in intervals of $0.1$~eV were 
+applied here,
+%\footnote{{Applying $\alpha=\pm0.01$, 
+%as in H$_2^+$, was too small a perturbation 
+%to produce a sufficient signal to noise ratio 
+%in the changes to the subspace occupancy, 
+%and it consequently produced large errors 
+%in the linear fits.}}, 
+for which we calculated $U=6.4\pm0.1$~eV, 
+as shown in Fig.~\ref{fig:NiO_alpha}.
+%
+This is within reasonable 
+range of the $U$ values used in other studies, 
+which vary between 4.6~eV and 
+8~eV~\cite{PhysRevB.71.035105,
+PhysRevB.62.16392,
+PhysRevB.44.943,
+PhysRevB.60.10763,
+PhysRevLett.102.226401}
+%
+The parameters and results of this study, 
+as well as those from various other DFT+$U$ works, 
+are summarised in Table~\ref{table:multi_electron_results} 
+in Chapter~\ref{ch:self_consistent_hubbard}
+along with the experimental data.
+
+
+Unsurprisingly, 
+the PBE calculation 
+qualitatively underestimates both the 
+local magnetic moment, 
+measured here to be 1.37~$\mu$B, 
+and the band gap, which is 1.66~eV, 
+in accordance with other studies~\cite{PhysRevB.23.5048}.
+%
+Moreover, 
+it incorrectly attributes the 
+valence band edge states to nickel 3$d$-orbitals,  
+as indicated by the density of states (DOS) 
+plot in Fig.~\ref{fig:NiOpbedos}.
+%
+{
+Given that the system is fully compensated, 
+we inspect only the spin-up channel, 
+for which we depict the contributions 
+from Ni spin-up sub-lattice (green), 
+Ni spin-down sub-lattice (blue), 
+the O atoms (red), 
+and finally the total spin-up DOS (black).}
+%
+{
+We note that in this, and subsequent, DOS profiles 
+the conduction states beyond a few eV 
+are likely to be unreliable~\cite{PhysRevB.84.165131}, 
+which is due to the limited resolution provided by 
+the valence-optimised NGWFs for states 
+beyond the valence band edge.}
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/NiO.pbe.dos.1.pdf}
+\caption[Species-resolved DOS for NiO calculated with PBE]
+{The species-resolved DOS for NiO 
+with half-width Gaussian smearing of 0.1 eV 
+and the zero-energy set to the Fermi level (eV) for 
+unperturbed PBE.
+%
+{
+The DOS is plotted for the up-spin 
+channel stemming from   
+Ni spin-up atoms (green), 
+Ni spin-down atoms (blue), 
+O atoms (red), 
+and total (black)}.}
+\label{fig:NiOpbedos}
+\end{figure}
+
+
+%
+The DOS computed from applying 
+$U=6.7$~eV to all Ni atoms in the crystal 
+is presented in Fig.~\ref{fig:NiO6.7dos}, 
+in which the band gap is increased to 3.04~eV.
+%
+Here, the grey dashed line, 
+labeled as the Hubbard DOS, 
+describes the DOS stemming from the localised subspace, 
+i.e., the localised Ni 3$d$ states.
+%
+The conduction band edge 
+(shown in the inset)
+is assigned to a dispersive $s$-state, 
+which is unaffected by the $+U$ correction, 
+in line with experimental 
+results~\cite{Hufner1992,PhysRevB.79.045118,PhysRevB.62.16392}.
+%
+This is evident from the lack of contribution 
+of this state arising from the localised subspace, 
+as indicated by the total Hubbard DOS.
+%
+The sharp peak in the conduction states  
+lies 4.44~eV above the Fermi level 
+and likely relates to the 
+experimentally observed band gap.
+%
+The magnetic moment for this state 
+is 1.62~$\mu$B and within reasonable 
+range of the experimental values~\cite{alperin1962nio,PhysRevB.27.6964}.
+
+Finally, the constituent states of the 
+valence band from $-1.5$~eV 
+up to the Fermi level are 
+25\% Ni and 75\% O, 
+whereas the conduction band is composed of 
+90\% Ni and 10\% O 
+up to 5~eV above the Fermi level.
+%
+These figures corroborate 
+experimental observations~\cite{PhysRevB.43.14674,PhysRevLett.53.2339} 
+that categorise NiO 
+as a charge transfer type semi-conductor.
+%
+We therefore conclude that our 
+computed Hubbard $U$ value, 
+from variational LR, 
+is also applicable to extensive solids 
+and yields sufficient agreement 
+with experimental data.
+
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/NiO.6.7.dos.pdf}
+\caption[Species-resolved DOS for NiO calculated with PBE+$U$]
+{The species-resolved density-of-states of NiO 
+with half-width Gaussian smearing of 0.1 eV 
+and the zero-energy set to the Fermi level (eV) 
+for $U=6.7$~eV.
+%
+The lines depict the same as in Fig.~\ref{fig:NiOpbedos}, 
+with the Hubbard total given in dashed grey.
+%Ni majority-spin (green), 
+%Ni minority-spin (blue), 
+%O (red), 
+%total (black), and 
+%
+Inset illustrates the conduction band minimum 
+is not attributed to the localised Hubbard states 
+but a dispersive $s$-state, 
+giving a band gap of 3.04~eV.
+}
+\label{fig:NiO6.7dos}
+\end{figure}
+
+
+
+
+
+%Cr2O3
+\subsection{Bulk Cr$_2$O$_3$}
+
+%
+Finally, 
+we shall consider chromium(III) oxide (Cr$_2$O$_3$), or {\it chromia}, 
+which is a Mott-Hubbard material 
+when computed with DFT+$U$ but, 
+until now, has not benefited from 
+the calculation of the Hubbard $U$ 
+from LR approach.
+%
+The following work was conducted with 
+Emma Norton and Karsten Fleischer, 
+and provides a welcome opportunity 
+to showcase the first novel application 
+of our variational LR method.
+
+The search for a viable $p$-type 
+transparent semiconducting oxide (TCO) 
+has seen growing interest in 
+magnesium-doped chromia Mg:Cr$_2$O$_3$, 
+which has demonstrated potential as 
+such~\cite{doi:10.1063/1.3638461,0953-8984-28-12-125501,PhysRevB.91.125202,PhysRevB.93.115302}.
+%
+The host matrix, Cr$_2$O$_3$, 
+possesses a corundum crystal structure with lattice 
+constants $a=b=4.96$~\AA\  and $c=13.60$~\AA\  
+in the $R\bar{3}c$ space group~\cite{Gloege1999L917}.
+%
+The N\'eel temperature is 307~K~\cite{PhysRevB.15.4451,YACOVITCH19771126}, 
+below which it is an antiferromagnetic insulator 
+with alternating magnetic moments of 
+2.76~$\mu$B, 
+{determined via neutron diffraction}~\cite{doi:10.1063/1.1714118},
+on each Cr atom along the $c$-axis.
+
+The excitation mechanism in chromia 
+is deemed to be between that of a charge-transfer and 
+Mott-Hubbard type~\cite{CATTI19961735,PhysRevB.70.125426} 
+with an optical band gap of 
+3.0-3.4~eV~\cite{FISCHER19712455,doi:10.1063/1.1702871,doi:10.1063/1.1714118,HOLT1997201,PhysRevB.91.125202}.
+%
+However, several 
+experiments~\cite{FISCHER19712455,HOWNG198075,PhysRevB.91.125202,doi:10.1021/jp404230k} 
+have observed transition energies at 2.1~eV and 2.7~eV, 
+but no computational study to date has 
+successfully reproduced them, 
+despite their being experimentally 
+attributed to spin-allowed 
+transitions~\cite{PhysRevB.57.9586}.
+
+\begin{figure}[th!]
+\centering
+\subfloat[]{
+\includegraphics[trim={7.8cm 0 6.8cm 0},clip,height=0.494\textwidth]{images/cr2o3.4.jpg}
+\label{fig:cr2o3_structure}}
+\quad
+%
+\subfloat[]{
+\includegraphics[height=0.494\textwidth]{images/cr2o3_alpha.pdf}
+\label{fig:cr2o3_alpha}}
+%
+\caption[Cr$_2$O$_3$ crystal structure and linear-response calculation]
+{\subref{fig:cr2o3_structure} 
+The Cr$_2$O$_3$ corundum crystal structure.
+\subref{fig:cr2o3_alpha} 
+The interacting response $V_\textrm{int}$ 
+against subspace occupancy $N$, 
+the slope of which gives 
+$U=2.8\pm0.1$~eV.}
+\end{figure}
+
+
+Chromia has been the focus of 
+many DFT+$U$ computational studies to date,
+the first of which was performed 
+by Catti {\it et al.}~\cite{CATTI19961735} 
+using unrestricted Hartree-Fock (UHF), 
+in which they calculated an excessively large 
+band gap of $\sim$15~eV.
+%
+Progress later came when 
+Dobin and co-workers~\cite{PhysRevB.62.11997} 
+performed LSDA calculations 
+but found an underestimated band gap of 1.5~eV.
+%
+The first attempt to address the poorly resolved 
+electromagnetic behaviour came when 
+Rohrbach {\it et al}~\cite{PhysRevB.70.125426,C0JM03852K} 
+invoked the DFT+$U$ functional 
+of Dudarev and Liechtenstein~\cite{PhysRevB.56.4900} 
+with $U=5$~eV and $J=1$~eV, 
+determined via fitting to experimental data.
+%
+Nevertheless, 
+the band gap and magnetic moment they calculated, 
+2.6~eV and 3.01~$\mu$B, respectively, 
+were in much better agreement with experiment 
+and have been widely used since~\cite{doi:10.1021/jp5039943,Mosey2009287,doi:10.1021/jp5039943}.
+
+Mosey and co-workers~\cite{PhysRevB.76.155123,doi:10.1063/1.4865780,doi:10.1063/1.2943142,Mosey2009287}, 
+were the first to calculate $U$ from {\it ab initio} methods 
+and used UHF to calculate $U=3.3$~eV and $J=0.1$~eV, 
+which they also implemented in Dudarev's 
+DFT+$U$ functional~\cite{PhysRevB.56.4900}.
+%
+The band gap they resolved was 2.9~eV 
+while the magnetic moment was 2.9~$\mu$B, 
+which were in reasonable agreement with experiment.
+%
+
+Shortly thereafter, 
+Shi {\it et al.}~\cite{PhysRevB.79.104404}, 
+in pursuit of resolving the magnetic properties,
+determined $U\approx4$~eV, for a fixed $J=0.58$~eV,  
+from the full-potential linear augmented plane-wave (FLAPW) 
+method described in Ref.~\cite{blugel2006computational}.
+%
+They implemented the 
+rotationally invariant DFT+$U$ functional~\cite{PhysRevB.52.R5467,0953-8984-9-35-010,PhysRevB.71.035105} 
+and computed a 2.88~eV band gap 
+and 3.26~eV magnetic moment.
+%
+In more recent years, 
+$U$ and $J$ values have been 
+determined via fitting 
+to experimental data~\cite{PhysRevB.73.195107,0953-8984-28-12-125501,Wang20121422,doi:10.1063/1.4970882,doi:10.1021/acs.jpcc.6b05575,PhysRevB.87.195124}, 
+for which a range of values have been derived.
+%
+A summary of the parameters and results of this study, 
+as well as those from other selected DFT+$U$ reports, 
+and the experimental data 
+are presented in Table~\ref{table:cr2o3_summary} 
+in Chapter~\ref{ch:self_consistent_hubbard}.
+
+For this study, 
+spin-polarised calculations were performed using the\break 
+projector-augmented wave (PAW) method 
+and an LDA for the XC functional. 
+%
+A plane-wave energy cutoff of 1100~eV 
+was chosen with a $3\times3\times2$ supercell, 
+$\Gamma$-point sampling, 
+and a NGWF cutoff radius of 12~$a_0$ 
+such that total-energy  convergence was achieved to 
+within $2\times10^{-5}$ Ha per atom.
+%
+Values of $\alpha$ between $\pm0.2$~eV 
+in intervals of $0.1$~eV were again applied, 
+for which we calculated $U=2.8\pm0.1$~eV, 
+as shown in Fig.~\ref{fig:cr2o3_alpha}.
+%
+To our knowledge, this is the first
+instance of the Hubbard $U$ calculated 
+from LR (variational or otherwise) for this material. 
+%
+
+{
+We again plot the DOS for the spin-up sub-lattice 
+and present the contributions from 
+Cr spin-up atoms (green), 
+Cr spin-down atoms (blue), 
+O atoms (red), 
+and the total spin-up DOS (black).}
+%
+As expected, 
+the traditional LDA calculation underestimates 
+the local magnetic moment, 
+here calculated as 2.30~$\mu$B, 
+and the band gap, which is 1.27~eV, 
+in line with Ref.~\cite{PhysRevB.62.11997}.
+%
+Fig.~\ref{fig:cr2o3pbedos} demonstrates that 
+the valence and conduction band edge states 
+are heavily attributed to the Cr $3d$-states.
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/cr2o3.pbe.dos.1.pdf}
+\caption[Species-resolved DOS for Cr$_2$O$_3$ calculated with LDA]
+{The species-resolved DOS of Cr$_2$O$_3$ 
+calculated with LDA, 
+with half-width Gaussian smearing of 0.1 eV 
+and the zero-energy set to the Fermi level (eV).
+%
+The lines depict    
+Ni majority-spin (green), 
+Ni minority-spin (blue), 
+O (red), 
+and total (black)}
+\label{fig:cr2o3pbedos}
+\end{figure}
+
+
+The LDA+$U$ calculation on the other hand, 
+provided with $U=2.8$~eV on all Cr atoms, 
+returns a DOS depicted in Fig.~\ref{fig:cr2o3.2.8.dos}, 
+in which the band gap is increased to 2.10~eV, 
+and a magnetic moment of 2.56~$\mu$B, 
+which are both in excellent agreement 
+with experimental observations~\cite{FISCHER19712455,HOWNG198075,PhysRevB.91.125202,doi:10.1021/jp404230k,doi:10.1063/1.1714118}.
+%
+Excitations are now expected to be governed by 
+$d-d$ like-spin transitions up to 2.8~eV above the Fermi level.
+%at which point $d-d$ spin-transition excitations 
+%dominate thereafter.
+%
+The constituent states of the 
+valence band from $-1.5$~eV 
+up to the Fermi level are, 
+on average, 
+70\% Cr and 30\% O, 
+whereas the conduction band is composed of 
+80\% Cr and 20\% O 
+up to 4~eV above the Fermi level, 
+which confirms the Mott-Hubbard 
+character~\cite{PhysRevB.79.104404}.
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/cr2o3.2.8.dos.pdf}
+\caption[Species-resolved DOS for Cr$_2$O$_3$ calculated with LDA+$U$]
+{The species-resolved DOS of Cr$_2$O$_3$, 
+calculated with LDA$+U=2.8$~eV
+with half-width Gaussian smearing of 0.1 eV 
+and the zero-energy set to the Fermi level (eV).
+%
+The lines depict the same as in Fig.~\ref{fig:cr2o3pbedos}, 
+with the Hubbard total given in dashed grey.}
+\label{fig:cr2o3.2.8.dos}
+\end{figure}
+
+
+%COMPARISON TO PHOTOELECTRON MEASUREMENTS
+\subsubsection{Comparison to spectroscopic measurements}
+{
+Our experimentalist colleagues, 
+Emma Norton and Karsten Fleischer, 
+obtained high resolution (0.58~eV)
+X-ray and ultraviolet photoelectron 
+spectroscopy measurements, 
+termed XPS and UPS respectively, 
+which probe the valence DOS of bulk chromia.
+%
+Furthermore, 
+ultraviolet-visible spectroscopy (UV-Vis) data 
+were provided,
+which measures the optical absorption 
+according to the method described in 
+Ref.~\cite{PhysRevB.91.125202}.
+%
+In this section, 
+we compare their measurements 
+with computational data.}
+%
+A 0.29~eV half-width Gaussian smearing 
+was applied to all LDA+$U$ DOS 
+given in Fig.~\ref{fig:cr2o3.2.8.dos}, 
+in order to provide a consistent comparison 
+to the all experimental data.
+
+Plotted in Fig.~\ref{fig:cr2o3.vb.xps.ups.total} 
+are the Gaussian smeared 
+total (solid red line) 
+and Hubbard (blue solid line) DOS 
+along with the XPS (dashed orange line) 
+and UPS (dashed blue line) measurements.
+%
+In order to assist in their comparison, 
+we have normalised the DOS plots   
+such that the integral over the binding energy $E$ 
+returns the total number of electrons in the unit cell (432).
+%
+From the graph it is clear that the total DOS 
+reproduces very well the large peak in the XPS 
+between -2.5~eV and 0~eV.
+%
+Furthermore, 
+between -8~eV and -2.5~eV, 
+the total DOS qualitatively reproduces 
+the behaviour in the UPS data.
+%
+Meanwhile, 
+the Hubbard DOS broadly follows 
+the behaviour of the XPS across all energies, 
+and accounts for approximately 
+50\% of the total contribution. 
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/cr2o3.vb.xps.ups.total.pdf}
+\caption[Normalised XPS and UPS measurements of Cr$_2$O$_3$ compared to LDA+$U$
+total DOS]
+{Comparison of 
+XPS (orange, dashed) and UPS (blue, dashed) 
+measurements of Cr$_2$O$_3$
+against the total (red, solid) and Hubbard (blue, solid) 
+DOS calculated with LDA+$U$.
+%
+All data are normalised such that 
+the integral under the curves equals 
+the number of electrons in the unit cell.
+%
+A Gaussian smearing of 0.29~eV 
+has been applied to the DOS 
+to ensure consistent comparison.
+%
+The total DOS reproduces the peak in the XPS, 
+and matches the broad trend in the UPS 
+for lower binding energies very well.
+%
+{The Hubbard DOS,
+which is attributed to the 
+localised states, contributes} 
+$\sim$50\% toward the XPS data 
+across all energies.}
+\label{fig:cr2o3.vb.xps.ups.total}
+\end{figure}
+
+To further aid this analysis, 
+in Fig.~\ref{fig:cr2o3.vb.xps.ups.species}, 
+we present the species-resolved DOS 
+in comparison to the XPS and UPS data.
+%
+Here, we observe that the 
+profile of the Cr up DOS (green solid line) 
+contributes heavily to the sharp 
+peak in the XPS data at $\approx$-2~eV.
+%
+Moreover, 
+the trend in the UPS data 
+seems to be reliably matched 
+by that of the O DOS (solid red line), 
+{from 0~eV}, 
+where there exists a small peak, 
+to the large spectral feature present 
+from {-2~eV to -8~eV.}
+%
+The Cr down DOS (blue solid line), however, 
+does not contribute appreciably to the total DOS.
+%which seems to suggest that 
+%the Cr atoms are highly magnetised.
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/cr2o3.vb.xps.ups.species.pdf}
+\caption[Normalised XPS and UPS measurements of Cr$_2$O$_3$ 
+compared to LDA+$U$ species-resolved DOS]
+{Comparison of 
+XPS (orange, dashed) and UPS (blue, dashed) 
+measurements of Cr$_2$O$_3$
+against the 
+Cr up (green, solid), 
+Cr down (blue solid), 
+and O (red, solid) 
+DOS calculated with LDA+$U$.
+%
+All data are normalised and 
+a Gaussian smearing of 0.29~eV 
+has been applied to the DOS.
+%
+The Cr up DOS contributes heavily to the sharp 
+peak in the XPS data at high binding energies.
+%
+The O DOS reproduces the broad trend 
+in the UPS data at all energies.
+%
+The Cr down DOS contributes very little.
+}
+\label{fig:cr2o3.vb.xps.ups.species}
+\end{figure}
+
+{
+Finally, 
+in Fig.~\ref{fig:cr2o3.cb.absorption}, 
+we present the absorption spectrum 
+truncated to 5~eV above the conduction band edge, 
+which has been normalised 
+such that the integral under the curve is equal to one.
+%
+The absorption spectrum 
+may be approximated from the joint DOS 
+(assuming fixed optical matrix elements)
+%
+\begin{equation}
+\alpha(\omega)\sim \int d\omega'\,\rho_v(\omega-\omega')\rho_c(\omega'), 
+\end{equation}
+%
+and we plot the joint DOS 
+evaluated from the summed 
+convolution of the species-resolved 
+valence and conduction DOS, 
+given by $\rho_v(\omega)$ and $\rho_c(\omega)$, respectively.
+%
+This has been similarly normalised 
+to aid in the visual comparison.}
+
+{
+Although the predictive capabilities 
+of the calculated joint DOS is limited 
+(see our above comment regarding 
+conduction states)
+we nonetheless observe some similar features 
+present in both profiles.
+%
+For instance the onset of absorption 
+coincides at $\approx$~2~eV, 
+whereupon the peak values at 5~eV 
+are of similar magnitude.
+%
+Furthermore, 
+the excitation present at $\approx$~2.5~eV 
+corresponds to a similar feature 
+in the joint DOS.
+}
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/cr2o3.cb.absorption.pdf}
+\caption[Normalised absorption spectrum of Cr$_2$O$_3$ 
+compared to LDA+$U$ joint DOS]
+{Comparison of 
+UV-Vis (dashed) measurements of Cr$_2$O$_3$ 
+of the optical absorption 
+against the joint DOS calculated with LDA+$U$.
+%
+All data are normalised and 
+a Gaussian smearing of 0.29~eV 
+has been applied to the DOS.
+}
+\label{fig:cr2o3.cb.absorption}
+\end{figure}
+
+{
+To produce a more reliable comparison 
+between the joint DOS and UV-vis data, 
+one could incorporate more NGWFs 
+in the calculation to provide more conduction states, 
+or optimise the energy with respect to the conduction states 
+(with which it would be cumbersome to converge the total-energy), 
+however, neither approach is guaranteed to significantly improve results.}
+
+Regardless, 
+these combination of the present results 
+provide further support for the validity of 
+our variational LR method,  
+as we have now reliably calculated 
+both qualitative and quantitative 
+electronic properties to reasonably precision, 
+without invoking fitting of any kind.
+
+
+%CALCULATING J
+\section[Calculating $J$ using the variational linear-response method]{Calculating $J$ using the variational \break linear-response method}
+\label{sec:calculating_j}	
+
+Let us now extend our variational approach 
+to the calculation of the Hund's exchange parameter $J$, 
+which is utilised in Eq.~\eqref{eq:dft+u+j_functional} 
+to penalise anti-parallel spins occupying the same site 
+and thereby encourages magnetic ordering.
+%
+While the full expression given 
+in Eq.~\eqref{eq:dft+u+j_functional} 
+is not frequently employed, 
+it is common practice~\cite{PhysRevB.79.035103}, 
+dating back to the Dudarev model~\cite{PhysRevB.57.1505}, 
+to combine $U$ and $J$ to create 
+an effective Coulomb repulsion between like-spins only 
+$U_\textrm{eff}=U-J$ 
+for use in Eq.~\eqref{eq:dft+u_functional}.
+
+Similar to $U$, 
+the $J$ term has historically been determined 
+by fitting~\cite{PhysRevB.70.125426}, 
+or calculated by 
+cLDA~\cite{PhysRevB.44.943}, 
+LAPW~\cite{Cai200989,0295-5075-69-5-777,PhysRevB.79.104404}, 
+linear muffin-tin orbitals (LMTO)~\cite{PhysRevB.44.943}, 
+linear combination of atomic orbitals (LCAO)~\cite{0953-8984-9-3-005}, 
+or by configuration interaction (CI)~\cite{PhysRevB.63.214520,Calzado2001}.
+%
+Computed $J$ values are typically 
+$\approx$1~eV in magnitude~\cite{PhysRevB.44.943} 
+and are often absorbed into $U$, 
+or sometimes ignored altogether.
+
+Himmetoglu and co-workers 
+in Ref.~\cite{PhysRevB.84.115108} 
+formulated an extension to the LR approach outlined in section~\ref{sec:linear_response_approach}, 
+in which $J$ is calculated from 
+the {\it magnetic} response functions 
+and is related to the curvature of the energy 
+with respect to magnetisation 
+$M=n^\uparrow-n^\downarrow$, given by
+%
+\begin{equation}
+J \sim \frac{\partial^2E}{\partial M^2}.
+\label{eq:j_curvature}
+\end{equation}
+%
+
+Let us outline the formulation required 
+to calculate the $J$ term from a variational approach
+in the same spirit as we did for $U$ 
+in section~\ref{sec:variational_linear_response}, 
+by computing the total-energy curvature 
+with respect to magnetisation.
+%
+We start by defining a constrained energy 
+parameterised by a target magnetisation $M_I$, 
+enforced by a set of Lagrange multipliers $\{\beta_I\}$, 
+whereby 
+%
+\begin{equation}
+E[\{\beta\}]=\min_{n({\br})}\left\{E[n({\br})]
++\sum_I \beta_I(n_I^\uparrow-n_I^\downarrow-M_I)\right\}.
+\label{eq:coc_linear_response4}
+\end{equation}
+%
+For a single site model, 
+the difference between the 
+spin up and spin down potentials 
+in this system is then defined by the spin-splitting $\beta_I$ 
+as follows
+%
+\begin{align}
+\hat{V}^\uparrow-\hat{V}^\downarrow
+=\frac{\delta E}{\delta \hat{\rho}^\uparrow}&-\frac{\delta E}{\delta \hat{\rho}^\downarrow}
+= \hat{V}_\textrm{ext}^\uparrow-\hat{V}_\textrm{ext}^\downarrow 
+= 2\beta\hat{P}\nonumber \\[0.5em]
+\Rightarrow\quad 
+\beta&=\frac{1}{2}\left( {V}_\textrm{ext}^\uparrow-{V}_\textrm{ext}^\downarrow\right), 
+\end{align}
+%
+where $\hat{P}$ is the usual projection operator and 
+$V_\textrm{ext}^\sigma\equiv \textrm{Tr}\left[\hat{V}_\textrm{ext}^\sigma\hat{P}\right]$.
+
+{In keeping with the subspace-bare potential 
+prescribed in section~\ref{sec:variational_linear_response}, 
+we take the partial derivative of 
+Eq.~\eqref{eq:coc_linear_response4}
+with respect to $M$ which, 
+according to the Hellman-Feyman theorem 
+presented in Ref.~\cite{PhysRevB.94.035159}, 
+yields} 
+%
+\begin{equation}
+\frac{\partial E}{\partial M}=-\beta 
+= -\frac{1}{2}\left(V_\textrm{ext}^\uparrow-V_\textrm{ext}^\downarrow \right).
+\end{equation}
+%
+The total derivative of this expression follows to give 
+the inverse of the bath-screen interacting 
+on-site magnetic response $\chi_M$
+%
+\begin{equation}
+\frac{d}{dM}\left(\frac{\partial E}{\partial M}\right)
+=-\frac{d\beta}{dM} = -\chi_M^{-1}
+= -\frac{1}{2}\frac{d}{dM}\left(V_\textrm{ext}^\uparrow-V_\textrm{ext}^\downarrow \right). 
+\end{equation}
+%
+The non-interacting equivalent is then 
+computed as before  
+%
+\begin{equation}
+%\left(\frac{d^2E}{dM^2}\right)_0 = 
+\chi_{M,0}^{-1}
+= \frac{1}{2}\frac{d}{dM}\left(V_\textrm{KS}^\uparrow-V_\textrm{KS}^\downarrow \right), 
+\end{equation}
+%
+such that we may define $J$ 
+as the difference between interacting 
+and non-interacting magnetic responses as before, 
+giving the net, subspace-averaged exchange interaction 
+%
+\begin{equation}
+J=\chi_{M,0}^{-1}-\chi_M^{-1}
+=-\frac{1}{2}\frac{d(V_\textrm{int}^\uparrow-V_\textrm{int}^\downarrow)}{d(n^\uparrow-n^\downarrow)}.
+\label{eq:j_definition}
+\end{equation}
+%
+
+Moreover, 
+we may expand the expression for $J$ 
+in terms of the spin-dependent interactions, 
+as we did for $U$, as follows
+%
+\begin{align}
+J
+&=-\frac{1}{2}\left(\frac{dV_\textrm{int}^\uparrow}{dM}
+-\frac{dV_\textrm{int}^\downarrow}{dM}\right) \nonumber\\[0.75em]
+&=-\frac{1}{2}\left(\frac{d V_\textrm{int}^\uparrow}{d n^\uparrow}\frac{dn^\uparrow}{dM} 
++\frac{d V_\textrm{int}^\uparrow}{d n^\downarrow}\frac{dn^\downarrow}{dM} 
+-\frac{d V_\textrm{int}^\downarrow}{d n^\downarrow}\frac{dn^\downarrow}{dM} 
+-\frac{d V_\textrm{int}^\downarrow}{d n^\uparrow}\frac{dn^\uparrow}{dM} \right) \nonumber\\[0.75em]
+&=-\frac{1}{2}\left(F^{\uparrow\uparrow}\frac{dn^\uparrow}{dM} 
+-F^{\uparrow\downarrow}\frac{dn^\downarrow}{dM} 
++F^{\downarrow\downarrow}\frac{dn^\downarrow}{dM} 
+-F^{\downarrow\uparrow}\frac{dn^\uparrow}{dM} \right)\nonumber \\[0.75em]
+\Rightarrow F^{\hat{P}}_\textrm{J}&=-\frac{1}{4}\left(F_\textrm{int}^{\uparrow\uparrow}-F_\textrm{int}^{\uparrow\downarrow}
++F_\textrm{int}^{\downarrow\downarrow}-F_\textrm{int}^{\downarrow\uparrow}\right).
+\label{eq:j_interaction}
+\end{align}
+%
+In the last line we have defined the 
+interaction kernel $F^{\hat{P}}_\textrm{J}$ 
+as the average {\it difference} between subspace-screened 
+parallel and anti-parallel spin interactions, 
+using 
+%
+\begin{align}
+n^\uparrow=\frac{1}{2}(N+M)
+\quad&\mbox{and}\quad
+n^\downarrow=\frac{1}{2}(N-M)
+\quad \Rightarrow\quad
+\frac{dn^\uparrow}{dM}=-\frac{dn^\downarrow}{dM}=\frac{1}{2}.
+\end{align}
+
+
+The connection between the definitions 
+of $U$,  presented in Eq.~\eqref{eq:u_interaction}, 
+and $J$ now becomes clear, 
+where the former is a measure of 
+the average on-site interaction between all spins, 
+and the latter is the average on-site difference  
+between parallel and anti-parallel spin interactions.
+%
+{
+We also remind the reader 
+that the DFT+$U$ functional, 
+presented in Eq.~\eqref{eq:dft+u_functional}, 
+only explicitly affects like-spin interactions.}
+%
+Thus, the practice of incorporating 
+$U-J$ now makes sense 
+as a correction for the average like-spin interaction, 
+as seen by the role of the DFT+U functional 
+in Eq.~\eqref{eq:dft+u_functional}, 
+%
+\begin{equation}
+U^I_\textrm{eff}=U^I-J^I
+=\left(F^{\hat{P}}_\textrm{Hxc}-F^{\hat{P}}_\textrm{J}\right)^I
+=\frac{1}{2}\left(F^{\uparrow\uparrow}_\textrm{int}+F^{\downarrow\downarrow}_\textrm{int}\right)^I.
+\label{eq:u-j_interaction}
+\end{equation}
+
+%CORRECTING SCE IN H2
+\subsection{Correcting static correlation error in H$_2$}
+
+{
+While SCE has not been directly treated by DFT+$J$, 
+at least to our present knowledge, 
+the association of $J$ with 
+the curvature of the constrained energy 
+with respect to magnetisation 
+in Eq.~\eqref{eq:j_curvature},  
+alludes to an intriguing prospect.}
+%
+If we consider Fig.~\ref{fig:H2_sce}, 
+we observe that the SCE is expressed  
+by a deviation from piece-wise constancy~\cite{doi:10.1063/1.2987202} 
+with respect to total spin magnetisation 
+in the form of a spurious curvature.
+% 
+{
+We therefore surmise that SCE 
+may be effectively treated 
+by an energy correction
+that vanishes at integer values 
+of the spin-density and 
+contributes a non-zero correction otherwise, 
+which may be expressed in the form}
+%
+\begin{equation}
+E_J=\frac{1}{2}\sum_{I\sigma}J^In^{I\sigma}(n^{I\sigma}-1).
+\end{equation} 
+%
+This expression is precisely the 
+double-counting term present 
+in Eq.~\eqref{eq:double_counting} 
+(up to a minus sign).
+%
+It therefore begs the question 
+if a DFT+$J$ functional can be used effectively to this end.
+
+We applied the variational method 
+to calculate $J$ in spin-polarised calculations 
+of dissociating H$_2$, 
+with the intention of treating the SCE.
+%
+{
+The resulting values were again 
+calculated with excellent precision, 
+within $10^{-3}$~eV}, 
+where it transpired that for short bond-lengths, 
+an excessively high exchange term was computed, 
+e.g, 
+$J\approx$150~eV at 1.0~a$_0$, 
+due to the large responses induced 
+by strongly overlapping 1$s$ orbitals.
+%
+These values quickly decayed with 
+the internuclear separation, however, 
+as the orbital overlap reduced 
+and measured $J=4.3$~eV at 2.8~a$_0$.
+%
+
+However, beyond the 
+Coulson-Fischer point~\cite{doi:10.1080/14786444908521726} 
+at $\approx$3.2~a$_0$,  
+$J$ can not be computed since the magnetic potential, 
+given by $V^\uparrow_\textrm{KS}-V^\downarrow_\textrm{KS}$, 
+switches from a stable to an unstable equilibrium.
+%
+\edit{This is illustrated below in Fig.~\ref{fig:H2_vplots} 
+where we have computed the potential at 1~a$_0$, 
+which clearly exhibits a stable equilibrium with respect to 
+the magnetisation of a H atom.
+%
+Meanwhile, 
+the system is clearly unstable at 4.8~a$_0$.
+%
+Hence, any magnetic perturbation 
+that is applied beyond $\approx$3.2~a$_0$ 
+immediately causes the system to fully polarise, 
+wherein we depart from the linear-response regime,
+thereby making a calculation of $J$ infeasible with this method.}
+%
+\begin{figure}[th!]
+\centering
+\subfloat[]{
+\includegraphics[height=0.45\textwidth]{images/H2_vplot1}
+\label{fig:H2_vplot1}}
+\quad
+%
+\subfloat[]{
+\includegraphics[height=0.45\textwidth]{images/H2_vplot2}
+\label{fig:H2_vplot2}}
+%
+\caption[Stable and unstable magnetic potentials for H$_2$ at 1~a$_0$ and 4.8~a$_0$ bond-length]
+{The stable and unstable magnetic potentials for H$_2$ at  
+\subref{fig:H2_vplot1} 
+ 1~a$_0$ and
+\subref{fig:H2_vplot2} 
+4.8~a$_0$ bond-length 
+illustrating the transition from 
+a stable to an unstable equilibrium 
+beyond the Coulson-Fischer point.}
+\label{fig:H2_vplots}
+\end{figure}
+
+
+\edit{To effectively calculate $J$ for larger bond-lengths, 
+and toward the dissociation limit, 
+it will be necessary to supplement 
+the system with an external potential 
+to impose a stable equilibrium 
+and mitigate this tendency to polarise.
+%
+The potential we will require 
+to do this is none other than the second term in 
+Eq.~\eqref{eq:dft+u+j_functional}, 
+or just Eq.~\eqref{eq:dft+j_functional}, 
+in conjunction with a {\it negative} $J$.
+%
+Crucially, this additional potential 
+can penalise the polarisation and therefore  
+increase the slope of the magnetic potential  
+with respect to magnetisation 
+to ensure a stable equilibrium once more.}
+
+{This proposed strategy  
+likens to that of the incipient practice of 
+calculating self-consistent Hubbard $U$ 
+parameters~\cite{PhysRevLett.97.103001,PhysRevB.81.245113,0953-8984-22-5-055602,cococcioni4}, 
+which has aided in providing an improved 
+description of many systems.
+%
+This method entails computing 
+$U_\textrm{out}$ values in a system 
+for incremental values of an applied $U_\textrm{in}$ 
+until some pre-defined self-consistency condition has been met.
+%
+The self-consistency procedure will therefore feature prominently 
+in our attempt to effectively calculate the $J$ parameter in dissociating H$_2$, 
+and will be a central aspect of the following Chapter.}
+
+
+
+%CALCULATING J FOR NiO
+\subsection{Calculating J for NiO and Cr$_2$O$_3$}
+
+For now, 
+let us revisit NiO and Cr$_2$O$_3$ 
+and calculate the $J$ term for these systems.
+%
+At the start of this section, 
+we outlined how to calculate $J$ 
+via magnetic perturbations of the form 
+$\hat{V}^{I\sigma}_\textrm{ext}=\pm\beta\hat{P}^{I\sigma}$.
+%
+However, 
+for spin-polarised systems, 
+we may also calculate $J$ 
+from the magnetic perturbations induced 
+from the uniform perturbation 
+$\hat{V}^I_\textrm{ext}=\alpha\hat{P}^{I}$, 
+since nowhere in Eq.~\eqref{eq:j_definition} 
+does $\beta$ feature explicitly.
+%
+%While the uniform perturbation does not generate 
+%the minimal energy deviations 
+%for these specific levels of magnetisation, 
+%this indirect approach is sufficient 
+%for the sake of convenience in our current calculations.
+%
+{
+In other words, 
+while the uniform external potential 
+will not yield the lowest-energy states consistent 
+with a given non-trivial magnetisation~\cite{PhysRevB.94.035159}, 
+the magnetisation induced can nonetheless 
+be used as a proxy.
+%
+This convenient workaround to evaluate $J$, 
+from the same set of calculations we previously 
+performed to determine $U$, 
+approximates the result of the  
+variational linear-response calculations 
+we would otherwise have to perform.}
+
+\subsubsection{NiO DFT+$U$+$J$ results}
+
+Using the same set of calculations from the previous section, 
+we determined $J=0.84\pm0.01$~eV 
+and applied it in conjunction with $U=6.7$~eV 
+in the full  DFT+$U$+$J$ functional 
+in Eq.~\eqref{eq:dft+u+j_functional}.
+%
+In comparison to the previous DFT+$U$ calculation, 
+the resulting band gap reduced slightly to 2.95~eV, 
+while the magnetisation increased to 1.66~$\mu$B.
+%
+{
+We again refer the reader to the summary of results 
+presented in Table~\ref{table:multi_electron_results}.}
+
+In Fig.~\ref{fig:NiO6.7Jdos} we present 
+the resulting DOS, 
+where the combined $U+J$ treatment 
+{has increased the contribution} of Hubbard states 
+in the valence bands between 
+-4~eV and -1.75~eV, 
+which now {feature} as much as 
+the O states.
+%
+Moreover, 
+there seems to be no qualitative difference 
+in the conduction bands, 
+however they have migrated upwards in energy, 
+where the peak now lies at 
+4.87~eV above the Fermi energy.
+%
+The profile of the dispersive $s$-states, 
+meanwhile, seems relatively unaffected.
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/NiO.6.7.J.dos.pdf}
+\caption[Species-resolved DOS for NiO calculated with PBE+$U$+$J$]
+{The species-resolved density-of-states of NiO 
+for $U$=6.7~eV and $J$=0.84~eV.
+%
+The lines depict the same as in Fig.~\ref{fig:NiO6.7dos}.
+%
+The $J$ term has marginally decreased the band gap, 
+and increased the magnetisation.
+%
+The conduction bands, 
+along with deep valence states, 
+have migrated upwards in energy, 
+where the peak now occurs at 4.87~eV, 
+while the dispersive $s$-state remains unaffected.
+}
+\label{fig:NiO6.7Jdos}
+\end{figure}
+
+% Cr2O3 DFT+U+J results
+\subsubsection{Cr$_2$O$_3$ DFT+$U$+$J$ results}
+
+Similarly, 
+we calculated $J=0.435\pm0.004$~eV 
+and applied it with $U=2.8$~eV from the same calculations 
+in the DFT+$U$+$J$ functional.
+%
+%
+Here 
+the band gap is 2.06~eV 
+and the magnetic moment is 2.59~$\mu$B
+which only provides a marginal  
+improvement in the latter  
+compared to the DFT+$U$ results 
+presented in Fig.~\ref{fig:cr2o3.2.8.dos}.
+
+\begin{figure}[th!]
+\centering
+\includegraphics[height=0.494\textwidth]{images/cr2o3.2.8.J.dos.pdf}
+\caption[Species-resolved DOS for Cr$_2$O$_3$ calculated with PBE+$U$+$J$]
+{As in Fig.~\ref{fig:cr2o3.2.8.dos}. 
+The species-resolved DOS of Cr$_2$O$_3$, 
+calculated with LDA+$U=2.8$+$J=0.44$.
+%
+There exists little discernible difference 
+between these two regimes.}
+\label{fig:cr2o3.2.8.J.dos}
+\end{figure}
+
+{
+We therefore conclude that the $J$-term  
+computed in this alternative fashion, 
+when implemented in the DFT+$U$+$J$ functional, 
+does not produce any new qualitative features.
+%
+In fact, 
+the band gaps, magnetic moments 
+and DOS profiles remained largely comparable 
+between the different regimes.
+%
+But without the relevant and experimental data, 
+or the explicit evaluation of $J$ from magnetic perturbations, 
+it is difficult to precisely ascertain the difference.
+%
+However, 
+given that $J$ is essentially free to compute from the $U$ calculations, 
+we maintain that there is still an advantage to be gained 
+from computing it, 
+such as the knowledge of its approximate magnitude.}
+
+{
+Finally, in Table~\ref{table:cr2o3_summary}, 
+we present a summary of the results for Cr$_2$O$_3$
+obtained in this and other studies, 
+in comparison to experimental data.}
+\newpage 
+
+\begin{table}[th!]
+\centering
+\begin{tabular}{lrrrr}
+\hline\hline
+Calculation 	&$U$ (eV) &$J$ (eV)&$E_g$ (eV)&$m$ ($\mu$B)\\
+\hline
+Experiment	& -		& - 		& 2.1$^\textrm{\cite{PhysRevB.91.125202}}$
+									&2.76$^\textrm{\cite{doi:10.1063/1.1714118}}$ \\
+Refs.~\cite{PhysRevB.70.125426,C0JM03852K,doi:10.1021/jp5039943,Mosey2009287,doi:10.1021/jp5039943}	
+			& 5.0		& 1.0		& 2.6		& 3.01\\
+Ref.~\cite{PhysRevB.76.155123,doi:10.1063/1.4865780,doi:10.1063/1.2943142,Mosey2009287}	
+			& 3.3 	& 0.1 	& 2.9 	& 2.9 \\
+Ref.~\cite{PhysRevB.71.035105}
+			& 4.0 	& 0.58 	& 2.88 	&3.26\\
+\hline
+LDA			& 0.0		& 0.0 	&1.27	&2.30\\
+LDA+$U$		& 2.8 	& 0.0		&2.10	&2.56\\ 
+LDA+$U$+$J$	& 2.8 	& 0.44	&2.06	&2.59\\ 
+\hline\hline
+\end{tabular}
+\caption{Summary of experimental and 
+computational results of Cr$_2$O$_3$, 
+including band gap $E_g$ (eV) 
+and magnetic moment $m$ ($\mu$B), 
+and the $U$ (eV), $J$ (eV), where applicable.}
+\label{table:cr2o3_summary} 
+\end{table}
+
+
+%CONCLUSION
+\section{Conclusion}
+
+{
+In this Chapter, 
+we developed a modification to the linear-response method  
+for calculating the Hubbard $U$ and Hund's $J$ parameters 
+from a variational approach, 
+such that it is equally applicable in 
+direct-minimisation and SCF codes alike.
+%
+We outlined the technical similarities and 
+stated the key differences between the two methods, 
+which amounted to the evaluation of the 
+non-interacting response function 
+from the ground-state density.
+%
+The variational framework thus enables 
+DFT+$U$ to be placed 
+on a first-principles footing within the context 
+of direct-minimisation DFT solvers.
+%
+This prospect has important consequences for the 
+calculation of DFT+$U$  total-energy differences 
+{featured in high-throughput calculations~\cite{jain2011high,setyawan2010high,curtarolo,Curtarolo2012218,PhysRevX.5.011006}, 
+phase diagrams~\cite{PhysRevB.87.115111,PhysRevB.84.045115,doi:10.1021/cm702327g}, 
+heterogeneous catalysis~\cite{Bliem1215},
+thermodynamical properties~\cite{PhysRevB.75.035109,PhysRevB.78.075125,PhysRevB.75.035115,1674-1056-17-4-035,doi:10.1021/cm702327g,CapdevilaCortada201558,PhysRevB.85.155208,PhysRevB.84.045115,PhysRevB.85.115104,PhysRevB.90.115105}, 
+and spin-triplet splittings~\cite{Korshunov2004,PhysRevB.55.12829,PhysRevB.77.045118}}. 
+}
+
+{
+We tested our method extensively on dissociating H$_2^+$ 
+and successfully corrected the total-energy curve to remarkable accuracy, 
+thereby demonstrating for the first time that DFT+$U$ is capable of correcting one-electron SIE under ideal conditions.
+%
+We proceeded to calculate highly accurate $U$ values 
+for multi-electronic systems, Ni(CO)$_4$, NiO, and Cr$_2$O$_3$, 
+with which we achieved broad agreement 
+with experimental measurements of the 
+HOMO-LUMO and optical gaps, 
+magnetic moments, 
+and DOS profiles. 
+%
+For both NiO, and Cr$_2$O$_3$, 
+we also successfully calculated a $J$ term 
+from the same set of calculations 
+that produced a marginal difference.
+%  
+Finally, we compared our numerical results for  Cr$_2$O$_3$,
+with high-resolution XPS, UPS and absorption measurements 
+obtained from experimental colleagues, 
+for which our calculations successfully 
+reproduced the qualitative features.}
+
+{
+The successful employment of our variational method  
+in testing conventional and novel structures 
+therefore demonstrates that it 
+is versatile, robust and effective.
+%
+It enables the reliable reproduction 
+of both quantitative and qualitative 
+features in solids and molecules 
+that systemically suffer from many-body SIE.}
+
+{
+However,  
+we illustrated with dissociating H$_2$ that DFT+$U$ is an inappropriate 
+correction scheme for systems dominated by SCE.
+%
+We postulated, however, that a correction of the form presented 
+by  DFT+$J$ may be an adequate remedy.
+%
+Unfortunately, this hypothesis could not be confirmed, 
+since stable magnetic perturbations were intractable 
+beyond the Coulson-Fischer point.
+%
+We proposed a possible solution to this problem   
+that consists of supplementing the subspace orbitals 
+with a $J_\textrm{in}$ correction 
+in order to calculate a $J_\textrm{out}$.
+%
+This goal, and the pursuit of 
+a self-contained mechanism for performing 
+thermodynamics within the DFT+$U$ framework, 
+provides the motivation for the 
+development of a self-consistency scheme, 
+presented in the next Chapter.}
+
+%{
+%The practice of calculating of interaction parameters 
+%in the presence of an applied $U$ 
+%is a relatively recent idea that bears 
+%significant theoretical and conceptual consequences.
+%%
+%In the next Chapter, 
+%we will incorporate the facility to calculate  
+%self-consistent parameters 
+%into the variational linear-response framework, 
+%and investigate the various self-consistency criteria.
+%%
+%Of particular interest to our cause is what effect, if any, 
+%will an applied parameter have 
+%on the evaluation of the other, 
+%since the simultaneous calculation of both $U$ and $J$ 
+%has, to date, not been explored.
+%%
+%These questions will be the subject of the next Chapter.}
+
+
+
+
+
+
+%
+%In the SCF LR method it is calculated 
+%from the density after the first self-consistency cycle, 
+%which we have argued is an excited state of the system 
+%and therefore not conducive to the calculation of 
+%ground-state parameters.
+%
+%In contrast, 
+%we define the non-interacting response function 
+%as that derived from the Kohn-Sham potential, 
+%which is calculated as a strict ground-state property 
+%in conjunction with the interacting response, 
+%thereby elevating the $U$ parameter to a ground-state property.
+%
+%This method puts DFT+$U$ on a first-principles footing
+%within the context of direct-minimisation DFT solvers, 
+%even the linear-scaling schemes  
+%of the type now routinely used to simulate systems which
+%are simultaneously spatially and electronically 
+%complex~\cite{skylaris2005introducing,hine2009linear,hine2010linear,Gillan200714,0953-8984-14-11-303,0953-8984-14-11-302,0953-8984-20-6-064208,Genovese2011149,PhysRevB.72.045121,doi:10.1063/1.2841077}
+%%%
+%
+%%
+%Moreover, 
+%we discussed the importance of the correct kernel projection, 
+%to ensure the desired properties in the calculated parameters, 
+%and the contribution of subspace SIE to the global error.
+%%
+
+%We also expressed the $U$ and $J$ parameters 
+%in terms of the net average 
+%and net difference of spin-dependent interaction kernels, 
+%respectively, 
+%subsequent to which we highlighted the physical significance 
+%of the effective $U$ parameter, 
+%given by $U-J$, 
+%in concerning like-spin interactions only.
+%
+%In the case of the bulk systems, 
+%we were able to reliably restore 
+%the qualitative features of the 
+%species-resolved DOS.
+%
+%For NiO, 
+%we restored the charge-transfer behaviour, 
+%magnetisation, and, 
+%furthermore, successfully calculated a $J$ term 
+%from the same set of calculations.
+%
+%In the case of chromia, meanwhile, 
+%the computed valence DOS 
+%compared very well 
+%with high-resolution XPS and UPS measurements 
+%obtained from experimental colleagues, 
+%where the magnetisation and band gap 
+%were also accurately determined.
+

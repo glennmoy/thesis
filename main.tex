@@ -1,0 +1,314 @@
+\documentclass[twoside,12pt]{report}
+
+%PACKAGES
+\usepackage[utf8]{inputenc}
+\usepackage[pdftex]{graphicx}
+\usepackage{fancyhdr}
+\usepackage{array}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage{float}
+\usepackage{pdfpages}
+\usepackage{amsthm}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+\usepackage{url}
+\usepackage{cancel}
+\usepackage{color,soul}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{titlesec}
+\usepackage{lettrine}
+\usepackage{fix-cm}
+\usepackage{lipsum}
+\usepackage{grffile}
+\usepackage{xr-hyper} 
+\usepackage{hyperref}
+\usepackage{gensymb}
+\usepackage[caption=false]{subfig}
+\usepackage{multicol}
+\usepackage{rotating}
+\usepackage{extsizes}
+\usepackage{dsfont}
+\usepackage{listings}
+\usepackage{epigraph}
+\usepackage{sidecap}
+\usepackage{flafter}
+\usepackage[tocindentauto]{tocstyle}
+
+
+
+\usepackage[a4paper, 
+top=30mm,
+bottom=30mm,
+%left=35mm,
+%right=25mm]{geometry}
+left=32.5mm,
+right=27.5mm]{geometry}
+
+
+\usepackage[activate={true,nocompatibility},
+final,tracking=true,
+kerning=true,
+spacing=true,
+factor=1100,
+stretch=10,
+shrink=10]{microtype}
+
+\sidecaptionvpos{figure}{c}
+
+\bibliographystyle{apsrev}
+
+\lstset{frame=tb,
+ language=bash,
+  columns=flexible,
+  basicstyle={\tiny\ttfamily},
+  commentstyle=\color{blue}
+}
+
+
+%%\AtBeginDocument{%
+%  \hypersetup{colorlinks,
+%    citecolor=blue,
+%    filecolor=blue,
+%    linkcolor=cyan,   
+%    urlcolor=cyan,
+%    linktocpage=true}
+    
+      \hypersetup{colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,   
+    urlcolor=black,
+    linktocpage=true}
+    
+% A4 90 gsmBinding curve
+% blue cloth
+% TITLE on titlepage
+% SPINE - Degree, year, name (24 pt, Gold)
+% 4 abstracts
+    
+\linespread{1.5}
+
+\captionsetup[subfloat]{justification=centering}
+\captionsetup[figure]{justification=raggedright,singlelinecheck=false}
+\captionsetup[table]{justification=raggedright,singlelinecheck=false}
+
+%CUSTOM COMMANDS
+\def\bra#1{\langle#1\vert}
+\def\ket#1{\vert#1\rangle}
+\def\braket#1#2{\langle#1\vert#2\rangle}
+\def\ketbra#1#2{\lvert#1\rangle\langle#2\rvert}
+\def\ketmatbra#1#2#3{\lvert#1\rangle#2\langle#3\rvert}
+\def\exv#1#2#3{\langle#1\vert#2\vert#3\rangle}
+\def\rd#1{\textcolor{red}{#1}}
+\def\bl#1{\textcolor{blue}{#1}}
+\def\bfk{{\mathbf{k}}}
+\newcommand{\onlinecite}[1]{\hspace{-1 ex} \nocite{#1}\citenum{#1}} 
+\newcommand{\br}{{\bf r}}
+\newcommand{\bk}{{\bf k}}
+
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\def\edit#1{\textcolor{black}{#1}}
+\def\editt#1{\textcolor{black}{#1}}
+
+\def\lett#1#2{\lettrine[lines=2,
+%lhang=0.25,
+loversize=1,
+%lraise=0.15, 
+findent=0.5em,
+nindent=0em, 
+slope=-0.5em
+]{\textcolor{black}{#1}}{#2}}
+
+\newtheorem{HK1}{Hohenberg-Kohn Theorem}
+
+\renewcommand{\thechapter}{\Roman{chapter}}
+\renewcommand \thesection{\arabic{section}}
+\renewcommand \thesubsection{\arabic{section}.\arabic{subsection}}
+
+\usetocstyle{standard}
+
+%THESIS STYLE
+\titleformat{\chapter}[display]{\center\Huge}{\thechapter}
+{10pt} % vertical space
+{\sc \center \LARGE} %chapter title formatting
+\titlespacing*{\chapter}{0pt}{-50pt}{40pt}
+\titleformat{\section}{\sc \large}{\thesection}{1em}{}
+\titleformat{\subsection}{\sc }{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\bf}{\thesubsubsection}{1em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancyhead[L]{}
+\fancyhead[R]{}
+\fancyhead[CO]{\nouppercase\chaptername\ \thechapter}
+\fancyhead[CE]{\nouppercase\rightmark}
+\fancyfoot[CO,CE]{\thepage}
+
+\graphicspath{ {images/} }
+\setlength{\headheight}{10pt} 
+%\setlength{\leftmargin}{35mm} 
+
+
+\renewcommand{\contentsname}{\textsc{ \LARGE table of contents}}
+\renewcommand{\listfigurename}{\textsc{ \LARGE list of figures}}
+
+
+
+%BEGIN DOCUMENT
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%
+%%TITLE PAGE
+%\clearpage\null\thispagestyle{empty}\newpage
+\input{titlepage}
+\thispagestyle{empty}
+
+\clearpage\null\thispagestyle{empty}\newpage
+
+%DECLARATION
+\addcontentsline{toc}{chapter}{\sc declaration}
+\chapter*{\textsc {\centering \LARGE declaration}}
+\renewcommand{\thepage}{\roman{page}}
+\setcounter{page}{1}
+\thispagestyle{empty}
+\setcounter{page}{1}
+\input{chapters/declaration}
+
+%ABSTRACT
+\clearpage\null\thispagestyle{empty}\newpage
+\addcontentsline{toc}{chapter}{\sc  summary}
+\chapter*{\textsc {\centering \LARGE summary}}
+\input{chapters/abstract}
+%
+%ACKNOWLEDGEMENTS
+\cleardoublepage
+\addcontentsline{toc}{chapter}{\sc acknowledgments}
+\chapter*{\textsc {\centering \LARGE acknowledgments}}
+\input{chapters/acknowledgements}
+
+
+
+%LIST OF FIGURES
+\cleardoublepage
+\addcontentsline{toc}{chapter}{\sc list of figures}
+\listoffigures
+
+
+%
+%TABLE OF CONTENTS
+\tableofcontents
+\clearpage\null\thispagestyle{empty}\newpage
+
+
+\pagestyle{fancy}
+\renewcommand{\thepage}{\arabic{page}}
+\setcounter{page}{1}
+%
+%INTRODUCTION
+\chapter{\sc introduction}
+\label{ch:introduction}
+\input{chapters/introduction}
+
+
+%QUANTUM MECHANICAL SIMULATION
+\chapter{\sc quantum mechanical simulation}
+\label{ch:qm_simulation}
+\input{chapters/qm_simulation}
+
+
+%MECHANICAL PROPERTIES 2D MATERIALS
+\chapter[\sc mechanical properties of two-dimensional \break group-V materials]{\sc mechanical properties of two-dimensional group-V materials}
+\label{ch:mech_prop_2d_mater}
+\input{chapters/mech_prop_2d_mater}
+
+
+%ELECTRONIC PROPERTIES 2D MATERIALS
+\chapter[{\sc electronic properties of two-dimensional \break group-V materials}]{\sc electronic properties of two-dimensional group-V materials}
+\label{ch:elec_prop_2d_mater}
+\input{chapters/elec_prop_2d_mater}
+
+\clearpage\null\newpage
+%SELF-INTERACTION ERROR
+\chapter{\sc the nature and origin of pervasive errors in \break approximate DFT}
+\label{ch:self_interaction_error}
+\input{chapters/self_interaction_error}
+
+
+\clearpage\null\newpage
+%CALCULATING HUBBARD PARAMETERS
+\chapter{\sc calculation of hubbard parameters from \break variational linear response}
+\label{ch:calculating_hubbard_u}
+\input{chapters/calculating_hubbard_u}
+
+\clearpage\null\newpage
+%SELF-CONSISTENCY OF HUBBARD PARAMETERS
+\chapter[\sc calculation of self-consistent hubbard \break parameters]{\sc calculation of self-consistent hubbard parameters}
+\label{ch:self_consistent_hubbard}
+\input{chapters/self_consistent_hubbard}
+
+
+%GENERALISED DFT+U FUNCTIONAL
+\chapter[\sc the investigation of non-linear constraints and a \break generalised  DFT+U functional]{\sc the investigation of non-linear constraints and a generalised  DFT+U functional}
+\label{ch:non_linear_constraints}
+\input{chapters/non_linear_constraints}
+
+%
+%
+%CONCLUDING REMARKS
+\chapter{\sc concluding remarks}
+\label{ch:conclusions}
+\input{chapters/conclusions}
+
+
+%APPENDICES
+\clearpage\null\newpage
+\appendix
+
+\chapter{Sample input files}
+\label{ch:input_files}
+\input{chapters/input_files_appendix}
+
+\chapter[Supplemental data for group-V 2D materials]{Supplemental data for \break group-V 2D materials}
+\label{ch:2d_appendix}
+\input{chapters/2d_appendix}
+
+%\chapter{Group-V mechanical properties}
+%\label{ch:group_v_mech_props}
+%\input{chapters/mech_prop_appendix}
+%
+%\chapter{Group-V electronic properties}
+%\label{ch:group_v_elec_props}
+%\input{chapters/elec_prop_appendix}
+
+\chapter{Further discussion on self-consistency schemes}
+\label{ch:self_consistency_appendix}
+\input{chapters/self_consistency_appendix}
+
+
+%BIBLIOGRAPHY
+\newpage
+\bibliography{bibfile}
+\end{document}
+
+
+%Major changes
+%
+%*) Fixed typos
+%*) Chapter 6 (Generalised DFT+U functional) moved to Chapter 8 and edited to reflect new context
+%*) Chapter 1 rewritten to reflect re-ordering of chapters
+%*) Images in Chapters 3 and 4 increased in size 
+%*) Error analysis of mechanical properties in Chapter 3 improved
+%*) Chapter 5 includes more discussion of static correlation error in the context of the H2 wave function and the full configuration interaction
+%*) Additional images in Chapter 6 to illustrate the difficulty in calculating J for H2 beyond the Coulson-Fischer point 
+%*) Chapter 7 includes short discussion on subspace projectors
+%*) Conclusions chapter includes more discussion on implications of work presented in thesis
+%*) Experimental data from Chapter 3 included in Appendix
+%*) Fewer band structure figures in Appendix

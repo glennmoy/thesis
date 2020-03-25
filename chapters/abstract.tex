@@ -1,0 +1,232 @@
+%2D MATERIALS
+\lett{D}{ensity-functional theory} (DFT), 
+{
+in its approximate Kohn-Sham formalism, 
+is a highly-acclaimed computational tool that 
+affords the practical and expeditious  
+calculation of ground-state properties 
+of molecules and solids, 
+often with a very reasonable accuracy.
+%
+It finds routine application 
+in the fields of chemistry, 
+physics, 
+materials science, 
+and biochemistry, 
+where it now contributes 
+%to research 
+in both 
+a descriptive and predictive capacity.}
+
+{
+It is not, in practice, without systematic errors 
+such as those defined by self-interaction and static correlation.
+%
+These errors undermine the accurate description 
+of particular systems that are beyond the scope   
+of the approximate exchange-correlation functionals, 
+particularly for those comprising 
+so-called {\it strongly-correlated} electrons. 
+%
+The effective treatment of these errors 
+is laid down in a number of formative works 
+now adopted within the canon of Kohn-Sham DFT. 
+%
+Many of the most popular and affordable correction schemes 
+entail the calculation of external parameters 
+to diagnose and treat these pervasive errors 
+on a per-electron basis, 
+such as the DFT+Hubbard $U$ method.}
+
+{
+A possibility that has not yet been explored, however, 
+is the automation of these correction schemes  
+for the provision of greater efficiency, 
+versatility and comparability between 
+DFT calculations.
+%
+An automated procedure   
+would enable the correction process to be self-contained, 
+thereby circumventing the need for human input,  
+and establish a standardised approach  
+between the various softwares and electronic systems.
+%
+Of particular interest is the application 
+in high-throughput materials design, 
+and the comparability of DFT+$U$ 
+total-energies for the calculation  
+of thermodynamical quantities.}
+
+{
+In this dissertation, 
+we present a comprehensive account 
+of our work in pursuit of this goal.
+%some initial advances  
+%in pursuit of this goal from first-principles.
+%
+We motivate and describe an 
+efficient self-contained approach 
+for correcting the many-body self-interaction error 
+in strongly-correlated systems 
+from ground-state quantities 
+within the DFT+$U$ framework.
+%
+Moreover, 
+we implement this procedure in a linear-scaling code, 
+which extends its applicability to large-scale systems.}
+
+{
+Specifically, 
+we develop a highly accurate 
+variational linear-response approach  
+for calculating the 
+Hubbard $U$ and Hund's $J$ parameters, 
+for which a unique criterion for 
+their self-consistency is identified.
+% 
+Our results demonstrate that this scheme 
+is accurate and versatile, 
+and facilitates the correction of 
+many-body self-interaction error 
+for various systems.
+%
+Moreover, 
+we propose the novel construction of a 
+generalised DFT+$U$ functional 
+that resolves Koopmans' condition exactly 
+in a one-electron system 
+when supplied with the appropriate 
+self-consistent $U$ value.}
+
+{
+Our research provides insight into important questions 
+about the practice and consequences 
+of calculating corrective parameters 
+for approximate DFT self-consistently, 
+and opens up several new avenues 
+for future developments.}
+
+%oeuvre
+%As an attest to the utility of DFT,  
+%we perform comprehensive calculations on 
+%the nascent class of two-dimensional pnictogen materials 
+%characterised by the puckered phase of black phosphorus, 
+%for which we make qualitative predictions of  
+%their electro-mechanical properties 
+%in various states of mechanical strain. 
+%%electronic transitions, 
+%%and states exhibiting ballistic conduction 
+%%are predicted to occur.
+%%
+%%SELF-INTERACTION ERROR
+%In so doing, we reveal the 
+%tendency of DFT to exhibit systematic errors, 
+%such as the pervasive self-interaction error (SIE), 
+%which are incurred by approximate exchange-correlation functionals.
+%%used to incorporate the complex many-body interactions.
+%%
+%These errors are known to be particularly disruptive 
+%in systems comprising strongly-correlated electrons.
+%%which includes a growing number systems 
+%%that require large-scale simulation.
+%
+%Adequate treatment of these systems 
+%is typically sought by the administration of 
+%an appropriate corrective scheme, 
+%such as the established DFT+$U$ method,  
+%which targets SIE-prone electrons 
+%in highly-localised orbitals.
+%%
+%However, 
+%the calculation of the Hubbard $U$ parameters 
+%governing the correction can be challenging to compute, 
+%and expertise in the matter is limited to a small community.
+%%
+%The development of methods that address SIE 
+%from an automated approach, 
+%wherein the calculation of Hubbard parameters 
+%is delegated to a self-contained procedure, 
+%thus presents an attractive and expedient prospect 
+%for many practitioners, 
+%especially when readily extended to large-scale systems.
+%%
+%We are therefore motivated towards the design 
+%of efficient, self-contained methods  
+%for the treatment of SIE-prone systems 
+%within a linear-scaling framework.
+%
+%
+%%NON-LINEAR CONSTRAINTS
+%We first elect to exploit the proven efficiency 
+%of constrained-DFT (cDFT) 
+%to enforce non-linear constraints 
+%on the occupancies of the localised orbitals, 
+%the interaction for which emulates 
+%that found in the SIE-targeting DFT+$U$ functional.
+%%
+%However, 
+%we prove via inductive proof 
+%and stringent numerical calculations  
+%that such a procedure is strictly impossible.
+%%due to non-vanishing response functions.  
+%%
+%%GENERALISED DFT+U FUNCTIONAL
+%%
+%However, we suggest a possible workaround 
+%by introducing a generalised DFT+$U$ functional 
+%that simultaneously targets the correction of 
+%the ground-state total-energy and eigenvalue.
+%%
+%The scheme requires only the input of 
+%ground-state DFT properties to operate, 
+%including the Hubbard $U$ parameter, 
+%the calculation of which in we proceed to develop.
+% 
+%%CALCULATING U
+%We build upon the established success 
+%of the computationally convenient linear-response approach 
+%and present a modification based, instead, 
+%on the variation of the ground-state density, 
+%whereupon  the $U$ parameter 
+%is defined in terms of ground-state quantities.
+%%
+%Similarly, 
+%we devise an original and equivalent self-consistency scheme 
+%to calculate the exchange parameter $J$.
+%
+%%We demonstrate for the first time that DFT+$U$ 
+%%precisely corrects the one-electron total-energy 
+%%for self-interaction error under ideal conditions.
+%%
+%Accordingly, 
+%the variational approach provides a convenient framework 
+%in which to address the incipient practice of parameter self-consistency, 
+%which hitherto remains unresolved in spite of 
+%a number of proposed schemes.
+%%
+%Stringent numerical tests on various systems reveal  
+%a clear best choice for the self-consistency condition, 
+%and to effectuate the correction for multiple electrons 
+%we find the corresponding $J$-term is not only advantageous, 
+%but required.
+%%
+%Moreover, we suggest this scheme as a possible 
+%remedy for static-correlation (SCE) error, 
+%for which preliminary results on dissociating H$_2$ 
+%are encouraging.
+%
+%
+%
+
+
+
+
+
+
+
+
+
+
+
+
+ 

@@ -1,0 +1,281 @@
+\section{Sample {\sc QuantumEspresso} input file}
+\begin{lstlisting}
+ &control
+    title = 'p',
+    calculation = 'relax',
+    restart_mode='from_scratch',
+    prefix='p',
+    pseudo_dir = '~/pseudos'
+    verbosity='normal',
+    tprnfor=.true.,
+    tstress=.true.
+    etot_conv_thr = 1.0E-7,  
+/
+ &system
+    ibrav=0
+    celldm(1)=6.2618
+    nat=8
+    ntyp=1
+    nspin=1
+    nbnd=40 
+    vdw_corr='DFT-D'
+    ecutwfc = 80
+    ecutrho = 640
+    occupations='smearing'
+    smearing='marzari-vanderbilt'
+    degauss=0.0001
+ /
+ &electrons
+    mixing_mode = 'TF'
+    conv_thr = 1.0e-10
+ /
+ &ions
+    ion_dynamics = 'bfgs'
+ /
+ &cell
+    cell_dynamics = 'bfgs'
+/
+
+ATOMIC_SPECIES
+ P    30.973761998  P.pbe-n-rrkjus_psl.0.1.UPF
+
+ATOMIC_POSITIONS angstrom
+<ATOMIC POSITIONS>
+
+CELL_PARAMETERS alat
+<CELL PARAMETERS>
+
+K_POINTS automatic
+15 15 15 0 0 0
+\end{lstlisting}
+\newpage
+
+\section{Sample {\sc ONETEP} input file}
+\begin{lstlisting}
+##########################################################################
+##########################################################################
+##			 ONETEP TEMPLATE INPUT FILE	        		##
+##  			    Glenn M Moynihan 2015    		        	##
+##########################################################################
+##########################################################################
+
+# ========================================================================
+# 				SETUP PARAMETERS			         #
+# ========================================================================
+
+# -----------------------------------------
+# Task Type
+# -----------------------------------------
+task				: SINGLEPOINT
+
+# -----------------------------------------
+# How much detail?
+# -----------------------------------------
+output_detail           	: NORMAL
+
+# -----------------------------------------
+# Specify Cutoff Energy ~ 1170 eV
+# -----------------------------------------
+psinc_spacing 			: 0.420266667 0.420266667 0.420266667
+
+# -----------------------------------------
+# XC Functional Type and Options
+# -----------------------------------------
+xc_functional 			: PBE
+
+# -----------------------------------------
+# Toggle Read/Write Restart Files
+# -----------------------------------------
+write_converged_dk_ngwfs 	: F    
+write_denskern       		: T
+write_tightbox_ngwfs 		: T
+read_denskern        		: F
+read_tightbox_ngwfs  		: F
+
+# ========================================================================
+#                               MULTITHREADING                                   #
+# ========================================================================
+
+threads_max                     :  2   
+threads_num_fftboxes            :  2   
+threads_per_fftbox              :  1   
+threads_per_cellfft             :  1   
+
+
+# ========================================================================
+# 			   TECHNICAL PARAMETERS	        			 #
+# ========================================================================
+
+# -----------------------------------------
+# Density Kernel Optimisation (Inner Loop)
+# -----------------------------------------
+lnv_cg_max_step      		: 10.0
+maxit_lnv            		: 35
+minit_lnv            		: 5
+lnv_check_trial_steps 		: T             
+kernel_update       		: T         	
+
+
+# -----------------------------------------
+# NGWF Optimisation (Outer Loop)
+# -----------------------------------------
+ngwf_threshold_orig  		: 2.0e-6     	
+ngwf_cg_max_step     		: 4.0       	
+maxit_ngwf_cg        		: 100       	
+elec_cg_max 			: 5             
+delta_e_conv 			: T             
+ELEC_ENERGY_TOL   		: 1.0e-4 eV    	
+
+
+# -----------------------------------------
+# Better nursing parameters for solid oxides
+# -----------------------------------------
+maxit_pen 			: 0              
+maxit_palser_mano    		: -1       	
+maxit_kernel_fix     		: 3       	
+kerfix               		: 2       	
+maxit_hotelling 		: 0        	
+pen_param 			: 20            
+
+charge 				: 0             # Set Background Charge
+dos_smear           		:  0.10 eV	# Densities of states	
+occ_mix				: 0.25		# Occupational Mixing 	
+timings_level        		: 1		# Set level of detail in timings
+
+# ========================================================================
+# 			TURN FEATURES ON/OFF	        			 #
+# ========================================================================
+
+# Toggle Spin
+spin_polarized 			: T
+spin 				: 0   		
+
+# Toggle Hartree Potential
+#turn_off_hartree 		: F
+
+# Toggle Unify Sites
+hubbard_unify_sites		: F		
+
+# Print potentials to calculate U
+hubbard_calculating_U           : T
+
+# Print calculation summary
+print_qc             		: T
+
+# Output formats:
+cube_format          		: F       	
+grd_format           		: F
+
+# Plot densities, orbitals
+write_density_plot   		: T
+lumo_dens_plot       		: 1      	
+homo_dens_plot       		: 1
+lumo_plot            		: 1     
+homo_plot            		: 1
+
+# Check atomic positions
+check_atoms          		: T       	
+
+# Plot NGWFs, see %block species_ngwf_plot
+write_ngwf_plot      		: F       	
+
+# Do post-processing
+do_properties        		: T       	
+
+# Compute dipole moment
+polarisation_calculate 		: F       	
+
+# Spherical harmonic decomposition of NGWFs
+ngwf_analysis          		: F       	
+
+# Forces
+write_forces           		: T       	
+
+popn_calculate         		: T
+initial_dens_realspace		: T
+write_params			: T             
+write_initial_radial_ngwfs	: F
+
+
+# ========================================================================
+# 				ATOMIC SETUP	        			 #
+# ========================================================================
+
+# -----------------------------------------
+# Species List
+# -----------------------------------------
+%block species_ngwf_plot
+Ni1
+Ni2
+O1 
+O2
+%endblock species_ngwf_plot
+
+# -----------------------------------------
+#! Block describing NGWFs of species
+# -----------------------------------------
+# Species, Label, Atomic number,  #NGWF's, NGWF cutoff
+%block species
+bohr
+Ni1 Ni 28 9 11.0
+Ni2 Ni 28 9 11.0
+O1   O  8 4 11.0
+O2   O  8 4 11.0
+%endblock species
+
+# -----------------------------------------
+# NGWF initial configuration guesses
+# -----------------------------------------
+%block species_atomic_set 
+Ni1  SOLVE conf=3s2 3p6 4s2 3d8 INIT SPIN=+2 CHARGE=+2
+Ni2  SOLVE conf=3s2 3p6 4s2 3d8 INIT SPIN=-2 CHARGE=+2
+O1   SOLVE ws=5.0 wp=5.0
+O2   SOLVE ws=5.0 wp=5.0
+%endblock species_atomic_set
+
+# -----------------------------------------
+# Pseudopotentials or PAW atomic data
+# -----------------------------------------
+%block species_pot
+Ni1 "Ni_GGA_P2.recpot"
+Ni2 "Ni_GGA_P2.recpot"
+O1  "o-pbe.recpot"
+O2  "o-pbe.recpot"
+%endblock species_pot
+
+# -----------------------------------------
+# Atomic decomposition of density of states
+# -----------------------------------------
+%block species_ldos_groups
+Ni1
+Ni2
+O1
+O2
+%endblock species_ldos_groups
+
+#-----------------------------------------
+# Unit Cell Lattice Parameters
+# -----------------------------------------
+%block lattice_cart
+31.5200  0.0000  0.0000
+0.0000 31.5200  0.0000
+0.0000  0.0000 31.5200
+%endblock lattice_cart
+
+# ========================================================================
+# 				DFT+U Options	        			 #
+# ========================================================================
+# Species, L, Uin, Jin, Hub proj character, alpha, -2beta
+%block hubbard
+Nix 2 5.2 0.0 -1 0.0 0.0
+%endblock hubbard
+
+# -----------------------------------------
+# Atomic Positions
+# -----------------------------------------
+%block positions_abs
+# <ATOMIC POSITIONS>
+
+%endblock positions_abs
+\end{lstlisting}
+
